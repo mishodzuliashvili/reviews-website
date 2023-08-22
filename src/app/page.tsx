@@ -7,6 +7,8 @@ import { useEffect } from "react";
 // add file upload
 // add fatabase fetch
 // test if ably has rooms
+// TODO: light and dark theme and 2 languages
+// TODO: next auth with providers
 export default function Home() {
   useEffect(() => {
     axios
