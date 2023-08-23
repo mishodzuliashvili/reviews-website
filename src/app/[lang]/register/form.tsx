@@ -16,7 +16,7 @@ const RegisterForm = () => {
   const validateForm = (values: {
     email: string;
     password: string;
-    username: string;
+    name: string;
   }) => {
     const errors: any = {};
     if (!values.email) {
@@ -27,8 +27,8 @@ const RegisterForm = () => {
     if (!values.password) {
       errors.password = "Required";
     }
-    if (!values.username) {
-      errors.username = "Required";
+    if (!values.name) {
+      errors.name = "Required";
     }
     return errors;
   };
@@ -37,7 +37,7 @@ const RegisterForm = () => {
     values: {
       email: string;
       password: string;
-      username: string;
+      name: string;
     },
     { setSubmitting }: any
   ) => {
@@ -77,7 +77,7 @@ const RegisterForm = () => {
       <ToastContainer />
       {error && <div className="text-red-500">{error}</div>}
       <Formik
-        initialValues={{ email: "", password: "", username: "" }}
+        initialValues={{ email: "", password: "", name: "" }}
         validate={validateForm}
         onSubmit={handleSubmit}
       >
@@ -87,7 +87,7 @@ const RegisterForm = () => {
               className="border border-secondary p-3 bg-transparent outline-none w-full rounded-sm"
               placeholder="Please enter your name..."
               type="text"
-              name="username"
+              name="name"
             />
             <ErrorMessage name="name" component="div" />
             <Field
