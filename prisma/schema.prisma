@@ -53,7 +53,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  password         String
+  password         String?
   isAdmin          Boolean   @default(false)
   lastLoginTime    DateTime? @db.Timestamp(0)
   registrationTime DateTime  @default(now()) @db.Timestamp(0)
