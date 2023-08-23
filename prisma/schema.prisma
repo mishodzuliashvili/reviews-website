@@ -48,19 +48,12 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
+  // add password that can be null
+  password      String?
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-
-  password         String
-  isAdmin          Boolean   @default(false)
-  lastLoginTime    DateTime? @db.Timestamp(0)
-  registrationTime DateTime  @default(now()) @db.Timestamp(0)
-  isBlocked        Boolean   @default(false)
-  reviews          Review[]
-  comments         Comment[]
-  likes            Like[]
 }
 
 model VerificationToken {
@@ -71,55 +64,55 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Review {
-  id        String      @id @default(uuid())
-  title     String
-  item      String
-  group     ReviewGroup
-  tags      Tag[]
-  text      String
-  grade     Int
-  createdAt DateTime    @default(now()) @db.Timestamp(0)
+// model Review {
+//   id        String      @id @default(uuid())
+//   title     String
+//   item      String
+//   group     ReviewGroup
+//   tags      Tag[]
+//   text      String
+//   grade     Int
+//   createdAt DateTime    @default(now()) @db.Timestamp(0)
 
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String
+//   author   User   @relation(fields: [authorId], references: [id])
+//   authorId String
 
-  likes    Like[]
-  comments Comment[]
+//   likes    Like[]
+//   comments Comment[]
 
-  @@index([authorId])
-}
+//   @@index([authorId])
+// }
 
-model Tag {
-  id      String   @id @default(uuid())
-  name    String   @unique
-  reviews Review[]
-}
+// model Tag {
+//   id      String   @id @default(uuid())
+//   name    String   @unique
+//   reviews Review[]
+// }
 
-model Like {
-  id       Int    @id @default(autoincrement())
-  user     User   @relation(fields: [userId], references: [id])
-  userId   String
-  review   Review @relation(fields: [reviewId], references: [id])
-  reviewId String
+// model Like {
+//   id       Int    @id @default(autoincrement())
+//   user     User   @relation(fields: [userId], references: [id])
+//   userId   String
+//   review   Review @relation(fields: [reviewId], references: [id])
+//   reviewId String
 
-  @@index([userId])
-  @@index([reviewId])
-}
+//   @@index([userId])
+//   @@index([reviewId])
+// }
 
-model Comment {
-  id       String @id @default(uuid())
-  text     String
-  review   Review @relation(fields: [reviewId], references: [id])
-  reviewId String
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String
+// model Comment {
+//   id       String @id @default(uuid())
+//   text     String
+//   review   Review @relation(fields: [reviewId], references: [id])
+//   reviewId String
+//   author   User   @relation(fields: [authorId], references: [id])
+//   authorId String
 
-  createdAt DateTime @default(now()) @db.Timestamp(0)
+//   createdAt DateTime @default(now()) @db.Timestamp(0)
 
-  @@index([reviewId])
-  @@index([authorId])
-}
+//   @@index([reviewId])
+//   @@index([authorId])
+// }
 
 // Piece entity (optional)
 // model Piece {

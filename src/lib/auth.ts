@@ -6,16 +6,16 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
-function updateLastLoginTime(id: string) {
-  return prisma.user.update({
-    where: {
-      id: id,
-    },
-    data: {
-      lastLoginTime: new Date(),
-    },
-  });
-}
+// function updateLastLoginTime(id: string) {
+//   return prisma.user.update({
+//     where: {
+//       id: id,
+//     },
+//     data: {
+//       lastLoginTime: new Date(),
+//     },
+//   });
+// }
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -43,13 +43,17 @@ export const authOptions: NextAuthOptions = {
             email: email,
           },
         });
-        if (!user || !(await compare(password, user.password))) {
+        if (
+          !user ||
+          !user.password ||
+          !(await compare(password, user.password))
+        ) {
           throw new Error("Email or password is incorrect");
         }
-        if (user.isBlocked) {
-          throw new Error("User is blocked");
-        }
-        await updateLastLoginTime(user.id);
+        // if (user.isBlocked) {
+        //   throw new Error("User is blocked");
+        // }
+        // await updateLastLoginTime(user.id);
         return {
           id: user.id,
           email: user.email,
@@ -65,6 +69,11 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
+  callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      return true;
+    },
+  },
   pages: {
     // signIn: "/login",
     // error: "/login",

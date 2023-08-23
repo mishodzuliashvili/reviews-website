@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { redirectIfNotAuthenticated, signOutIfBlocked } from "@/lib/protected";
 import { HiOutlineLightBulb } from "react-icons/hi";
 import { LoginButton, LogoutButton } from "@/components/buttons.component";
+import axios from "axios";
 export default async function Home({
   params: { lang },
 }: {
@@ -10,6 +11,15 @@ export default async function Home({
 }) {
   // await redirectIfNotAuthenticated();
   // await signOutIfBlocked();
+  const session = await getServerSession(authOptions);
+
+  // fetch("/api/users/" + session?.user?.email)
+  //   .then((res) => {
+  //     return res.json();
+  //   })
+  //   .then((data) => {
+  //     console.log(data);
+  //   });
   // TODO: auth with providers not only email
   return (
     <main className="py-12 lg:py-20 px-10">
@@ -18,7 +28,9 @@ export default async function Home({
         <section className="flex flex-row lg:flex-col gap-2 lg:max-w-xs w-full">
           <div className="radial-gradient rounded-lg p-6 pt-14">
             <div className="text-white">
-              <h2 className="text-xl font-bold">Hello, </h2>
+              <h2 className="text-xl font-bold">
+                Hello, {session?.user?.email}
+              </h2>
               <p>Feedback board</p>
               <LoginButton />
               <LogoutButton />
