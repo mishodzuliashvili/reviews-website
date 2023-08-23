@@ -8,20 +8,3 @@ export default async function subscribeAbly(callback: (data: any) => void) {
     callback(message.data);
   });
 }
-
-// ! server side ably
-
-// const ably = new Ably.Realtime.Promise(
-//   ""
-// );
-
-// (async () => {
-//   await ably.connection.once("connected");
-//   console.log("Connected to Ably!");
-// })();
-
-// ? when creating a new message
-// async function publishMessage(message: Message) {
-//   const channel = ably.channels.get("chat");
-//   await channel.publish("message", message);
-// }

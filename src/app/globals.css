@@ -2,4 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: #f7f8fd;
+}
 
+[class='dark'] {
+  --background: rgb(0, 0, 0);
+}
+
+body {
+  background: var(--background);
+}
+
+.radial-gradient {
+  background: radial-gradient(128.88% 128.88% at 103.9% -10.39%,#e84d70 0%,#a337f6 53.09%,#28a7ed 100%);;
+}

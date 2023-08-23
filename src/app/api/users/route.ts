@@ -5,9 +5,10 @@ function getUsers() {
   return prisma.user.findMany({
     select: {
       id: true,
-      username: true,
+      name: true,
       email: true,
       isAdmin: true,
+      accounts: true,
     },
   });
 }
