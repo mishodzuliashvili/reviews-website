@@ -4,6 +4,7 @@ import { redirectIfNotAuthenticated, signOutIfBlocked } from "@/lib/protected";
 import { HiOutlineLightBulb } from "react-icons/hi";
 import { LoginButton, LogoutButton } from "@/components/buttons.component";
 import axios from "axios";
+import { langDictionary } from "@/content";
 export default async function Home({
   params: { lang },
 }: {
@@ -24,8 +25,10 @@ export default async function Home({
   return (
     <main className="py-12 lg:py-20 px-10">
       <div className="flex justify-center items-start max-w-5xl mx-auto w-full flex-col lg:flex-row gap-7">
-        <h1>Hello, {session?.user?.email}</h1>
-        {session ? <LogoutButton /> : <LoginButton />}
+        <h1>
+          {langDictionary[lang].hello}, {session?.user?.email}
+        </h1>
+        {session ? <LogoutButton lang={lang} /> : <LoginButton lang={lang} />}
         {/* left section */}
         {/* <section className="flex flex-row lg:flex-col gap-2 lg:max-w-xs w-full">
           <div className="radial-gradient rounded-lg p-6 pt-14">

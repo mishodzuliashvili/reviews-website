@@ -3,15 +3,15 @@
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 
-export const LoginButton = () => {
+export const LoginButton = ({ lang }: any) => {
   return (
-    <button style={{ marginRight: 10 }} onClick={() => signIn()}>
-      Sign in
-    </button>
+    <Link href={`${lang}/login`} style={{ marginRight: 10 }}>
+      Sign In
+    </Link>
   );
 };
 
-export const RegisterButton = () => {
+export const RegisterButton = ({ lang }: any) => {
   return (
     <Link href="/register" style={{ marginRight: 10 }}>
       Register
@@ -19,7 +19,7 @@ export const RegisterButton = () => {
   );
 };
 
-export const LogoutButton = () => {
+export const LogoutButton = ({ lang }: any) => {
   return (
     <button style={{ marginRight: 10 }} onClick={() => signOut()}>
       Sign Out
