@@ -32,6 +32,7 @@ export default async function Home({
       <div className="flex justify-center items-start max-w-5xl mx-auto w-full flex-col lg:flex-row gap-7">
         <Header email={session?.user?.email || ""} />
         {session ? <LogoutButton /> : <LoginButton />}
+        {JSON.stringify(session)}
         {/* left section */}
         {/* <section className="flex flex-row lg:flex-col gap-2 lg:max-w-xs w-full">
           <div className="radial-gradient rounded-lg p-6 pt-14">

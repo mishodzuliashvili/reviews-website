@@ -1,25 +1,35 @@
 import { withAuth } from "next-auth/middleware";
 import createIntlMiddleware from "next-intl/middleware";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { signOut } from "next-auth/react";
 
 const locales = ["en", "ka"];
-const publicPages = ["/", "/login"];
-
+const publicPages = ["/login", "/register"];
+const adminPages = ["/admin"];
 const intlMiddleware = createIntlMiddleware({
   locales,
   defaultLocale: "en",
 });
 
 const authMiddleware = withAuth(
-  // Note that this callback is only invoked if
-  // the `authorized` callback has returned `true`
-  // and not for pages listed in `pages`.
   function onSuccess(req) {
+    const adminPathNames = RegExp(
+      `^(/(${locales.join("|")}))?(${adminPages.join("|")})/?$`,
+      "i"
+    );
+    if (
+      adminPathNames.test(req.nextUrl.pathname) &&
+      req.nextauth.token?.isAdmin === false
+    ) {
+      return NextResponse.redirect(new URL("/", req.nextUrl.origin).toString());
+    }
     return intlMiddleware(req);
   },
   {
     callbacks: {
-      authorized: ({ token }) => token != null,
+      authorized: ({ token }) => {
+        return token != null && token.isBlocked !== true;
+      },
     },
     pages: {
       signIn: "/login",
@@ -29,7 +39,7 @@ const authMiddleware = withAuth(
 
 export default function middleware(req: NextRequest) {
   const publicPathnameRegex = RegExp(
-    `^(/(${locales.join("|")}))?(${publicPages.join("|")})?/?$`,
+    `^(/(${locales.join("|")}))?(${publicPages.join("|")})/?$`,
     "i"
   );
   const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);

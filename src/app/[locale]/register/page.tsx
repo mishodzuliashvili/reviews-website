@@ -7,8 +7,6 @@ export default async function Register({
 }: {
   params: { lang: string };
 }) {
-  await redirectIfAuthenticated();
-
   return (
     <div>
       <div className="p-5 flex flex-col gap-3 items-start">

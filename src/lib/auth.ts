@@ -23,6 +23,26 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET as string,
   adapter: PrismaAdapter(prisma),
+  callbacks: {
+    async jwt({ token, user }) {
+      if (token && token.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: {
+            email: token.email as string,
+          },
+          select: {
+            isAdmin: true,
+            isBlocked: true,
+          },
+        });
+        token.isBlocked = dbUser?.isBlocked;
+        token.isAdmin = dbUser?.isAdmin;
+        console.log(token);
+      }
+      return token;
+    },
+  },
+
   providers: [
     CredentialsProvider({
       name: "Sign in",
