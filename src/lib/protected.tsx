@@ -26,7 +26,6 @@ export async function redirectIfBlocked() {
 
 export async function signOutIfBlocked() {
   const isBlocked = await isUserBlocked();
-  isBlocked && signOut();
 }
 
 async function isUserAdmin() {
@@ -37,8 +36,7 @@ async function isUserAdmin() {
       email: session?.user?.email || "",
     },
   });
-  // return user?.isAdmin;
-  return true;
+  return user?.isAdmin;
 }
 
 async function isUserBlocked() {
@@ -49,6 +47,6 @@ async function isUserBlocked() {
       email: session?.user?.email || "",
     },
   });
-  // return user?.isBlocked;
-  return false;
+  console.log("eee", session, user);
+  return user?.isBlocked;
 }

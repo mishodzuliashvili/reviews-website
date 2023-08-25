@@ -6,15 +6,16 @@ import { LoginButton, LogoutButton } from "@/components/buttons.component";
 import axios from "axios";
 import { useTranslations } from "next-intl";
 import Header from "@/components/Header";
-export const dynamic = "force-dynamic";
+import { signOut } from "next-auth/react";
 export default async function Home({
   params: { lang },
 }: {
   params: { lang: string };
 }) {
-  // await redirectIfNotAuthenticated();
+  await redirectIfNotAuthenticated();
   // await signOutIfBlocked();
-
+  //  if user is blocked then signout
+  // TODO: middleware do everything for auth and for admin page i dont know exactly know if user is blocked from main context signout ez
   const session = await getServerSession(authOptions);
   console.log(session);
   // fetch("/api/users/" + session?.user?.email)

@@ -6,17 +6,17 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
-// function updateLastLoginTime(id: string) {
-//   return prisma.user.update({
-//     where: {
-//       id: id,
-//     },
-//     data: {
-//       lastLoginTime: new Date(),
-//     },
-//   });
-// }
-
+function updateLastLoginTime(id: string) {
+  return prisma.user.update({
+    where: {
+      id: id,
+    },
+    data: {
+      lastLoginTime: new Date(),
+    },
+  });
+}
+// TODO: going every api to user id
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
@@ -50,10 +50,10 @@ export const authOptions: NextAuthOptions = {
         ) {
           throw new Error("Email or password is incorrect");
         }
-        // if (user.isBlocked) {
-        //   throw new Error("User is blocked");
-        // }
-        // await updateLastLoginTime(user.id);
+        if (user.isBlocked) {
+          throw new Error("User is blocked");
+        }
+        await updateLastLoginTime(user.id);
         return {
           id: user.id,
           email: user.email,

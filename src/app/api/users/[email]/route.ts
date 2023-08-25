@@ -12,6 +12,8 @@ function getUser(email: string) {
       id: true,
       name: true,
       email: true,
+      isAdmin: true,
+      isBlocked: true,
     },
   });
 }

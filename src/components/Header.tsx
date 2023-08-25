@@ -1,11 +1,11 @@
+"use client";
 import { useTranslations } from "next-intl";
 
 const Header = ({ email }: { email: string }) => {
-  // const t = useTranslations("Index");
+  const t = useTranslations("Index");
   return (
     <div>
-      {/* {t("title")} {email} */}
-      {email}
+      {t("title")} {email}
     </div>
   );
 };
