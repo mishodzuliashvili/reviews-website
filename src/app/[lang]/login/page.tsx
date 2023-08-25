@@ -8,18 +8,21 @@ export default async function Login({
   params: { lang: string };
 }) {
   await redirectIfAuthenticated();
-
   return (
-    <div>
-      <div className="p-5 flex flex-col gap-3 items-start">
-        <h2 className="font-bold text-2xl">Welcome back!</h2>
-        <p className="text-tsecondary">
-          {"Don't have an account? "}
-          <Link className="underline" href="/register">
-            Create an account
-          </Link>
-        </p>
-        <LoginForm />
+    <div className="">
+      <div className="lg:mt-10 bg-white w-full max-w-xl mx-auto shadow-slate-200 shadow-sm rounded-lg p-5">
+        <header>
+          <h2 className="text-xl font-bold">Sign in</h2>
+          <p className="text-tsecondary">
+            {"Dont Have an account? "}
+            <Link className="underline" href="/register">
+              Sign Up
+            </Link>
+          </p>
+        </header>
+        <section className="mt-5">
+          <LoginForm />
+        </section>
       </div>
     </div>
   );

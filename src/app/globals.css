@@ -1,9 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+ 
 :root {
-  --background: #f7f8fd;
+  --background: #f7fafd;
 }
 
 [class='dark'] {
@@ -12,7 +13,6 @@
 
 body {
   background: var(--background);
-  /* / */
 }
 
 .radial-gradient {

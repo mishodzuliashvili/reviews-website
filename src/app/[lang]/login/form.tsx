@@ -3,17 +3,21 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-
+import { useRouter, useSearchParams } from "next/navigation";
+import { FaGithub, FaGoogle } from "react-icons/fa";
+import { SignInError, getSignInErrorMessage } from "./signInError";
 const CALLBACK_URL = "/";
 
 const LoginForm = () => {
-  const [error, setError] = useState<null | string>(null);
+  const searchParams = useSearchParams();
+
+  const [error, setError] = useState<null | string>(
+    getSignInErrorMessage(searchParams.get("error"))
+  );
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const validateForm = (values: { email: string; password: string }) => {
-    // s
     const errors: any = {};
     if (!values.email) {
       errors.email = "Required";
@@ -40,47 +44,70 @@ const LoginForm = () => {
       redirect: false,
       email,
       password,
-    })
-      .then((res) => {
-        router.push(CALLBACK_URL);
-      })
-      .catch((err) => {
+    }).then((res: any) => {
+      if (res?.error) {
         setSubmitting(false);
         setLoading(false);
-        setError(err.message);
-      });
+        setError(res.error);
+      } else {
+        router.push(CALLBACK_URL);
+      }
+    });
   };
   return (
     <>
-      {error && <div className="text-red-500">{error}</div>}
       <Formik
         initialValues={{ email: "", password: "" }}
         validate={validateForm}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
-          <Form className="flex flex-col gap-3 items-start max-w-xs w-full">
+          <Form className="flex flex-col gap-3 items-start w-full">
+            {error && <SignInError errorMessage={error} />}
             <Field
-              className="border border-secondary p-3 bg-transparent outline-none w-full rounded-sm"
+              className="border border-gray-200 rounded-lg p-3 outline-none w-full"
               placeholder="Please enter your email..."
               type="email"
               name="email"
             />
             <ErrorMessage name="email" component="div" />
             <Field
-              className="border border-secondary p-3 bg-transparent outline-none w-full rounded-sm"
+              className="border border-gray-200 rounded-lg p-3 outline-none w-full"
               placeholder="Please enter your password..."
               type="password"
               name="password"
             />
             <ErrorMessage name="password" component="div" />
-            <button type="submit" disabled={isSubmitting}>
+            <button
+              className="bg-[black] text-white py-3 px-5 flex gap-1 items-center font-medium rounded-full"
+              type="submit"
+              disabled={isSubmitting}
+            >
               {loading ? (
                 <AiOutlineLoading3Quarters className="animate-spin text-2xl" />
               ) : (
                 "Sign In"
               )}
             </button>
+            <p>Or sign in with</p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => signIn("google")}
+                className="bg-[#4285F4] text-white py-3 px-5 flex gap-1 items-center font-medium rounded-full"
+              >
+                <FaGoogle />
+                oogle
+              </button>
+              <button
+                type="button"
+                onClick={() => signIn("github")}
+                className="bg-[#1c1c1c] text-white py-3 px-5 flex gap-1 items-center font-medium rounded-full"
+              >
+                <FaGithub />
+                Github
+              </button>
+            </div>
           </Form>
         )}
       </Formik>
