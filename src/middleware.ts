@@ -1,35 +1,46 @@
-import { NextRequest, NextResponse } from "next/server";
-import { match } from "@formatjs/intl-localematcher";
-import Negotiator from "negotiator";
-import { defaultLocale, locales } from "./locals";
+import { withAuth } from "next-auth/middleware";
+import createIntlMiddleware from "next-intl/middleware";
+import { NextRequest } from "next/server";
 
-function getLocale(request: NextRequest) {
-  const headers = new Headers(request.headers);
-  const acceptLanguage = headers.get("accept-language");
-  if (acceptLanguage) {
-    headers.set("accept-language", acceptLanguage.replaceAll("_", "-"));
+const locales = ["en", "ka"];
+const publicPages = ["/", "/login"];
+
+const intlMiddleware = createIntlMiddleware({
+  locales,
+  defaultLocale: "en",
+});
+
+const authMiddleware = withAuth(
+  // Note that this callback is only invoked if
+  // the `authorized` callback has returned `true`
+  // and not for pages listed in `pages`.
+  function onSuccess(req) {
+    return intlMiddleware(req);
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => token != null,
+    },
+    pages: {
+      signIn: "/login",
+    },
   }
-  const headersObject = Object.fromEntries(headers.entries());
-  const languages = new Negotiator({
-    headers: headersObject,
-  }).languages();
-  return match(languages, locales, defaultLocale);
-}
+);
 
-export function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
-  const pathnameIsMissingLocale = locales.every(
-    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+export default function middleware(req: NextRequest) {
+  const publicPathnameRegex = RegExp(
+    `^(/(${locales.join("|")}))?(${publicPages.join("|")})?/?$`,
+    "i"
   );
-  if (pathnameIsMissingLocale) {
-    const locale = getLocale(request);
-    const searchParams = request.nextUrl.search;
-    return NextResponse.redirect(
-      new URL(`/${locale + pathname + searchParams}`, request.url)
-    );
+  const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
+
+  if (isPublicPage) {
+    return intlMiddleware(req);
+  } else {
+    return (authMiddleware as any)(req);
   }
 }
 
 export const config = {
-  matcher: ["/((?!_next|api|favicon.ico).*)"],
+  matcher: ["/((?!api|_next|.*\\..*).*)"],
 };

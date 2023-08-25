@@ -2,11 +2,11 @@
 import ThemeSwitch from "./ThemeSwitch";
 import LanguageSwitcher from "./LanguageSwitcher";
 
-const Navbar = ({ lang }: { lang: string }) => {
+const Navbar = ({ local }: { local: string }) => {
   return (
     <div>
       <ThemeSwitch />
-      <LanguageSwitcher lang={lang} />
+      <LanguageSwitcher local={local} />
     </div>
   );
 };

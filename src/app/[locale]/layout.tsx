@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Jost } from "next/font/google";
 import { Providers } from "../providers";
 import Navbar from "@/components/Navbar";
+import { notFound } from "next/navigation";
+import { NextIntlClientProvider } from "next-intl";
 
 const font = Jost({
   weight: ["300", "400", "500", "700"],
@@ -15,20 +17,29 @@ export const metadata: Metadata = {
     "Discover and share recommendations for books, movies, games, and more.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-  params: { lang },
+  params: { locale },
 }: {
   children: React.ReactNode;
-  params: { lang: string };
+  params: { locale: string };
 }) {
+  let messages;
+  try {
+    messages = (await import(`../../messages/${locale}.json`)).default;
+  } catch (error) {
+    notFound();
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={font.className}>
-        <Providers>
-          <Navbar lang={lang} />
-          {children}
-        </Providers>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <Providers>
+            <Navbar local={locale} />
+            {children}
+          </Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

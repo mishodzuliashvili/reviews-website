@@ -3,7 +3,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { SignInError, getSignInErrorMessage } from "./signInError";
 const CALLBACK_URL = "/";
@@ -44,13 +44,15 @@ const LoginForm = () => {
       redirect: false,
       email,
       password,
+      callbackUrl: CALLBACK_URL,
     }).then((res: any) => {
       if (res?.error) {
         setSubmitting(false);
         setLoading(false);
         setError(res.error);
       } else {
-        router.push(CALLBACK_URL);
+        // router.push(CALLBACK_URL);
+        window.location.replace(CALLBACK_URL);
       }
     });
   };

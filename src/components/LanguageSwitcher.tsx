@@ -3,7 +3,7 @@
 import { localeLabels, locales } from "@/locals";
 import { useRouter } from "next/navigation";
 
-export default function LanguageSwitcher({ lang }: { lang: string }) {
+export default function LanguageSwitcher({ local }: { local: string }) {
   const router = useRouter();
   return (
     <div>
@@ -11,7 +11,7 @@ export default function LanguageSwitcher({ lang }: { lang: string }) {
         onChange={(e) => {
           router.push(`/${e.target.value}`);
         }}
-        value={lang}
+        value={local}
       >
         {locales.map((locale: string) => (
           <option key={locale} value={locale}>

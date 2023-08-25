@@ -3,15 +3,15 @@
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 
-export const LoginButton = ({ lang }: any) => {
+export const LoginButton = () => {
   return (
-    <Link href={`${lang}/login`} style={{ marginRight: 10 }}>
+    <Link href={`login`} style={{ marginRight: 10 }}>
       Sign In
     </Link>
   );
 };
-
-export const RegisterButton = ({ lang }: any) => {
+// TODO: when router gets new page // language should be persisted
+export const RegisterButton = () => {
   return (
     <Link href="/register" style={{ marginRight: 10 }}>
       Register
@@ -19,7 +19,7 @@ export const RegisterButton = ({ lang }: any) => {
   );
 };
 
-export const LogoutButton = ({ lang }: any) => {
+export const LogoutButton = () => {
   return (
     <button style={{ marginRight: 10 }} onClick={() => signOut()}>
       Sign Out

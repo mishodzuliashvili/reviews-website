@@ -1,7 +1,7 @@
-export const locales = ["en-US", "ka-GE"];
-export const defaultLocale = "ka-GE";
+export const locales = ["en", "ka"];
+export const defaultLocale = "en";
 
 export const localeLabels = {
-  "en-US": "🇺🇸",
-  "ka-GE": "🇬🇪",
+  en: "English",
+  ka: "ქართული",
 };
