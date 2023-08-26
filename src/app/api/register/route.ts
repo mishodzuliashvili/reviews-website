@@ -7,7 +7,8 @@ import { NextResponse } from "next/server";
 // TODO: protect eevry api by some easy way
 // TODO: polish by design and then we will continue by admin page i think'
 // ? or maybe by writing api
-
+const DEFAULT_IMAGE =
+  "https://i.pinimg.com/550x/18/b9/ff/18b9ffb2a8a791d50213a9d595c4dd52.jpg";
 export async function POST(req: Request) {
   try {
     const { name, email, password } = (await req.json()) as {
@@ -22,6 +23,7 @@ export async function POST(req: Request) {
         name,
         email: email.toLowerCase(),
         password: hashed_password,
+        image: DEFAULT_IMAGE,
       },
     });
 

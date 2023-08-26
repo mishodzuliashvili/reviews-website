@@ -14,6 +14,9 @@ function getUser(id: string) {
       email: true,
       isAdmin: true,
       isBlocked: true,
+      image: true,
+      lastLoginTime: true,
+      registrationTime: true,
     },
   });
 }

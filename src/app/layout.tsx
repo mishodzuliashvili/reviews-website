@@ -1,12 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Jost } from "next/font/google";
 import { Providers } from "./providers";
-
-const font = Jost({
-  weight: ["300", "400", "500", "700"],
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "InsightfulPicks",
@@ -23,7 +17,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={font.className}>
+      <body>
         <Providers>{children}</Providers>
       </body>
     </html>

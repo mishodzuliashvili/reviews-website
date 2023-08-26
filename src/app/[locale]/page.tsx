@@ -2,6 +2,7 @@
 import { signOut } from "next-auth/react";
 import { useMain } from "../mainContext";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 export default function Home() {
   const { user } = useMain();
@@ -10,10 +11,11 @@ export default function Home() {
   return (
     <main className="py-12 lg:py-20 px-10">
       <div className="flex justify-center items-start max-w-5xl mx-auto w-full flex-col lg:flex-row gap-7">
-        <h1 className="text-5xl font-medium">
+        {/* <h1 className="text-5xl font-medium">
           {t("hello")}, {user?.name}
-        </h1>
-        <button onClick={() => signOut()}>Sign Out</button>
+        </h1> */}
+        {/* <Image width={200} height={200} src={user?.image || ""} alt="" /> */}
+        {/* <button onClick={() => signOut()}>Sign Out</button> */}
         {/* {session ? <LogoutButton /> : <LoginButton />} */}
         {/* left section */}
         {/* <section className="flex flex-row lg:flex-col gap-2 lg:max-w-xs w-full">

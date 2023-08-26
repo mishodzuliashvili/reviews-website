@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { SignInError, getSignInErrorMessage } from "./signInError";
+
 const CALLBACK_URL = "/";
 
 const LoginForm = () => {

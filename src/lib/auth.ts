@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { compare } from "bcryptjs";
-import type { NextAuthOptions } from "next-auth";
+import type { DefaultSession, NextAuthOptions, Session } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -44,12 +44,11 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.user = {
-        ...session.user,
-        id: token.id,
-        isAdmin: token.isAdmin,
-        isBlocked: token.isBlocked,
-      } as typeof session.user;
+      (
+        session as Session & {
+          userId: string;
+        }
+      ).userId = token.id as string;
       return session;
     },
   },
