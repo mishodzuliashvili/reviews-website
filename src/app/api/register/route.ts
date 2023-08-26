@@ -2,6 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 
+// TODO: validate everything everyehwere now i have to polish registration
+// TODO: i dont need api to session actually
+// TODO: protect eevry api by some easy way
+// TODO: polish by design and then we will continue by admin page i think'
+// ? or maybe by writing api
+
 export async function POST(req: Request) {
   try {
     const { name, email, password } = (await req.json()) as {

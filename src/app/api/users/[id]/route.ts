@@ -3,10 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-function getUser(email: string) {
+function getUser(id: string) {
   return prisma.user.findUnique({
     where: {
-      email,
+      id,
     },
     select: {
       id: true,
@@ -20,10 +20,14 @@ function getUser(email: string) {
 
 export async function GET(
   request: Request,
-  { params }: { params: { email: string } }
+  { params }: { params: { id: string } }
 ) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
+  }
   try {
-    const user = await getUser(params.email);
+    const user = await getUser(params.id);
     if (!user) {
       return NextResponse.json({ error: "User not found." }, { status: 500 });
     }

@@ -16,7 +16,7 @@ function updateLastLoginTime(id: string) {
     },
   });
 }
-// TODO: going every api to user id
+
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
@@ -25,10 +25,13 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   callbacks: {
     async jwt({ token, user }) {
-      if (token && token.email) {
+      if (user) {
+        token.id = user.id;
+      }
+      if (token) {
         const dbUser = await prisma.user.findUnique({
           where: {
-            email: token.email as string,
+            id: token.id as string,
           },
           select: {
             isAdmin: true,
@@ -37,9 +40,17 @@ export const authOptions: NextAuthOptions = {
         });
         token.isBlocked = dbUser?.isBlocked;
         token.isAdmin = dbUser?.isAdmin;
-        console.log(token);
       }
       return token;
+    },
+    async session({ session, token }) {
+      session.user = {
+        ...session.user,
+        id: token.id,
+        isAdmin: token.isAdmin,
+        isBlocked: token.isBlocked,
+      } as typeof session.user;
+      return session;
     },
   },
 

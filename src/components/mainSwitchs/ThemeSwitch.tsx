@@ -1,18 +1,14 @@
 "use client";
-import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
 
 const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => setMounted(true), []);
 
-  if (!mounted) {
-    return null;
-  }
+  if (!mounted) return null;
 
   return (
     <select value={theme} onChange={(e) => setTheme(e.target.value)}>

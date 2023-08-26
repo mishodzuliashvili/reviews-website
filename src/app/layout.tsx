@@ -2,8 +2,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Jost } from "next/font/google";
 import { Providers } from "./providers";
-import Navbar from "@/components/Navbar";
-import { notFound } from "next/navigation";
 
 const font = Jost({
   weight: ["300", "400", "500", "700"],

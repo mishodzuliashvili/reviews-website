@@ -95,7 +95,11 @@ const LoginForm = () => {
             <div className="flex gap-3">
               <button
                 type="button"
-                onClick={() => signIn("google")}
+                onClick={() =>
+                  signIn("google", {
+                    callbackUrl: CALLBACK_URL,
+                  })
+                }
                 className="bg-[#4285F4] text-white py-3 px-5 flex gap-1 items-center font-medium rounded-full"
               >
                 <FaGoogle />
@@ -103,7 +107,11 @@ const LoginForm = () => {
               </button>
               <button
                 type="button"
-                onClick={() => signIn("github")}
+                onClick={() =>
+                  signIn("github", {
+                    callbackUrl: CALLBACK_URL,
+                  })
+                }
                 className="bg-[#1c1c1c] text-white py-3 px-5 flex gap-1 items-center font-medium rounded-full"
               >
                 <FaGithub />

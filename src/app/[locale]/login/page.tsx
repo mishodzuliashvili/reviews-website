@@ -7,7 +7,6 @@ export default async function Login({
 }: {
   params: { lang: string };
 }) {
-  // await redirectIfAuthenticated();
   return (
     <div className="">
       <div className="lg:mt-10 bg-white w-full max-w-xl mx-auto shadow-slate-200 shadow-sm rounded-lg p-5">

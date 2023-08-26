@@ -1,4 +1,4 @@
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/ui/Navbar";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 
@@ -11,13 +11,13 @@ export default async function LocaleLayout({
 }) {
   let messages;
   try {
-    messages = (await import(`../../messages/${locale}.json`)).default;
+    messages = (await import(`../../i18n/messages/${locale}.json`)).default;
   } catch (error) {
     notFound();
   }
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <Navbar local={locale} />
+      <Navbar />
       {children}
     </NextIntlClientProvider>
   );

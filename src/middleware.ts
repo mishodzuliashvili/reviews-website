@@ -1,55 +1,58 @@
 import { withAuth } from "next-auth/middleware";
 import createIntlMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
-import { signOut } from "next-auth/react";
+import { locales, defaultLocale } from "./i18n/locals";
 
-const locales = ["en", "ka"];
-const publicPages = ["/login", "/register"];
-const adminPages = ["/admin"];
+function doesPathMatchPages(req: NextRequest, pages: string[]) {
+  return RegExp(`^(/(${locales.join("|")}))?(${pages.join("|")})/?$`, "i").test(
+    req.nextUrl.pathname
+  );
+}
+
+function redirect(req: NextRequest, redirectURL: string) {
+  return NextResponse.redirect(
+    new URL(redirectURL, req.nextUrl.origin).toString()
+  );
+}
+
 const intlMiddleware = createIntlMiddleware({
   locales,
-  defaultLocale: "en",
+  defaultLocale,
 });
 
-const authMiddleware = withAuth(
+const authPages = ["/login", "/register"];
+const defaultAuthPage = "/login";
+const blockedPages = ["/blocked"];
+const defaultBlockedPage = "/blocked";
+const adminPages = ["/admin"];
+
+export default withAuth(
   function onSuccess(req) {
-    const adminPathNames = RegExp(
-      `^(/(${locales.join("|")}))?(${adminPages.join("|")})/?$`,
-      "i"
-    );
+    const token = req.nextauth.token;
+    if (!token) {
+      if (!doesPathMatchPages(req, authPages))
+        return redirect(req, defaultAuthPage);
+      return intlMiddleware(req);
+    }
     if (
-      adminPathNames.test(req.nextUrl.pathname) &&
-      req.nextauth.token?.isAdmin === false
+      doesPathMatchPages(req, authPages) ||
+      (doesPathMatchPages(req, blockedPages) && !token.isBlocked) ||
+      (doesPathMatchPages(req, adminPages) && !token.isAdmin)
     ) {
-      return NextResponse.redirect(new URL("/", req.nextUrl.origin).toString());
+      return redirect(req, "/");
+    }
+
+    if (!doesPathMatchPages(req, blockedPages) && token.isBlocked) {
+      return redirect(req, defaultBlockedPage);
     }
     return intlMiddleware(req);
   },
   {
     callbacks: {
-      authorized: ({ token }) => {
-        return token != null && token.isBlocked !== true;
-      },
-    },
-    pages: {
-      signIn: "/login",
+      authorized: () => true,
     },
   }
 );
-
-export default function middleware(req: NextRequest) {
-  const publicPathnameRegex = RegExp(
-    `^(/(${locales.join("|")}))?(${publicPages.join("|")})/?$`,
-    "i"
-  );
-  const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
-
-  if (isPublicPage) {
-    return intlMiddleware(req);
-  } else {
-    return (authMiddleware as any)(req);
-  }
-}
 
 export const config = {
   matcher: ["/((?!api|_next|.*\\..*).*)"],

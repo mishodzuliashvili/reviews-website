@@ -1,38 +1,20 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { redirectIfNotAuthenticated, signOutIfBlocked } from "@/lib/protected";
-import { HiOutlineLightBulb } from "react-icons/hi";
-import { LoginButton, LogoutButton } from "@/components/buttons.component";
-import axios from "axios";
-import { useTranslations } from "next-intl";
-import Header from "@/components/Header";
+"use client";
 import { signOut } from "next-auth/react";
-export default async function Home({
-  params: { lang },
-}: {
-  params: { lang: string };
-}) {
-  await redirectIfNotAuthenticated();
-  // await signOutIfBlocked();
-  //  if user is blocked then signout
-  // TODO: middleware do everything for auth and for admin page i dont know exactly know if user is blocked from main context signout ez
-  const session = await getServerSession(authOptions);
-  console.log(session);
-  // fetch("/api/users/" + session?.user?.email)
-  //   .then((res) => {
-  //     return res.json();
-  //   })
-  //   .then((data) => {
-  //     console.log(data);
-  //   });
-  // TODO: auth with providers not only email
-  console.log(session);
+import { useMain } from "../mainContext";
+import { useTranslations } from "next-intl";
+
+export default function Home() {
+  const { user } = useMain();
+  const t = useTranslations("Index");
+
   return (
     <main className="py-12 lg:py-20 px-10">
       <div className="flex justify-center items-start max-w-5xl mx-auto w-full flex-col lg:flex-row gap-7">
-        <Header email={session?.user?.email || ""} />
-        {session ? <LogoutButton /> : <LoginButton />}
-        {JSON.stringify(session)}
+        <h1 className="text-5xl font-medium">
+          {t("hello")}, {user?.name}
+        </h1>
+        <button onClick={() => signOut()}>Sign Out</button>
+        {/* {session ? <LogoutButton /> : <LoginButton />} */}
         {/* left section */}
         {/* <section className="flex flex-row lg:flex-col gap-2 lg:max-w-xs w-full">
           <div className="radial-gradient rounded-lg p-6 pt-14">

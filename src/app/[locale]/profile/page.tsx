@@ -5,8 +5,5 @@ export default async function Profile({
 }: {
   params: { lang: string };
 }) {
-  await redirectIfNotAuthenticated();
-  await signOutIfBlocked();
-
   return <div>Profile</div>;
 }

@@ -1,41 +1,52 @@
 "use client";
+import MainError from "@/components/ui/MainError";
+import MainLoader from "@/components/ui/MainLoader";
 import { prisma } from "@/lib/prisma";
 import { signOut, useSession } from "next-auth/react";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-const MainContext = createContext({} as {});
+const MainContext = createContext(
+  {} as {
+    user: any;
+  }
+);
 
 export function MainProvider({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<any>(null);
-  const { data: session } = useSession();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [user, setUser] = useState<any | null>(null);
+  const { data: session, status: sessionStatus } = useSession();
+
+  const fetchUser = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/users/${(session?.user as any)?.id}`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setUser(data.user);
+      setError(null);
+    } catch (error) {
+      setError(error as Error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // setLoading(true);
-    // (async () => {
-    //   if (session) {
-    //     await fetch("/api/users/" + session?.user?.email, {
-    //       method: "GET",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     })
-    //       .then((res) => {
-    //         if (!res.ok) signOut();
-    //         return res.json();
-    //       })
-    //       .then(({ user }) => {
-    //         console.log(user);
-    //         if (user?.isBlocked) signOut();
-    //         else setUser(user);
-    //       });
-    //   }
-    //   setLoading(false);
-    // })();
+    if (session) fetchUser();
+    if (sessionStatus.toLocaleLowerCase() === "unauthenticated")
+      setLoading(false);
   }, [session]);
 
   return (
-    <MainContext.Provider value={{}}>
-      {loading ? <div>Loading...</div> : children}
+    <MainContext.Provider
+      value={{
+        user,
+      }}
+    >
+      {error && <MainError error={error} />}
+      {!error && loading && <MainLoader />}
+      {!error && !loading && children}
     </MainContext.Provider>
   );
 }
