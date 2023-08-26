@@ -1,6 +1,5 @@
 import Link from "next/link";
 import LoginForm from "./form";
-import { redirectIfAuthenticated, signOutIfBlocked } from "@/lib/protected";
 
 export default async function Login({
   params: { lang },

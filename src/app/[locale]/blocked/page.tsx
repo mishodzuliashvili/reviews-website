@@ -1,10 +1,6 @@
 "use client";
 import { authOptions } from "@/lib/auth";
-import {
-  redirectIfNotAdmin,
-  redirectIfNotAuthenticated,
-  signOutIfBlocked,
-} from "@/lib/protected";
+
 import { getServerSession } from "next-auth";
 import { signOut } from "next-auth/react";
 
