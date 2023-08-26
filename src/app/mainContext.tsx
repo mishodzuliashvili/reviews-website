@@ -38,6 +38,7 @@ export function MainProvider({ children }: { children: React.ReactNode }) {
       setUser(null);
       setLoading(false);
     }
+    // sometimes user is lost on refresh
   }, [sessionStatus]);
 
   return (

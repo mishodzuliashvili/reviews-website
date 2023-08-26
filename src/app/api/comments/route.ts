@@ -29,6 +29,7 @@ function createComment() {
 }
 
 export async function POST() {
+  // TODO: check if user is authenticated
   try {
     // check if data is valid
     // 1. create comment based on reviewID

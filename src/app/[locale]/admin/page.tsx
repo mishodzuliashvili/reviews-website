@@ -1,8 +1,19 @@
-import { authOptions } from "@/lib/auth";
+import { DataTable } from "./data-table";
 
-import { getServerSession } from "next-auth";
+async function getData() {
+  const res = await import("../../api/users/route");
+
+  const { users } = await (await res.GET()).json();
+  return users;
+}
 
 export default async function Admin() {
-  const session = await getServerSession(authOptions);
-  return <div>Admin, {session?.user?.email}</div>;
+  const data = await getData();
+  return (
+    <div>
+      <div className="p-5">
+        <DataTable data={data} />
+      </div>
+    </div>
+  );
 }

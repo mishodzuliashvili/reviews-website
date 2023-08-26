@@ -1,10 +1,5 @@
 "use client";
-import {
-  LogOut,
-  Plus,
-  Settings,
-  User,
-} from "lucide-react";
+import { LogOut, Plus, Settings, User, Users, Settings2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +14,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useMain } from "@/app/mainContext";
 import { signOut } from "next-auth/react";
+import Link from "next-intl/link";
 
 const ProfileButton = () => {
   const { user } = useMain();
@@ -26,12 +22,15 @@ const ProfileButton = () => {
   return (
     <DropdownMenu>
       <div className="flex items-center gap-3">
-        {/* <Avatar className="w-9 h-9">
+        {/* <Avatar className="rounded-lg">
           <AvatarImage src={user?.image} alt="@shadcn" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar> */}
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">{user?.name}</Button>
+          <Button variant="outline">
+            <Settings2 className="sm:hidden" />
+            <span className="hidden sm:block">{user?.name}</span>
+          </Button>
         </DropdownMenuTrigger>
       </div>
       <DropdownMenuContent className="w-56">
@@ -50,11 +49,20 @@ const ProfileButton = () => {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          {user?.isAdmin && (
+            <Link href="/admin">
+              <DropdownMenuItem>
+                <Users className="mr-2 h-4 w-4" />
+                <span>Admin</span>
+              </DropdownMenuItem>
+            </Link>
+          )}
           <DropdownMenuItem>
             <Plus className="mr-2 h-4 w-4" />
             <span>New Review</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
+
         <DropdownMenuSeparator />
 
         <DropdownMenuItem onClick={() => signOut()}>
