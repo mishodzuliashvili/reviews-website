@@ -1,43 +1,63 @@
 "use client";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import React, { useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { FaGithub, FaGoogle } from "react-icons/fa";
-import { SignInError, getSignInErrorMessage } from "./signInError";
+import { getSignInErrorMessage } from "./signInError";
+import { useToast } from "@/components/ui/use-toast";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { Loader2 } from "lucide-react";
+import Link from "next-intl/link";
+
+const formSchema = z.object({
+  email: z
+    .string()
+    .email({
+      message: "Invalid email address.",
+    })
+    .min(2, {
+      message: "Username must be at least 2 characters.",
+    }),
+  password: z.string().min(6, {
+    message: "Password must be at least 6 characters.",
+  }),
+});
 
 const CALLBACK_URL = "/";
 
 const LoginForm = () => {
   const searchParams = useSearchParams();
+  const { toast } = useToast();
 
   const [error, setError] = useState<null | string>(
     getSignInErrorMessage(searchParams.get("error"))
   );
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
-  const validateForm = (values: { email: string; password: string }) => {
-    const errors: any = {};
-    if (!values.email) {
-      errors.email = "Required";
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-      errors.email = "Invalid email address";
-    }
-    if (!values.password) {
-      errors.password = "Required";
-    }
-    return errors;
-  };
-
-  const handleSubmit = (
-    values: {
-      email: string;
-      password: string;
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema as any),
+    defaultValues: {
+      email: "",
+      password: "",
     },
-    { setSubmitting }: any
-  ) => {
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     setError(null);
     const { email, password } = values;
@@ -48,81 +68,110 @@ const LoginForm = () => {
       callbackUrl: CALLBACK_URL,
     }).then((res: any) => {
       if (res?.error) {
-        setSubmitting(false);
         setLoading(false);
         setError(res.error);
       } else {
-        // router.push(CALLBACK_URL);
         window.location.replace(CALLBACK_URL);
       }
     });
-  };
+  }
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error,
+      });
+    }
+  }, [error]);
+
   return (
-    <>
-      <Formik
-        initialValues={{ email: "", password: "" }}
-        validate={validateForm}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form className="flex flex-col gap-3 items-start w-full">
-            {error && <SignInError errorMessage={error} />}
-            <Field
-              className="border border-gray-200 rounded-lg p-3 outline-none w-full"
-              placeholder="Please enter your email..."
-              type="email"
-              name="email"
-            />
-            <ErrorMessage name="email" component="div" />
-            <Field
-              className="border border-gray-200 rounded-lg p-3 outline-none w-full"
-              placeholder="Please enter your password..."
-              type="password"
-              name="password"
-            />
-            <ErrorMessage name="password" component="div" />
-            <button
-              className="bg-[black] text-white py-3 px-5 flex gap-1 items-center font-medium rounded-full"
-              type="submit"
-              disabled={isSubmitting}
-            >
-              {loading ? (
-                <AiOutlineLoading3Quarters className="animate-spin text-2xl" />
-              ) : (
-                "Sign In"
-              )}
-            </button>
-            <p>Or sign in with</p>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={() =>
-                  signIn("google", {
-                    callbackUrl: CALLBACK_URL,
-                  })
-                }
-                className="bg-[#4285F4] text-white py-3 px-5 flex gap-1 items-center font-medium rounded-full"
-              >
-                <FaGoogle />
-                oogle
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  signIn("github", {
-                    callbackUrl: CALLBACK_URL,
-                  })
-                }
-                className="bg-[#1c1c1c] text-white py-3 px-5 flex gap-1 items-center font-medium rounded-full"
-              >
-                <FaGithub />
-                Github
-              </button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <h1 className="text-2xl">Sign In</h1>
+        <FormDescription>
+          Sign in to your account using your email address and password.
+          {"Don't have an account? "}
+          <Link href="/register" className="text-black dark:text-white">
+            Sign up here.
+          </Link>
+        </FormDescription>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter you email..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Enter your password..."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" variant="default" disabled={loading}>
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Please wait
+            </>
+          ) : (
+            <>Sign In</>
+          )}
+        </Button>
+        <FormDescription>Or sign in with:</FormDescription>
+        <div className="flex gap-3 flex-wrap">
+          <Button
+            variant="outline"
+            type="button"
+            disabled={loading}
+            onClick={() => {
+              setLoading(true);
+              signIn("google", {
+                callbackUrl: CALLBACK_URL,
+              });
+            }}
+            className="flex gap-3 items-center"
+          >
+            <FaGoogle />
+            google
+          </Button>
+          <Button
+            variant="outline"
+            type="button"
+            disabled={loading}
+            onClick={() => {
+              setLoading(true);
+              signIn("github", {
+                callbackUrl: CALLBACK_URL,
+              });
+            }}
+            className="flex gap-3 items-center "
+          >
+            <FaGithub />
+            github
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };
 

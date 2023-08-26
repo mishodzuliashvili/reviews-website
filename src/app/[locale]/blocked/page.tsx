@@ -1,18 +1,21 @@
 "use client";
-import { authOptions } from "@/lib/auth";
 
-import { getServerSession } from "next-auth";
+import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 
-export default function Blocked({
-  params: { lang },
-}: {
-  params: { lang: string };
-}) {
+export default function Blocked() {
   return (
-    <div>
-      Please sign out,
-      <button onClick={() => signOut()}>ssssssssss</button>
+    <div className="p-5 flex flex-col gap-4 items-center text-center">
+      <h1 className="">
+        You are blocked from this site, please contact the site administrator
+      </h1>
+      <Button
+        onClick={() => {
+          signOut();
+        }}
+      >
+        Sign out
+      </Button>
     </div>
   );
 }

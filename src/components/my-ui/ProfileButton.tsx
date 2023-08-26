@@ -1,19 +1,9 @@
 "use client";
 import {
-  Cloud,
-  CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
   LogOut,
-  Mail,
-  MessageSquare,
   Plus,
-  PlusCircle,
   Settings,
   User,
-  UserPlus,
-  Users,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -23,12 +13,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -37,7 +22,7 @@ import { signOut } from "next-auth/react";
 
 const ProfileButton = () => {
   const { user } = useMain();
-  if (!user) return null;
+  if (!user || user.isBlocked) return null;
   return (
     <DropdownMenu>
       <div className="flex items-center gap-3">

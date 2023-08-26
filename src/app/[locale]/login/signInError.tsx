@@ -15,7 +15,3 @@ const errors = {
 export const getSignInErrorMessage = (error: any) => {
   return error && (errors[error as keyof typeof errors] ?? errors.default);
 };
-
-export const SignInError = ({ errorMessage }: { errorMessage: string }) => {
-  return <div className="text-red-500">{errorMessage}</div>;
-};

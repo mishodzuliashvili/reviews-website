@@ -1,46 +1,62 @@
 "use client";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import React, { useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useRouter } from "next/navigation";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { Loader2 } from "lucide-react";
+import Link from "next-intl/link";
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  email: z
+    .string()
+    .email({
+      message: "Invalid email address.",
+    })
+    .min(2, {
+      message: "Username must be at least 2 characters.",
+    }),
+  password: z.string().min(6, {
+    message: "Password must be at least 6 characters.",
+  }),
+});
+
+const CALLBACK_URL = "/";
 
 const RegisterForm = () => {
-  const [error, setError] = useState<null | string>(null);
-
-  const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
   const router = useRouter();
-  const CALLBACK_URL = "/login";
+  const [error, setError] = useState<null | string>(null);
+  const [loading, setLoading] = useState(false);
 
-  const validateForm = (values: {
-    email: string;
-    password: string;
-    name: string;
-  }) => {
-    const errors: any = {};
-    if (!values.email) {
-      errors.email = "Required";
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-      errors.email = "Invalid email address";
-    }
-    if (!values.password) {
-      errors.password = "Required";
-    }
-    if (!values.name) {
-      errors.name = "Required";
-    }
-    return errors;
-  };
-
-  const handleSubmit = async (
-    values: {
-      email: string;
-      password: string;
-      name: string;
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema as any),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
     },
-    { setSubmitting }: any
-  ) => {
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
       const res = await fetch("/api/register", {
@@ -52,69 +68,95 @@ const RegisterForm = () => {
         const error = await res.json();
         throw new Error(error.message);
       } else {
-        toast.success("🦄 Success!", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
+        toast({
+          title: "Registration was successful!",
+          description: "Please wait while we redirect you to the login page.",
         });
         setTimeout(() => {
           router.push(CALLBACK_URL);
         }, 1000);
       }
     } catch (error: any) {
-      setSubmitting(false);
       setLoading(false);
       setError(error.message);
     }
-  };
+  }
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error,
+      });
+    }
+  }, [error]);
+
   return (
-    <>
-      <ToastContainer />
-      {error && <div className="text-red-500">{error}</div>}
-      <Formik
-        initialValues={{ email: "", password: "", name: "" }}
-        validate={validateForm}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form className="flex flex-col gap-3 items-start max-w-xs w-full">
-            <Field
-              className="border border-secondary p-3 bg-transparent outline-none w-full rounded-sm"
-              placeholder="Please enter your name..."
-              type="text"
-              name="name"
-            />
-            <ErrorMessage name="name" component="div" />
-            <Field
-              className="border border-secondary p-3 bg-transparent outline-none w-full rounded-sm"
-              placeholder="Please enter your email..."
-              type="email"
-              name="email"
-            />
-            <ErrorMessage name="email" component="div" />
-            <Field
-              className="border border-secondary p-3 bg-transparent outline-none w-full rounded-sm"
-              placeholder="Please enter your password..."
-              type="password"
-              name="password"
-            />
-            <ErrorMessage name="password" component="div" />
-            <button type="submit" disabled={isSubmitting}>
-              {loading ? (
-                <AiOutlineLoading3Quarters className="animate-spin text-2xl" />
-              ) : (
-                "Sign Up"
-              )}
-            </button>
-          </Form>
-        )}
-      </Formik>
-    </>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <h1 className="text-2xl">Sign Up</h1>
+        <FormDescription>
+          Sign up to create an account. Already have an account?{" "}
+          <Link href="/login" className="text-black dark:text-white">
+            Sign in here.
+          </Link>
+        </FormDescription>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter you name..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter you email..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Enter your password..."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" variant="default" disabled={loading}>
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Please wait
+            </>
+          ) : (
+            <>Sign Up</>
+          )}
+        </Button>
+      </form>
+    </Form>
   );
 };
 

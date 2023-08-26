@@ -36,7 +36,7 @@ export default function LanguageSwitch() {
   return (
     <div>
       <DropdownMenu>
-        <DropdownMenuTrigger className="outline-none">
+        <DropdownMenuTrigger asChild className="outline-none">
           <Button variant="outline">{locale.toUpperCase()}</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>

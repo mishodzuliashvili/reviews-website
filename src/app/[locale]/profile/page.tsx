@@ -1,7 +1,3 @@
-export default async function Profile({
-  params: { lang },
-}: {
-  params: { lang: string };
-}) {
+export default async function Profile() {
   return <div>Profile</div>;
 }
