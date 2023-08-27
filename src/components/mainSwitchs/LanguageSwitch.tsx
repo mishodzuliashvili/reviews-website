@@ -38,7 +38,12 @@ export default function LanguageSwitch() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="outline-none">
           <Button variant="outline">
-            {localeLabels[locale as keyof typeof localeLabels]}
+            <span className="hidden sm:block">
+              {localeLabels[locale as keyof typeof localeLabels]}
+            </span>
+            <span className="block sm:hidden">
+              {localeLabels[locale as keyof typeof localeLabels].slice(0, 2)}
+            </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>

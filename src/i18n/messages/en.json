@@ -35,5 +35,42 @@
     "no-account": "Don't have an account?",
     "signup": "Sign up here.",
     "other-options": "Or sign in with:"
+  },
+  "RegisterForm": {
+    "title": "Sign up",
+    "description": "Create a new account using your email address and password.",
+    "name": "Name",
+    "name-placeholder": "Enter your name",
+    "email": "Email",
+    "email-placeholder": "Enter your email address",
+    "password": "Password",
+    "password-placeholder": "Enter your password",
+    "submit": "Sign up",
+    "wait": "Please wait...",
+    "have-account": "Already have an account?",
+    "signin": "Sign in here.",
+    "other-options": "Or sign up with:"
+  },
+  "DataTable": {
+    "delete": "Delete",
+    "block": "Block",
+    "unblock": "Unblock",
+    "make-admin": "Make admin",
+    "make-non-admin": "Make non-admin",
+    "filter-emails-placeholder": "Filter emails",
+    "columns": "Columns",
+    "name": "Name",
+    "email": "Email",
+    "isadmin": "Is admin",
+    "isblocked": "Is blocked",
+    "lastlogintime": "Last login time",
+    "registrationtime": "Registration time",
+    "id": "ID",
+    "no-results": "No results",
+    "of": "of",
+    "rows-selected": "row(s) selected",
+    "previous": "Previous",
+    "next": "Next",
+    "view-profile": "View profile"
   }
 }

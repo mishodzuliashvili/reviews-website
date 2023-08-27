@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import Link from "next-intl/link";
+import { useTranslations } from "next-intl";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -46,6 +47,7 @@ const RegisterForm = () => {
   const router = useRouter();
   const [error, setError] = useState<null | string>(null);
   const [loading, setLoading] = useState(false);
+  const t = useTranslations("RegisterForm");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema as any),
@@ -95,11 +97,11 @@ const RegisterForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <h1 className="text-2xl">Sign Up</h1>
+        <h1 className="text-2xl">{t("title")}</h1>
         <FormDescription>
-          Sign up to create an account. Already have an account?{" "}
+          {t("description")} {t("have-account")}{" "}
           <Link href="/login" className="text-black dark:text-white">
-            Sign in here.
+            {t("signin")}
           </Link>
         </FormDescription>
         <FormField
@@ -107,9 +109,9 @@ const RegisterForm = () => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>{t("name")}</FormLabel>
               <FormControl>
-                <Input placeholder="Enter you name..." {...field} />
+                <Input placeholder={t("name-placeholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -120,9 +122,9 @@ const RegisterForm = () => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("email")}</FormLabel>
               <FormControl>
-                <Input placeholder="Enter you email..." {...field} />
+                <Input placeholder={t("email-placeholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -133,11 +135,11 @@ const RegisterForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t("password")}</FormLabel>
               <FormControl>
                 <Input
                   type="password"
-                  placeholder="Enter your password..."
+                  placeholder={t("password-placeholder")}
                   {...field}
                 />
               </FormControl>
@@ -149,10 +151,10 @@ const RegisterForm = () => {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Please wait
+              {t("wait")}
             </>
           ) : (
-            <>Sign Up</>
+            <>{t("submit")}</>
           )}
         </Button>
       </form>

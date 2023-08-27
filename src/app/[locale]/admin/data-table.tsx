@@ -41,7 +41,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { columns } from "./columns";
+import { getColumns } from "./columns";
+import { useTranslations } from "next-intl";
 
 export function DataTable({ data }: { data: User[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -51,9 +52,12 @@ export function DataTable({ data }: { data: User[] }) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const t = useTranslations("DataTable");
+  const columns = getColumns(t);
   const table = useReactTable({
-    data: data,
+    data,
     columns,
+
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -76,28 +80,29 @@ export function DataTable({ data }: { data: User[] }) {
       },
     },
   });
+
   return (
     <div className="w-full">
       <div className="flex gap-3 flex-wrap">
         <Button variant="destructive">
-          <Trash className="h-4 w-4 mr-2 -mt-1" /> Delete
+          <Trash className="h-4 w-4 mr-2 -mt-1" /> {t("delete")}
         </Button>
         <Button variant="outline">
-          <Lock className="h-4 w-4 mr-2 -mt-1" /> Block
+          <Lock className="h-4 w-4 mr-2 -mt-1" /> {t("block")}
         </Button>
         <Button variant="outline">
-          <Unlock className="h-4 w-4 mr-2 -mt-1" /> Unblock
+          <Unlock className="h-4 w-4 mr-2 -mt-1" /> {t("unblock")}
         </Button>
         <Button variant="outline">
-          <UserPlus className="h-4 w-4 mr-2 -mt-1" /> Make Admin
+          <UserPlus className="h-4 w-4 mr-2 -mt-1" /> {t("make-admin")}
         </Button>
         <Button variant="outline">
-          <UserMinus className="h-4 w-4 mr-2 -mt-1" /> Make Non-Admin
+          <UserMinus className="h-4 w-4 mr-2 -mt-1" /> {t("make-non-admin")}
         </Button>
       </div>
       <div className="flex items-center py-4 gap-3 flex-wrap">
         <Input
-          placeholder="Filter emails..."
+          placeholder={t("filter-emails-placeholder")}
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("email")?.setFilterValue(event.target.value)
@@ -108,7 +113,7 @@ export function DataTable({ data }: { data: User[] }) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+              {t("columns")} <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -125,7 +130,7 @@ export function DataTable({ data }: { data: User[] }) {
                       column.toggleVisibility(!!value)
                     }
                   >
-                    {column.id}
+                    {t(column.id.toLowerCase())}
                   </DropdownMenuCheckboxItem>
                 );
               })}
@@ -175,7 +180,7 @@ export function DataTable({ data }: { data: User[] }) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {t("no-results")}
                 </TableCell>
               </TableRow>
             )}
@@ -184,8 +189,8 @@ export function DataTable({ data }: { data: User[] }) {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredSelectedRowModel().rows.length} {t("of")}{" "}
+          {table.getFilteredRowModel().rows.length} {t("rows-selected")}.
         </div>
         <div className="space-x-2">
           <Button
@@ -194,7 +199,7 @@ export function DataTable({ data }: { data: User[] }) {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            {t("previous")}
           </Button>
           <Button
             variant="outline"
@@ -202,7 +207,7 @@ export function DataTable({ data }: { data: User[] }) {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            {t("next")}
           </Button>
         </div>
       </div>

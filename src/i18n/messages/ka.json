@@ -35,5 +35,42 @@
     "no-account": "არ გაქვთ ანგარიში?",
     "signup": "დარეგისტრირდით აქ.",
     "other-options": "ან შესვლა:"
+  },
+  "RegisterForm": {
+    "title": "რეგისტრაცია",
+    "description": "შექმენით ახალი ანგარიში!",
+    "name": "სახელი",
+    "name-placeholder": "შეიყვანეთ სახელი",
+    "email": "ელ.ფოსტა",
+    "email-placeholder": "შეიყვანეთ ელ.ფოსტა",
+    "password": "პაროლი",
+    "password-placeholder": "შეიყვანეთ პაროლი",
+    "submit": "რეგისტრაცია",
+    "wait": "გთხოვთ დაელოდოთ...",
+    "have-account": "უკვე გაქვთ ანგარიში?",
+    "signin": "შესვლა აქ.",
+    "other-options": "ან რეგისტრაცია:"
+  },
+  "DataTable": {
+    "delete": "წაშლა",
+    "block": "დაბლოკვა",
+    "unblock": "ბლოკის მოხსნა",
+    "make-admin": "ადმინისტრატორად დამატება",
+    "make-non-admin": "ადმინისტრატორის უფლებების მოხსნა",
+    "filter-emails-placeholder": "ფილტრის ელ.ფოსტები",
+    "columns": "სვეტები",
+    "name": "სახელი",
+    "email": "ელ.ფოსტა",
+    "isadmin": "ადმინისტრატორია",
+    "isblocked": "დაბლოკილია",
+    "lastlogintime": "ბოლო შესვლა",
+    "registrationtime": "რეგისტრაცია",
+    "id": "ID",
+    "no-results": "შედეგები არ არის",
+    "of": "არის არჩეული",
+    "rows-selected": "სტრიქონიდან",
+    "previous": "წინა",
+    "next": "შემდეგი",
+    "view-profile": "პროფილის ნახვა"
   }
 }
