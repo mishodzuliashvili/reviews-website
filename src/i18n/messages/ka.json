@@ -1,6 +1,39 @@
 {
-  "Index": {
-    "title": "გამარჯობა, მსოფლიო!",
-    "hello": "გამარჯობა"
+  "Navbar": {
+    "home": "მთავარი"
+  },
+  "LanguageSwitch": {
+    "choose-language": "აირჩიეთ ენა"
+  },
+  "ThemeSwitch": {
+    "light": "ნათელი",
+    "dark": "მუქი",
+    "system": "სისტემური"
+  },
+  "ProfileButton": {
+    "my-account": "ჩემი ანგარიში",
+    "profile": "პროფილი",
+    "settings": "პარამეტრები",
+    "admin": "ადმინის გვერდი",
+    "new-review": "ახალი რევიუ",
+    "logout": "გასვლა"
+  },
+  "Blocked": {
+    "title": "თქვენ დაბლოკილი ხართ",
+    "description": "თქვენ დაბლოკილი ხართ ადმინისტრაციის მიერ. თქვენ ვერ გამოიყენებთ საიტს.",
+    "signout": "გასვლა"
+  },
+  "LoginForm": {
+    "title": "შესვლა",
+    "description": "შესვლა თქვენს ანგარიშზე თქვენი ელ.ფოსტით და პაროლით.",
+    "email": "ელ.ფოსტა",
+    "email-placeholder": "შეიყვანეთ ელ.ფოსტა",
+    "password": "პაროლი",
+    "password-placeholder": "შეიყვანეთ პაროლი",
+    "submit": "შესვლა",
+    "wait": "გთხოვთ დაელოდოთ...",
+    "no-account": "არ გაქვთ ანგარიში?",
+    "signup": "დარეგისტრირდით აქ.",
+    "other-options": "ან შესვლა:"
   }
 }

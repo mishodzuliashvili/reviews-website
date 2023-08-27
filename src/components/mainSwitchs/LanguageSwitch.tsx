@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { localeLabels, locales } from "@/i18n/locals";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next-intl/client";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -22,7 +22,7 @@ export default function LanguageSwitch() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const locale = useLocale();
-
+  const t = useTranslations("LanguageSwitch");
   useEffect(() => setMounted(true), []);
 
   if (!mounted) return null;
@@ -37,10 +37,12 @@ export default function LanguageSwitch() {
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="outline-none">
-          <Button variant="outline">{locale.toUpperCase()}</Button>
+          <Button variant="outline">
+            {localeLabels[locale as keyof typeof localeLabels]}
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel>Choose Language</DropdownMenuLabel>
+          <DropdownMenuLabel>{t("choose-language")}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup
             value={locale}

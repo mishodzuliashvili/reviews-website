@@ -1,6 +1,39 @@
 {
-  "Index": {
-    "title": "Hello world!",
-    "hello": "Hello"
+  "Navbar": {
+    "home": "Home"
+  },
+  "LanguageSwitch": {
+    "choose-language": "Choose language"
+  },
+  "ThemeSwitch": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "ProfileButton": {
+    "my-account": "My account",
+    "profile": "Profile",
+    "settings": "Settings",
+    "admin": "Admin panel",
+    "new-review": "New review",
+    "logout": "Log out"
+  },
+  "Blocked": {
+    "title": "You are blocked",
+    "description": "You are blocked by the administrator. You can not use the site.",
+    "signout": "Sign out"
+  },
+  "LoginForm": {
+    "title": "Sign in",
+    "description": "Sign in to your account using your email address and password.",
+    "email": "Email",
+    "email-placeholder": "Enter your email address",
+    "password": "Password",
+    "password-placeholder": "Enter your password",
+    "submit": "Sign in",
+    "wait": "Please wait...",
+    "no-account": "Don't have an account?",
+    "signup": "Sign up here.",
+    "other-options": "Or sign in with:"
   }
 }

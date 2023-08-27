@@ -18,13 +18,13 @@ export function MainProvider({ children }: { children: React.ReactNode }) {
 
   const { data: session, status: sessionStatus } = useSession();
   const fetchUser = async () => {
+    setError(null);
     setLoading(true);
     try {
       const res = await fetch(`/api/users/${(session as any)?.userId}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setUser(data.user);
-      setError(null);
     } catch (error) {
       setError(error as Error);
     } finally {

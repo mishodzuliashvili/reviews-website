@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import Link from "next-intl/link";
+import { useTranslations } from "next-intl";
 
 const formSchema = z.object({
   email: z
@@ -48,6 +49,7 @@ const LoginForm = () => {
     getSignInErrorMessage(searchParams.get("error"))
   );
   const [loading, setLoading] = useState(false);
+  const t = useTranslations("LoginForm");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema as any),
@@ -89,12 +91,12 @@ const LoginForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <h1 className="text-2xl">Sign In</h1>
+        <h1 className="text-2xl">{t("title")}</h1>
         <FormDescription>
-          Sign in to your account using your email address and password.
-          {"Don't have an account? "}
+          {t("description")}
+          {t("no-account")}{" "}
           <Link href="/register" className="text-black dark:text-white">
-            Sign up here.
+            {t("signup")}
           </Link>
         </FormDescription>
         <FormField
@@ -102,9 +104,9 @@ const LoginForm = () => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("email")}</FormLabel>
               <FormControl>
-                <Input placeholder="Enter you email..." {...field} />
+                <Input placeholder={t("email-placeholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -115,11 +117,11 @@ const LoginForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t("password")}</FormLabel>
               <FormControl>
                 <Input
                   type="password"
-                  placeholder="Enter your password..."
+                  placeholder={t("password-placeholder")}
                   {...field}
                 />
               </FormControl>
@@ -131,13 +133,13 @@ const LoginForm = () => {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Please wait
+              {t("wait")}
             </>
           ) : (
-            <>Sign In</>
+            <>{t("submit")}</>
           )}
         </Button>
-        <FormDescription>Or sign in with:</FormDescription>
+        <FormDescription>{t("other-options")}</FormDescription>
         <div className="flex gap-3 flex-wrap">
           <Button
             variant="outline"

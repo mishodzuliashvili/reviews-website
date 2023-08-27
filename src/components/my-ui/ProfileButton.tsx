@@ -15,9 +15,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useMain } from "@/app/mainContext";
 import { signOut } from "next-auth/react";
 import Link from "next-intl/link";
+import { useTranslations } from "next-intl";
 
 const ProfileButton = () => {
   const { user } = useMain();
+  const t = useTranslations("ProfileButton");
+
   if (!user || user.isBlocked) return null;
   return (
     <DropdownMenu>
@@ -34,17 +37,17 @@ const ProfileButton = () => {
         </DropdownMenuTrigger>
       </div>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>{t("my-account")}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <span>{t("profile")}</span>
           </DropdownMenuItem>
 
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
+            <span>{t("settings")}</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -53,13 +56,13 @@ const ProfileButton = () => {
             <Link href="/admin">
               <DropdownMenuItem>
                 <Users className="mr-2 h-4 w-4" />
-                <span>Admin</span>
+                <span>{t("admin")}</span>
               </DropdownMenuItem>
             </Link>
           )}
           <DropdownMenuItem>
             <Plus className="mr-2 h-4 w-4" />
-            <span>New Review</span>
+            <span>{t("new-review")}</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
@@ -67,7 +70,7 @@ const ProfileButton = () => {
 
         <DropdownMenuItem onClick={() => signOut()}>
           <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+          <span>{t("logout")}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
