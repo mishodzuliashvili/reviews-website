@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useMain } from "@/app/mainContext";
+import { useMain } from "@/app/[locale]/mainContext";
 import { signOut } from "next-auth/react";
 import Link from "next-intl/link";
 import { useTranslations } from "next-intl";

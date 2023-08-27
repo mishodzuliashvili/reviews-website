@@ -3,32 +3,29 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-function getUsers() {
-  return prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      isAdmin: true,
-      isBlocked: true,
-      image: true,
-      lastLoginTime: true,
-      registrationTime: true,
-    },
-  });
-}
-
-export async function GET() {
+export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
   }
+  const { userIds } = (await request.json()) as {
+    userIds: string[];
+  };
   try {
-    const users = await getUsers();
+    const users = await prisma.user.updateMany({
+      where: {
+        id: {
+          in: userIds,
+        },
+      },
+      data: {
+        isBlocked: true,
+      },
+    });
     return NextResponse.json({ users });
-  } catch (e: any) {
+  } catch (error) {
     return NextResponse.json(
-      { error: "Could not fetch users." },
+      { error: "Could not fetch user." },
       { status: 500 }
     );
   }
@@ -43,14 +40,17 @@ export async function DELETE(request: Request) {
     userIds: string[];
   };
   try {
-    const users = await prisma.user.deleteMany({
+    const users = await prisma.user.updateMany({
       where: {
         id: {
           in: userIds,
         },
       },
+      data: {
+        isBlocked: false,
+      },
     });
-    return NextResponse.json({});
+    return NextResponse.json({ users });
   } catch (error) {
     return NextResponse.json(
       { error: "Could not fetch user." },

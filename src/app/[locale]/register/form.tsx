@@ -22,33 +22,36 @@ import { Loader2 } from "lucide-react";
 import Link from "next-intl/link";
 import { useTranslations } from "next-intl";
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  email: z
-    .string()
-    .email({
-      message: "Invalid email address.",
-    })
-    .min(2, {
-      message: "Username must be at least 2 characters.",
+const getFormSchema = (t: any) =>
+  z.object({
+    name: z.string().min(2, {
+      message: t("name-min"),
     }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
-});
+    email: z
+      .string()
+      .email({
+        message: t("invalid-email"),
+      })
+      .min(2, {
+        message: t("email-min"),
+      }),
+    password: z.string().min(6, {
+      message: t("password-min"),
+    }),
+  });
 
 const CALLBACK_URL = "/";
 
 const RegisterForm = () => {
-  const searchParams = useSearchParams();
   const { toast } = useToast();
   const router = useRouter();
-  const [error, setError] = useState<null | string>(null);
+  const [error, setError] = useState<null | Error>(null);
   const [loading, setLoading] = useState(false);
   const t = useTranslations("RegisterForm");
+  const te = useTranslations("RegisterForm.errors");
+  const tform = useTranslations("RegisterForm.form");
 
+  const formSchema = getFormSchema(tform);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema as any),
     defaultValues: {
@@ -67,20 +70,21 @@ const RegisterForm = () => {
         body: JSON.stringify(values),
       });
       if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message);
+        const data = await res.json();
+        throw new Error(data.error);
       } else {
         toast({
-          title: "Registration was successful!",
-          description: "Please wait while we redirect you to the login page.",
+          title: t("success-title"),
+          description: t("success-description"),
         });
         setTimeout(() => {
           router.push(CALLBACK_URL);
         }, 1000);
       }
     } catch (error: any) {
+      setError(error);
+    } finally {
       setLoading(false);
-      setError(error.message);
     }
   }
 
@@ -88,8 +92,8 @@ const RegisterForm = () => {
     if (error) {
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: error,
+        title: t("error-heading"),
+        description: te(error.message),
       });
     }
   }, [error]);

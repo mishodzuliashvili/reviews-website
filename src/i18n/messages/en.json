@@ -34,7 +34,23 @@
     "wait": "Please wait...",
     "no-account": "Don't have an account?",
     "signup": "Sign up here.",
-    "other-options": "Or sign in with:"
+    "other-options": "Or sign in with:",
+    "error-heading": "Unable to sign in.",
+    "errors": {
+      "Signin": "Try signing with a different account.",
+      "OAuthSignin": "Try signing with a different account.",
+      "OAuthCallback": "Try signing with a different account.",
+      "OAuthCreateAccount": "Try signing with a different account.",
+      "EmailCreateAccount": "Try signing with a different account.",
+      "Callback": "Try signing with a different account.",
+      "OAuthAccountNotLinked": "To confirm your identity, sign in with the same account you used originally.",
+      "EmailSignin": "Check your email address.",
+      "CredentialsSignin": "Sign in failed. Check the details you provided are correct.",
+      "default": "Unable to sign in.",
+      "Email or password is incorrect": "Email or password is incorrect.",
+      "Invalid credentials": "Invalid credentials.",
+      "User is blocked": "User is blocked."
+    }
   },
   "RegisterForm": {
     "title": "Sign up",
@@ -49,7 +65,21 @@
     "wait": "Please wait...",
     "have-account": "Already have an account?",
     "signin": "Sign in here.",
-    "other-options": "Or sign up with:"
+    "other-options": "Or sign up with:",
+    "error-heading": "Unable to sign up.",
+    "errors": {
+      "Please fill all fields.": "Please fill all fields.",
+      "Not authenticated.": "Not authenticated.",
+      "User with this email already exists.": "User with this email already exists."
+    },
+    "form": {
+      "invalid-email": "Invalid email address.",
+      "email-min": "Username must be at least 2 characters.",
+      "password-min": "Password must be at least 6 characters.",
+      "name-min": "Name must be at least 2 characters."
+    },
+    "success-title": "Registration was successful!",
+    "success-description": "You can now sign in to your account."
   },
   "DataTable": {
     "delete": "Delete",
@@ -71,6 +101,14 @@
     "rows-selected": "row(s) selected",
     "previous": "Previous",
     "next": "Next",
-    "view-profile": "View profile"
+    "view-profile": "View profile",
+    "success-title": "Successfully",
+    "success-description": ""
+  },
+  "MainError": {
+    "error": "Error",
+    "User not found.": "User not found.",
+    "Not authenticated.": "Not authenticated.",
+    "Could not fetch user.": "Could not fetch user."
   }
 }

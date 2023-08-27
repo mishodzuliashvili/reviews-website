@@ -1,8 +1,7 @@
 "use client";
 import MainError from "@/components/my-ui/MainError";
 import MainLoader from "@/components/my-ui/MainLoader";
-import { prisma } from "@/lib/prisma";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 const MainContext = createContext(

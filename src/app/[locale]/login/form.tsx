@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { FaGithub, FaGoogle } from "react-icons/fa";
-import { getSignInErrorMessage } from "./signInError";
 import { useToast } from "@/components/ui/use-toast";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,32 +24,35 @@ import { Loader2 } from "lucide-react";
 import Link from "next-intl/link";
 import { useTranslations } from "next-intl";
 
-const formSchema = z.object({
-  email: z
-    .string()
-    .email({
-      message: "Invalid email address.",
-    })
-    .min(2, {
-      message: "Username must be at least 2 characters.",
+const getFormSchema = (t: any) =>
+  z.object({
+    email: z
+      .string()
+      .email({
+        message: t("invalid-email"),
+      })
+      .min(2, {
+        message: t("email-min"),
+      }),
+    password: z.string().min(6, {
+      message: t("password-min"),
     }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
-});
+  });
 
 const CALLBACK_URL = "/";
 
 const LoginForm = () => {
   const searchParams = useSearchParams();
   const { toast } = useToast();
-
-  const [error, setError] = useState<null | string>(
-    getSignInErrorMessage(searchParams.get("error"))
-  );
+  const searchParamsError = searchParams.get("error");
   const [loading, setLoading] = useState(false);
   const t = useTranslations("LoginForm");
-
+  const te = useTranslations("LoginForm.errors");
+  const tform = useTranslations("LoginForm.form");
+  const [error, setError] = useState<null | Error>(
+    searchParamsError ? new Error(searchParamsError) : null
+  );
+  const formSchema = getFormSchema(tform);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema as any),
     defaultValues: {
@@ -71,7 +73,7 @@ const LoginForm = () => {
     }).then((res: any) => {
       if (res?.error) {
         setLoading(false);
-        setError(res.error);
+        setError(new Error(res.error));
       } else {
         window.location.replace(CALLBACK_URL);
       }
@@ -82,8 +84,8 @@ const LoginForm = () => {
     if (error) {
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: error,
+        title: t("error-heading"),
+        description: te(error.message),
       });
     }
   }, [error]);

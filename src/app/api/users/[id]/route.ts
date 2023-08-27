@@ -42,3 +42,30 @@ export async function GET(
     );
   }
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
+  }
+  try {
+    const user = await getUser(params.id);
+    if (!user) {
+      return NextResponse.json({ error: "User not found." }, { status: 500 });
+    }
+    await prisma.user.delete({
+      where: {
+        id: params.id,
+      },
+    });
+    return NextResponse.json({ user });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Could not delete user." },
+      { status: 500 }
+    );
+  }
+}

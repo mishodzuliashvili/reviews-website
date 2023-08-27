@@ -43,17 +43,26 @@ import {
 } from "@/components/ui/table";
 import { getColumns } from "./columns";
 import { useTranslations } from "next-intl";
+import { redirect, useRouter } from "next/navigation";
+import { useMain } from "../mainContext";
+import { signOut } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
+import MainLoader from "@/components/my-ui/MainLoader";
 
-export function DataTable({ data }: { data: User[] }) {
+export function DataTable({ data: datum }: { data: User[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const { user } = useMain();
+  const [loading, setLoading] = React.useState(false);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const t = useTranslations("DataTable");
   const columns = getColumns(t);
+  const [data, setData] = React.useState<User[]>(datum);
+  const { toast } = useToast();
   const table = useReactTable({
     data,
     columns,
@@ -80,23 +89,191 @@ export function DataTable({ data }: { data: User[] }) {
       },
     },
   });
-
+  const router = useRouter();
   return (
     <div className="w-full">
+      {loading && <MainLoader />}
       <div className="flex gap-3 flex-wrap">
-        <Button variant="destructive">
+        <Button
+          disabled={loading}
+          onClick={() => {
+            setLoading(true);
+            const userIds = table
+              .getSelectedRowModel()
+              .rows.map((row) => row.original.id);
+            table.setRowSelection({});
+            setData((prevData) =>
+              prevData.filter((user) => !userIds.includes(user.id))
+            );
+
+            fetch("/api/users", {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ userIds }),
+            })
+              .then(() => {
+                toast({
+                  title: t("success-title"),
+                  description: t("success-description"),
+                });
+                if (user && userIds.includes(user.id)) {
+                  signOut();
+                }
+              })
+              .finally(() => {
+                setLoading(false);
+              });
+          }}
+          variant="destructive"
+        >
           <Trash className="h-4 w-4 mr-2 -mt-1" /> {t("delete")}
         </Button>
-        <Button variant="outline">
+        <Button
+          disabled={loading}
+          onClick={() => {
+            setLoading(true);
+            const userIds = table
+              .getSelectedRowModel()
+              .rows.map((row) => row.original.id);
+            table.setRowSelection({});
+            setData((prevData) =>
+              prevData.map((user) =>
+                userIds.includes(user.id) ? { ...user, isBlocked: true } : user
+              )
+            );
+
+            fetch("/api/users/block", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ userIds }),
+            })
+              .then(() => {
+                toast({
+                  title: t("success-title"),
+                  description: t("success-description"),
+                });
+                if (user && userIds.includes(user.id)) {
+                  signOut();
+                }
+              })
+              .finally(() => {
+                setLoading(false);
+              });
+          }}
+          variant="outline"
+        >
           <Lock className="h-4 w-4 mr-2 -mt-1" /> {t("block")}
         </Button>
-        <Button variant="outline">
+        <Button
+          disabled={loading}
+          onClick={() => {
+            setLoading(true);
+            const userIds = table
+              .getSelectedRowModel()
+              .rows.map((row) => row.original.id);
+            table.setRowSelection({});
+            setData((prevData) =>
+              prevData.map((user) =>
+                userIds.includes(user.id) ? { ...user, isBlocked: false } : user
+              )
+            );
+
+            fetch("/api/users/block", {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ userIds }),
+            })
+              .then(() => {
+                toast({
+                  title: t("success-title"),
+                  description: t("success-description"),
+                });
+              })
+              .finally(() => {
+                setLoading(false);
+              });
+          }}
+          variant="outline"
+        >
           <Unlock className="h-4 w-4 mr-2 -mt-1" /> {t("unblock")}
         </Button>
-        <Button variant="outline">
+        <Button
+          disabled={loading}
+          onClick={() => {
+            setLoading(true);
+            const userIds = table
+              .getSelectedRowModel()
+              .rows.map((row) => row.original.id);
+            table.setRowSelection({});
+            setData((prevData) =>
+              prevData.map((user) =>
+                userIds.includes(user.id) ? { ...user, isAdmin: true } : user
+              )
+            );
+
+            fetch("/api/users/admin", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ userIds }),
+            })
+              .then(() => {
+                toast({
+                  title: t("success-title"),
+                  description: t("success-description"),
+                });
+              })
+              .finally(() => {
+                setLoading(false);
+              });
+          }}
+          variant="outline"
+        >
           <UserPlus className="h-4 w-4 mr-2 -mt-1" /> {t("make-admin")}
         </Button>
-        <Button variant="outline">
+        <Button
+          disabled={loading}
+          onClick={() => {
+            setLoading(true);
+            const userIds = table
+              .getSelectedRowModel()
+              .rows.map((row) => row.original.id);
+            table.setRowSelection({});
+            setData((prevData) =>
+              prevData.map((user) =>
+                userIds.includes(user.id) ? { ...user, isAdmin: false } : user
+              )
+            );
+
+            fetch("/api/users/admin", {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ userIds }),
+            })
+              .then(() => {
+                toast({
+                  title: t("success-title"),
+                  description: t("success-description"),
+                });
+                if (user && userIds.includes(user.id)) {
+                  window.location.replace("/");
+                }
+              })
+              .finally(() => {
+                setLoading(false);
+              });
+          }}
+          variant="outline"
+        >
           <UserMinus className="h-4 w-4 mr-2 -mt-1" /> {t("make-non-admin")}
         </Button>
       </div>
