@@ -10,14 +10,16 @@ export function LocaleProviders({
   children,
   locale,
   messages,
+  user,
 }: {
   children: React.ReactNode;
   locale: string;
   messages: any;
+  user: User | null;
 }) {
   return (
     <NextIntlClientProvider
-      onError={(error) => {}}
+      onError={() => {}}
       getMessageFallback={({ error, key, namespace }) => {
         const nestedMessages = _.get(messages, namespace ?? "");
         if (!nestedMessages) return;
@@ -29,7 +31,8 @@ export function LocaleProviders({
     >
       <SessionProvider>
         <ThemeProvider attribute="class">
-          <MainProvider>{children}</MainProvider>
+          {/* TODO: make user provider not main */}
+          <MainProvider user={user}>{children}</MainProvider>
         </ThemeProvider>
       </SessionProvider>
     </NextIntlClientProvider>

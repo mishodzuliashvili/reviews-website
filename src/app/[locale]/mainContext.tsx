@@ -1,8 +1,5 @@
 "use client";
-import MainError from "@/components/my-ui/MainError";
-import MainLoader from "@/components/my-ui/MainLoader";
-import { useSession } from "next-auth/react";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext } from "react";
 
 const MainContext = createContext(
   {} as {
@@ -10,45 +7,20 @@ const MainContext = createContext(
   }
 );
 
-export function MainProvider({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-
-  const { data: session, status: sessionStatus } = useSession();
-  const fetchUser = async () => {
-    setError(null);
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/users/${(session as any)?.userId}`);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setUser(data.user);
-    } catch (error) {
-      setError(error as Error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (sessionStatus === "authenticated") fetchUser();
-    if (sessionStatus === "unauthenticated") {
-      setUser(null);
-      setLoading(false);
-    }
-    // sometimes user is lost on refresh
-  }, [sessionStatus]);
-
+export function MainProvider({
+  children,
+  user,
+}: {
+  children: React.ReactNode;
+  user: User | null;
+}) {
   return (
     <MainContext.Provider
       value={{
         user,
       }}
     >
-      {error && <MainError error={error} />}
-      {!error && loading && <MainLoader />}
-      {!error && !loading && children}
+      {children}
     </MainContext.Provider>
   );
 }

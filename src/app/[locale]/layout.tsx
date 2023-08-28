@@ -2,6 +2,23 @@ import Navbar from "@/components/my-ui/Navbar";
 import { notFound } from "next/navigation";
 import { Toaster } from "@/components/ui/toaster";
 import { LocaleProviders } from "./localeProviders";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { NextRequest } from "next/server";
+import { headers } from "next/headers";
+
+async function getUser(userId: string) {
+  const host = headers().get("host");
+  const res = await import("../api/users/[id]/route");
+  const { user } = await (
+    await res.GET(new NextRequest(`http://${host}/api/users/[id]/route`), {
+      params: {
+        id: userId,
+      },
+    })
+  ).json();
+  return user;
+}
 
 export default async function LocaleLayout({
   children,
@@ -16,9 +33,11 @@ export default async function LocaleLayout({
   } catch (error) {
     notFound();
   }
+  const session = await getServerSession(authOptions);
 
+  const user = session ? await getUser((session as any).userId) : null;
   return (
-    <LocaleProviders locale={locale} messages={messages}>
+    <LocaleProviders user={user} locale={locale} messages={messages}>
       <Navbar />
       <Toaster />
       {children}
