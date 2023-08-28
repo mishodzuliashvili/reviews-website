@@ -72,3 +72,38 @@ export async function DELETE(
     );
   }
 }
+
+
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
+  }
+  const { name } = (await request.json()) as {
+    name: string;
+  };
+  try {
+    let user = await getUser(params.id);
+    if (!user) {
+      return NextResponse.json({ error: "User not found." }, { status: 404 });
+    }
+    user = await prisma.user.update({
+      where: {
+        id: params.id,
+      },
+      data: {
+        name: name,
+      },
+    });
+    return NextResponse.json({ user });
+  }
+  catch (error) {
+    return NextResponse.json(
+      { error: "Could not update user." },
+      { status: 500 }
+    );
+  }
+}

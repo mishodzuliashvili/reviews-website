@@ -116,5 +116,17 @@
     "User not found.": "მომხმარებელი ვერ მოიძებნა.",
     "Not authenticated.": "არა ავტორიზებული",
     "Could not fetch user.": "მომხმარებლის მონაცემების წამოღება ვერ ხერხდება."
+  },
+  "ProfileSettingsForm": {
+    "name":"სახელი",
+    "name-placeholder":"შეიყვანეთ სახელი",
+    "submit": "შენახვა",
+    "name-min":"სახელი მინიმუმ 2 სიმბოლო.",
+    "update-success": "განახლება წარმატებით დასრულდა.",
+    "title": "პარამეტრები",
+    "description": "შეცვალეთ თქვენი პარამეტრები.",
+    "errors": {
+      "update-error": "შეცდომა განახლებისას."
+    }
   }
 }

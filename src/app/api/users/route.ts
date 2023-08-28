@@ -54,7 +54,7 @@ export async function DELETE(request: Request) {
   };
   try {
     const users = await deleteUsers(userIds);
-    return NextResponse.json({});
+    return NextResponse.json({users});
   } catch (error) {
     return NextResponse.json(
       { error: "Could not delete users." },

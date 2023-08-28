@@ -7,6 +7,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 const MainContext = createContext(
   {} as {
     user: User | null;
+    updateClientUser: (data: Partial<User>) => void;
   }
 );
 
@@ -31,7 +32,12 @@ export function MainProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateClientUser = (data: Partial<User>) => {
+    setUser((oldUser: any) => ({ ...oldUser, ...data }));
+  };
+
   useEffect(() => {
+    setLoading(true);
     if (sessionStatus === "authenticated") fetchUser();
     if (sessionStatus === "unauthenticated") {
       setUser(null);
@@ -44,6 +50,7 @@ export function MainProvider({ children }: { children: React.ReactNode }) {
     <MainContext.Provider
       value={{
         user,
+        updateClientUser,
       }}
     >
       {error && <MainError error={error} />}

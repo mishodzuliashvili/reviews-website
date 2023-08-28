@@ -40,15 +40,19 @@ const ProfileButton = () => {
         <DropdownMenuLabel>{t("my-account")}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>{t("profile")}</span>
-          </DropdownMenuItem>
+          <Link href="/profile">
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>{t("profile")}</span>
+            </DropdownMenuItem>
+          </Link>
+          <Link href="/profile/settings">
 
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
             <span>{t("settings")}</span>
           </DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
@@ -60,10 +64,13 @@ const ProfileButton = () => {
               </DropdownMenuItem>
             </Link>
           )}
+          <Link href="/review/new">
+
           <DropdownMenuItem>
             <Plus className="mr-2 h-4 w-4" />
             <span>{t("new-review")}</span>
           </DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
