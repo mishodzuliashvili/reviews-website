@@ -21,6 +21,13 @@ function getUser(id: string) {
   });
 }
 
+function deleteUser(id: string){
+  return prisma.user.delete({
+    where: {
+      id,
+    },
+  });
+}
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
@@ -32,7 +39,7 @@ export async function GET(
   try {
     const user = await getUser(params.id);
     if (!user) {
-      return NextResponse.json({ error: "User not found." }, { status: 500 });
+      return NextResponse.json({ error: "User not found." }, { status: 404 });
     }
     return NextResponse.json({ user });
   } catch (error) {
@@ -52,15 +59,11 @@ export async function DELETE(
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
   }
   try {
-    const user = await getUser(params.id);
+    let user = await getUser(params.id);
     if (!user) {
-      return NextResponse.json({ error: "User not found." }, { status: 500 });
+      return NextResponse.json({ error: "User not found." }, { status: 404 });
     }
-    await prisma.user.delete({
-      where: {
-        id: params.id,
-      },
-    });
+    user = await deleteUser(params.id);
     return NextResponse.json({ user });
   } catch (error) {
     return NextResponse.json(

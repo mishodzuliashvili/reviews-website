@@ -3,6 +3,19 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
+function changeUsersBlockedProperty(userIds: string[], isBlocked: boolean) {
+  return prisma.user.updateMany({
+    where: {
+      id: {
+        in: userIds,
+      },
+    },
+    data: {
+      isBlocked: isBlocked,
+    },
+  });
+}
+
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session) {
@@ -12,20 +25,11 @@ export async function POST(request: Request) {
     userIds: string[];
   };
   try {
-    const users = await prisma.user.updateMany({
-      where: {
-        id: {
-          in: userIds,
-        },
-      },
-      data: {
-        isBlocked: true,
-      },
-    });
+    const users = await changeUsersBlockedProperty(userIds, true)
     return NextResponse.json({ users });
   } catch (error) {
     return NextResponse.json(
-      { error: "Could not fetch user." },
+      { error: "Changing users blocked property failed." },
       { status: 500 }
     );
   }
@@ -40,20 +44,11 @@ export async function DELETE(request: Request) {
     userIds: string[];
   };
   try {
-    const users = await prisma.user.updateMany({
-      where: {
-        id: {
-          in: userIds,
-        },
-      },
-      data: {
-        isBlocked: false,
-      },
-    });
+    const users = await changeUsersBlockedProperty(userIds, false)
     return NextResponse.json({ users });
   } catch (error) {
     return NextResponse.json(
-      { error: "Could not fetch user." },
+      { error: "Changing users blocked property failed." },
       { status: 500 }
     );
   }
