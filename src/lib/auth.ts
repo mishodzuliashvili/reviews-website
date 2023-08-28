@@ -27,6 +27,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        await updateLastLoginTime(user.id);
       }
       if (token) {
         const dbUser = await prisma.user.findUnique({
@@ -83,7 +84,6 @@ export const authOptions: NextAuthOptions = {
         if (user.isBlocked) {
           throw new Error("User is blocked");
         }
-        await updateLastLoginTime(user.id);
         return {
           id: user.id,
           email: user.email,

@@ -110,5 +110,17 @@
     "User not found.": "User not found.",
     "Not authenticated.": "Not authenticated.",
     "Could not fetch user.": "Could not fetch user."
+  },
+  "ProfileSettingsForm": {
+    "name":"Name",
+    "name-placeholder":"Enter your name",
+    "submit":"Update User",
+    "name-min":"Name must be at least 2 characters.",
+    "update-success": "User updated successfully.",
+    "title": "Profile settings",
+    "description": "Update your profile settings.",
+    "errors": {
+      "update-error": "Unable to update user."
+    }
   }
 }

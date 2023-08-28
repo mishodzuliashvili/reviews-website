@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-function getUsers() {
+function getAllUsers() {
   return prisma.user.findMany({
     select: {
       id: true,
@@ -18,13 +18,23 @@ function getUsers() {
   });
 }
 
+function deleteUsers (userIds: string[]){
+  return prisma.user.deleteMany({
+    where: {
+      id: {
+        in: userIds,
+      },
+    },
+  });
+}
+
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
   }
   try {
-    const users = await getUsers();
+    const users = await getAllUsers();
     return NextResponse.json({ users });
   } catch (e: any) {
     return NextResponse.json(
@@ -43,17 +53,11 @@ export async function DELETE(request: Request) {
     userIds: string[];
   };
   try {
-    const users = await prisma.user.deleteMany({
-      where: {
-        id: {
-          in: userIds,
-        },
-      },
-    });
-    return NextResponse.json({});
+    const users = await deleteUsers(userIds);
+    return NextResponse.json({users});
   } catch (error) {
     return NextResponse.json(
-      { error: "Could not fetch user." },
+      { error: "Could not delete users." },
       { status: 500 }
     );
   }
