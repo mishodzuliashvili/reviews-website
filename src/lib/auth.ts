@@ -1,21 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import { compare } from "bcryptjs";
-import type { DefaultSession, NextAuthOptions, Session } from "next-auth";
+import type {
+  NextAuthOptions,
+  Session,
+  User as NextAuthUser,
+  RequestInternal,
+} from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
-function updateLastLoginTime(id: string) {
-  return prisma.user.update({
-    where: {
-      id: id,
-    },
-    data: {
-      lastLoginTime: new Date(),
-    },
-  });
-}
+import { JWT } from "next-auth/jwt";
+import { AdapterUser } from "next-auth/adapters";
+import { User } from "@prisma/client";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -24,71 +22,18 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET as string,
   adapter: PrismaAdapter(prisma),
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        await updateLastLoginTime(user.id);
-      }
-      if (token) {
-        const dbUser = await prisma.user.findUnique({
-          where: {
-            id: token.id as string,
-          },
-          select: {
-            isAdmin: true,
-            isBlocked: true,
-          },
-        });
-        token.isBlocked = dbUser?.isBlocked;
-        token.isAdmin = dbUser?.isAdmin;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      (
-        session as Session & {
-          userId: string;
-        }
-      ).userId = token.id as string;
-      return session;
-    },
+    jwt: updateJWTToken,
+    session: updateSession,
   },
 
   providers: [
     CredentialsProvider({
       name: "Sign in",
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "jsmith" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
-        const { email, password } = credentials as {
-          email: string;
-          password: string;
-        };
-        if (!credentials || !email || !password) {
-          throw new Error("Invalid credentials");
-        }
-        const user = await prisma.user.findUnique({
-          where: {
-            email: email,
-          },
-        });
-        if (
-          !user ||
-          !user.password ||
-          !(await compare(password, user.password))
-        ) {
-          throw new Error("Email or password is incorrect");
-        }
-        if (user.isBlocked) {
-          throw new Error("User is blocked");
-        }
-        return {
-          id: user.id,
-          email: user.email,
-        };
-      },
+      authorize: authorizeCredentials,
     }),
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
@@ -106,3 +51,78 @@ export const authOptions: NextAuthOptions = {
     signOut: "/login",
   },
 };
+function getUserById(id: string) {
+  return prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+
+function getUserByEmail(email: string) {
+  return prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+}
+
+function updateUserById(id: string, data: Partial<User>) {
+  return prisma.user.update({
+    where: {
+      id,
+    },
+    data,
+  });
+}
+
+async function authorizeCredentials(
+  credentials: Record<"email" | "password", string> | undefined,
+  req: Pick<RequestInternal, "query" | "body" | "headers" | "method">
+) {
+  if (!credentials) {
+    throw new Error("Invalid credentials");
+  }
+  const { email, password } = credentials;
+  const user = await getUserByEmail(email);
+  if (!user || !user.password || !(await compare(password, user.password))) {
+    throw new Error("Email or password is incorrect");
+  }
+  if (user.isBlocked) {
+    throw new Error("Your account is blocked");
+  }
+  return {
+    id: user.id,
+  };
+}
+
+async function updateJWTToken(params: {
+  token: JWT;
+  user: NextAuthUser | AdapterUser;
+}) {
+  const { token, user } = params;
+  if (user) {
+    token.id = user.id;
+    await updateUserById(user.id, {
+      lastLoginTime: new Date(),
+    });
+  }
+  if (token && token.id) {
+    const dbUser = await getUserById(token.id as string);
+    token.isBlocked = dbUser?.isBlocked;
+    token.isAdmin = dbUser?.isAdmin;
+  }
+  return token;
+}
+
+async function updateSession(
+  params: { session: Session; token: JWT; user: AdapterUser } & {
+    newSession: any;
+    trigger: "update";
+  }
+) {
+  const { session, token } = params;
+  const userSession = session as UserSession;
+  userSession.userId = token.id as string;
+  return session;
+}

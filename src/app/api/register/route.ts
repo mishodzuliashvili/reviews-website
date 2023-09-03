@@ -32,9 +32,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
     const hashed_password = await hash(password, 12);
-
     const user = await prisma.user.create({
       data: {
         name,
@@ -49,7 +47,6 @@ export async function POST(req: Request) {
         image: true,
       },
     });
-
     return NextResponse.json({
       user,
     });

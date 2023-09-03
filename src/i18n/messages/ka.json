@@ -1,6 +1,7 @@
 {
   "Navbar": {
-    "home": "მთავარი"
+    "home": "მთავარი",
+    "signin": "შესვლა"
   },
   "LanguageSwitch": {
     "choose-language": "აირჩიეთ ენა"
@@ -118,10 +119,10 @@
     "Could not fetch user.": "მომხმარებლის მონაცემების წამოღება ვერ ხერხდება."
   },
   "ProfileSettingsForm": {
-    "name":"სახელი",
-    "name-placeholder":"შეიყვანეთ სახელი",
+    "name": "სახელი",
+    "name-placeholder": "შეიყვანეთ სახელი",
     "submit": "შენახვა",
-    "name-min":"სახელი მინიმუმ 2 სიმბოლო.",
+    "name-min": "სახელი მინიმუმ 2 სიმბოლო.",
     "update-success": "განახლება წარმატებით დასრულდა.",
     "title": "პარამეტრები",
     "description": "შეცვალეთ თქვენი პარამეტრები.",

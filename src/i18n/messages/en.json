@@ -1,6 +1,7 @@
 {
   "Navbar": {
-    "home": "Home"
+    "home": "Home",
+    "signin": "Sign in"
   },
   "LanguageSwitch": {
     "choose-language": "Choose language"
@@ -112,15 +113,37 @@
     "Could not fetch user.": "Could not fetch user."
   },
   "ProfileSettingsForm": {
-    "name":"Name",
-    "name-placeholder":"Enter your name",
-    "submit":"Update User",
-    "name-min":"Name must be at least 2 characters.",
+    "name": "Name",
+    "name-placeholder": "Enter your name",
+    "submit": "Update User",
+    "name-min": "Name must be at least 2 characters.",
     "update-success": "User updated successfully.",
     "title": "Profile settings",
     "description": "Update your profile settings.",
     "errors": {
       "update-error": "Unable to update user."
+    }
+  },
+  "TagsSelect": {
+    "tags": "Tags",
+    "tags-placeholder": "Enter tags",
+    "no-options": "No options",
+    "search": "Search..."
+  },
+  "ReviewNewForm": {
+    "title": "Create review",
+    "description": "Create a new review.",
+    "title-field": "Title",
+    "title-field-placeholder": "Enter title",
+    "tags": "Tags",
+    "tags-placeholder": "Enter tags",
+    "submit": "Create review",
+    "item": "Item",
+    "item-placeholder": "Name of the reviewed piece of art",
+    "grade": "Grade",
+    "grade-placeholder": "Enter grade",
+    "errors": {
+      "create-error": "Unable to create review."
     }
   }
 }

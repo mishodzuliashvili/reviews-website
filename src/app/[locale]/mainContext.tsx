@@ -1,30 +1,34 @@
 "use client";
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-const MainContext = createContext(
+const UserContext = createContext(
   {} as {
     user: User | null;
+    setUser: React.Dispatch<React.SetStateAction<User | null>>;
   }
 );
 
-export function MainProvider({
+export function UserProvider({
   children,
-  user,
+  user: tUser,
 }: {
   children: React.ReactNode;
   user: User | null;
 }) {
+  const [user, setUser] = useState(tUser);
+
   return (
-    <MainContext.Provider
+    <UserContext.Provider
       value={{
         user,
+        setUser,
       }}
     >
       {children}
-    </MainContext.Provider>
+    </UserContext.Provider>
   );
 }
 
-export function useMain() {
-  return useContext(MainContext);
+export function useUser() {
+  return useContext(UserContext);
 }

@@ -8,12 +8,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-enum ReviewGroup {
-  Movies
-  Books
-  Games
-}
-
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -34,16 +28,6 @@ model Account {
   @@index([userId])
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-}
-
 model User {
   id               String    @id @unique @default(cuid())
   name             String?
@@ -56,66 +40,80 @@ model User {
   lastLoginTime    DateTime?
   registrationTime DateTime? @default(now())
   accounts         Account[]
-  sessions         Session[]
+  reviews          Review[]
+  Like             Like[]
+  Comment          Comment[]
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+model ReviewGroup {
+  id   String @id @default(cuid())
+  name String @unique
 
-  @@unique([identifier, token])
+  reviews Review[]
 }
 
-// model Review {
-//   id        String      @id @default(uuid())
-//   title     String
-//   item      String
-//   group     ReviewGroup
-//   tags      Tag[]
-//   text      String
-//   grade     Int
-//   createdAt DateTime    @default(now()) @db.Timestamp(0)
+model Review {
+  id        String      @id @default(cuid())
+  title     String
+  item      String
+  group     ReviewGroup @relation(fields: [reviewGroupId], references: [id])
+  text      String
+  grade     Int
+  createdAt DateTime    @default(now()) @db.Timestamp(0)
 
-//   author   User   @relation(fields: [authorId], references: [id])
-//   authorId String
+  images Image[]
+  tags   Tag[]
 
-//   likes    Like[]
-//   comments Comment[]
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
 
-//   @@index([authorId])
-// }
+  likes         Like[]
+  comments      Comment[]
+  reviewGroupId String
 
-// model Tag {
-//   id      String   @id @default(uuid())
-//   name    String   @unique
-//   reviews Review[]
-// }
+  @@index([authorId])
+  @@index([reviewGroupId])
+}
 
-// model Like {
-//   id       Int    @id @default(autoincrement())
-//   user     User   @relation(fields: [userId], references: [id])
-//   userId   String
-//   review   Review @relation(fields: [reviewId], references: [id])
-//   reviewId String
+model Tag {
+  value   String   @id @unique
+  label   String   @unique
+  reviews Review[]
+}
 
-//   @@index([userId])
-//   @@index([reviewId])
-// }
+model Image {
+  id       String @id @default(cuid())
+  url      String
+  review   Review @relation(fields: [reviewId], references: [id])
+  reviewId String
 
-// model Comment {
-//   id       String @id @default(uuid())
-//   text     String
-//   review   Review @relation(fields: [reviewId], references: [id])
-//   reviewId String
-//   author   User   @relation(fields: [authorId], references: [id])
-//   authorId String
+  @@index([reviewId])
+}
 
-//   createdAt DateTime @default(now()) @db.Timestamp(0)
+model Like {
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  review   Review @relation(fields: [reviewId], references: [id])
+  reviewId String
 
-//   @@index([reviewId])
-//   @@index([authorId])
-// }
+  @@id([userId, reviewId])
+  @@index([userId])
+  @@index([reviewId])
+}
+
+model Comment {
+  id       String @id @default(cuid())
+  text     String
+  review   Review @relation(fields: [reviewId], references: [id])
+  reviewId String
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+
+  @@index([reviewId])
+  @@index([authorId])
+}
 
 // Piece entity (optional)
 // model Piece {

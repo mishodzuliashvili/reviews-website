@@ -4,7 +4,7 @@ import React from "react";
 import _ from "lodash";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
-import { MainProvider } from "./mainContext";
+import { UserProvider } from "./mainContext";
 
 export function LocaleProviders({
   children,
@@ -22,7 +22,7 @@ export function LocaleProviders({
       onError={() => {}}
       getMessageFallback={({ error, key, namespace }) => {
         const nestedMessages = _.get(messages, namespace ?? "");
-        if (!nestedMessages) return;
+        if (!nestedMessages) return key;
         if (error.code === "MISSING_MESSAGE") return nestedMessages["default"];
         return nestedMessages[key];
       }}
@@ -31,8 +31,7 @@ export function LocaleProviders({
     >
       <SessionProvider>
         <ThemeProvider attribute="class">
-          {/* TODO: make user provider not main */}
-          <MainProvider user={user}>{children}</MainProvider>
+          <UserProvider user={user}>{children}</UserProvider>
         </ThemeProvider>
       </SessionProvider>
     </NextIntlClientProvider>

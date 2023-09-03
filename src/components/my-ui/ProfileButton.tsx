@@ -11,24 +11,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useMain } from "@/app/[locale]/mainContext";
+import { useUser } from "@/app/[locale]/mainContext";
 import { signOut } from "next-auth/react";
 import Link from "next-intl/link";
 import { useTranslations } from "next-intl";
 
 const ProfileButton = () => {
-  const { user } = useMain();
+  const { user } = useUser();
   const t = useTranslations("ProfileButton");
 
-  if (!user || user.isBlocked) return null;
   return (
     <DropdownMenu>
       <div className="flex items-center gap-3">
-        {/* <Avatar className="rounded-lg">
-          <AvatarImage src={user?.image} alt="@shadcn" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar> */}
         <DropdownMenuTrigger asChild>
           <Button variant="outline">
             <Settings2 className="sm:hidden" />
@@ -47,11 +41,10 @@ const ProfileButton = () => {
             </DropdownMenuItem>
           </Link>
           <Link href="/profile/settings">
-
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>{t("settings")}</span>
-          </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>{t("settings")}</span>
+            </DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -65,11 +58,10 @@ const ProfileButton = () => {
             </Link>
           )}
           <Link href="/review/new">
-
-          <DropdownMenuItem>
-            <Plus className="mr-2 h-4 w-4" />
-            <span>{t("new-review")}</span>
-          </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Plus className="mr-2 h-4 w-4" />
+              <span>{t("new-review")}</span>
+            </DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
 

@@ -20,18 +20,48 @@ const intlMiddleware = createIntlMiddleware({
   defaultLocale,
 });
 
+const publicPages = [""]; // path returns /ka not /ka/
+const defaultPublicPage = "";
 const authPages = ["/login", "/register"];
 const defaultAuthPage = "/login";
 const blockedPages = ["/blocked"];
 const defaultBlockedPage = "/blocked";
 const adminPages = ["/admin"];
 
+const publicApiRoutes = ["/register"];
+
 export default withAuth(
   function onSuccess(req) {
     const token = req.nextauth.token;
+
+    if (req.nextUrl.pathname.startsWith("/api")) {
+      if (
+        // !publicApiRoutes.some((route) =>
+        //   req.nextUrl.pathname.startsWith("/api" + route)
+        // ) &&
+        // !token
+        false
+      ) {
+        return NextResponse.json(
+          {
+            error: "Not authenticated.",
+          },
+          {
+            status: 401,
+          }
+        );
+      } else {
+        return NextResponse.next();
+      }
+    }
+
     if (!token) {
-      if (!doesPathMatchPages(req, authPages))
+      if (
+        !doesPathMatchPages(req, authPages) &&
+        !doesPathMatchPages(req, publicPages)
+      ) {
         return redirect(req, defaultAuthPage);
+      }
       return intlMiddleware(req);
     }
     if (
@@ -39,7 +69,7 @@ export default withAuth(
       (doesPathMatchPages(req, blockedPages) && !token.isBlocked) ||
       (doesPathMatchPages(req, adminPages) && !token.isAdmin)
     ) {
-      return redirect(req, "/");
+      return redirect(req, defaultPublicPage);
     }
 
     if (!doesPathMatchPages(req, blockedPages) && token.isBlocked) {
@@ -55,5 +85,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/((?!api|_next|.*\\..*).*)"],
+  matcher: ["/((?!_next|.*\\..*).*)"],
 };

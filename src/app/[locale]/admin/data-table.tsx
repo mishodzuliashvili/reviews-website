@@ -44,7 +44,7 @@ import {
 import { getColumns } from "./columns";
 import { useTranslations } from "next-intl";
 import { redirect, useRouter } from "next/navigation";
-import { useMain } from "../mainContext";
+import { useUser } from "../mainContext";
 import { signOut } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
 import MainLoader from "@/components/my-ui/MainLoader";
@@ -54,7 +54,7 @@ export function DataTable({ data: datum }: { data: User[] }) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const { user } = useMain();
+  const { user } = useUser();
   const [loading, setLoading] = React.useState(false);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});

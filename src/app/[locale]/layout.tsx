@@ -4,21 +4,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { LocaleProviders } from "./localeProviders";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { NextRequest } from "next/server";
-import { headers } from "next/headers";
-
-async function getUser(userId: string) {
-  const host = headers().get("host");
-  const res = await import("../api/users/[id]/route");
-  const { user } = await (
-    await res.GET(new NextRequest(`http://${host}/api/users/[id]/route`), {
-      params: {
-        id: userId,
-      },
-    })
-  ).json();
-  return user;
-}
 
 export default async function LocaleLayout({
   children,
@@ -27,15 +12,15 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  let messages;
+  let messages, user;
   try {
     messages = (await import(`../../i18n/messages/${locale}.json`)).default;
+    const session = await getServerSession(authOptions);
+    user = null; // TODO: user fetch
   } catch (error) {
     notFound();
   }
-  const session = await getServerSession(authOptions);
 
-  const user = session ? await getUser((session as any).userId) : null;
   return (
     <LocaleProviders user={user} locale={locale} messages={messages}>
       <Navbar />

@@ -1,31 +1,23 @@
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-function changeUsersBlockedProperty(userIds: string[], isBlocked: boolean) {
+function updateUsersByIds(ids: string[], data: { isBlocked: boolean }) {
   return prisma.user.updateMany({
     where: {
       id: {
-        in: userIds,
+        in: ids,
       },
     },
-    data: {
-      isBlocked: isBlocked,
-    },
+    data,
   });
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
-  }
-  const { userIds } = (await request.json()) as {
-    userIds: string[];
+  const { ids } = (await request.json()) as {
+    ids: string[];
   };
   try {
-    const users = await changeUsersBlockedProperty(userIds, true)
+    const users = await updateUsersByIds(ids, { isBlocked: true });
     return NextResponse.json({ users });
   } catch (error) {
     return NextResponse.json(
@@ -36,15 +28,11 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
-  }
-  const { userIds } = (await request.json()) as {
-    userIds: string[];
+  const { ids } = (await request.json()) as {
+    ids: string[];
   };
   try {
-    const users = await changeUsersBlockedProperty(userIds, false)
+    const users = await updateUsersByIds(ids, { isBlocked: false });
     return NextResponse.json({ users });
   } catch (error) {
     return NextResponse.json(
