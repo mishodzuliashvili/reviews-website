@@ -18,7 +18,7 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning={true}>
       <body>
         <LocaleProviders locale={locale} messages={messages}>
           <Navbar />
@@ -28,7 +28,4 @@ export default async function LocaleLayout({
       </body>
     </html>
   );
-}
-
-{
 }

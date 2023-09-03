@@ -14,16 +14,15 @@ import { localeLabels, locales } from "@/i18n/locals";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next-intl/client";
 import { useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useMounted } from "@/hooks/use-mounted";
 
 export default function LanguageSwitch() {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const locale = useLocale();
   const t = useTranslations("LanguageSwitch");
-  useEffect(() => setMounted(true), []);
 
   if (!mounted) return null;
 

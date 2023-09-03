@@ -10,13 +10,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTranslations } from "next-intl";
+import { useMounted } from "@/hooks/use-mounted";
 
 const ThemeSwitch = () => {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const { theme, setTheme } = useTheme();
   const t = useTranslations("ThemeSwitch");
-
-  useEffect(() => setMounted(true), []);
 
   if (!mounted) return null;
 

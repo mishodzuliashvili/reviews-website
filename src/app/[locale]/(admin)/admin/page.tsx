@@ -1,10 +1,8 @@
+import { prisma } from "@/lib/prisma";
 import { DataTable } from "./data-table";
 
 async function getData() {
-  const res = await import("../../api/users/route");
-
-  const { users } = await (await res.GET()).json();
-  return users;
+  return await prisma.user.findMany({});
 }
 
 export default async function Admin() {

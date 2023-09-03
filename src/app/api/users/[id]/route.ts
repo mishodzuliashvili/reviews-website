@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { getUserById } from "@/prisma-functions/users";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -46,31 +47,25 @@ export async function GET(
 //   }
 // }
 
-// export async function PUT(
-//   request: Request,
-//   { params }: { params: { id: string } }
-// ) {
-//   const { name } = (await request.json()) as {
-//     name: string;
-//   };
-//   try {
-//     let user = await getUserById(params.id);
-//     if (!user) {
-//       return NextResponse.json({ error: "User not found." }, { status: 404 });
-//     }
-//     user = await prisma.user.update({
-//       where: {
-//         id: params.id,
-//       },
-//       data: {
-//         name,
-//       },
-//     });
-//     return NextResponse.json({ user });
-//   } catch (error) {
-//     return NextResponse.json(
-//       { error: "Could not update user." },
-//       { status: 500 }
-//     );
-//   }
-// }
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const { name } = (await request.json()) as {
+    name: string;
+  };
+  let user = await getUserById(params.id);
+  if (!user) {
+    return NextResponse.json({ error: "User not found." }, { status: 404 });
+  }
+  user = await prisma.user.update({
+    where: {
+      id: params.id,
+    },
+    data: {
+      name,
+    },
+  });
+
+  return NextResponse.json({ user });
+}
