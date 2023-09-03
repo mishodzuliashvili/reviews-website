@@ -1,11 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { compare } from "bcryptjs";
-import type {
-  NextAuthOptions,
-  Session,
-  User as NextAuthUser,
-  RequestInternal,
-} from "next-auth";
+import type { NextAuthOptions, Session, User } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -13,7 +8,11 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import { JWT } from "next-auth/jwt";
 import { AdapterUser } from "next-auth/adapters";
-import { User } from "@prisma/client";
+import {
+  getUserByEmail,
+  getUserById,
+  updateUserById,
+} from "@/prisma-functions/users";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -51,34 +50,9 @@ export const authOptions: NextAuthOptions = {
     signOut: "/login",
   },
 };
-function getUserById(id: string) {
-  return prisma.user.findUnique({
-    where: {
-      id,
-    },
-  });
-}
-
-function getUserByEmail(email: string) {
-  return prisma.user.findUnique({
-    where: {
-      email,
-    },
-  });
-}
-
-function updateUserById(id: string, data: Partial<User>) {
-  return prisma.user.update({
-    where: {
-      id,
-    },
-    data,
-  });
-}
 
 async function authorizeCredentials(
-  credentials: Record<"email" | "password", string> | undefined,
-  req: Pick<RequestInternal, "query" | "body" | "headers" | "method">
+  credentials: Record<"email" | "password", string> | undefined
 ) {
   if (!credentials) {
     throw new Error("Invalid credentials");
@@ -98,7 +72,7 @@ async function authorizeCredentials(
 
 async function updateJWTToken(params: {
   token: JWT;
-  user: NextAuthUser | AdapterUser;
+  user: User | AdapterUser;
 }) {
   const { token, user } = params;
   if (user) {
@@ -107,22 +81,22 @@ async function updateJWTToken(params: {
       lastLoginTime: new Date(),
     });
   }
-  if (token && token.id) {
-    const dbUser = await getUserById(token.id as string);
-    token.isBlocked = dbUser?.isBlocked;
-    token.isAdmin = dbUser?.isAdmin;
+  if (token) {
+    const dbUser = await getUserById(token.id);
+    if (dbUser) {
+      token.isBlocked = dbUser.isBlocked;
+      token.isAdmin = dbUser.isAdmin;
+    }
   }
   return token;
 }
 
-async function updateSession(
-  params: { session: Session; token: JWT; user: AdapterUser } & {
-    newSession: any;
-    trigger: "update";
-  }
-) {
+async function updateSession(params: { session: Session; token: JWT }) {
   const { session, token } = params;
-  const userSession = session as UserSession;
-  userSession.userId = token.id as string;
+  if (token) {
+    session.user.id = token.id;
+    session.user.isBlocked = token.isBlocked;
+    session.user.isAdmin = token.isAdmin;
+  }
   return session;
 }

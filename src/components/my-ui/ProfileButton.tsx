@@ -11,14 +11,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useUser } from "@/app/[locale]/mainContext";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next-intl/link";
 import { useTranslations } from "next-intl";
 
 const ProfileButton = () => {
-  const { user } = useUser();
   const t = useTranslations("ProfileButton");
+  const { data, status } = useSession();
+
+  if (status === "loading") return null;
 
   return (
     <DropdownMenu>
@@ -26,7 +27,7 @@ const ProfileButton = () => {
         <DropdownMenuTrigger asChild>
           <Button variant="outline">
             <Settings2 className="sm:hidden" />
-            <span className="hidden sm:block">{user?.name}</span>
+            <span className="hidden sm:block">{data?.user.name}</span>
           </Button>
         </DropdownMenuTrigger>
       </div>
@@ -49,7 +50,7 @@ const ProfileButton = () => {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {user?.isAdmin && (
+          {data?.user.isAdmin && (
             <Link href="/admin">
               <DropdownMenuItem>
                 <Users className="mr-2 h-4 w-4" />

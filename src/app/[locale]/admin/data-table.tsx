@@ -44,17 +44,16 @@ import {
 import { getColumns } from "./columns";
 import { useTranslations } from "next-intl";
 import { redirect, useRouter } from "next/navigation";
-import { useUser } from "../mainContext";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
 import MainLoader from "@/components/my-ui/MainLoader";
+import { User } from "@prisma/client";
 
 export function DataTable({ data: datum }: { data: User[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const { user } = useUser();
   const [loading, setLoading] = React.useState(false);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -90,6 +89,9 @@ export function DataTable({ data: datum }: { data: User[] }) {
     },
   });
   const router = useRouter();
+  const { data: session, status } = useSession();
+  if (status === "loading") return null;
+  const user = session?.user;
   return (
     <div className="w-full">
       {loading && <MainLoader />}

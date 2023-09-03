@@ -5,33 +5,35 @@ import ProfileButton from "./ProfileButton";
 import { Button } from "../ui/button";
 import Link from "next-intl/link";
 import { useTranslations } from "next-intl";
-import { useUser } from "@/app/[locale]/mainContext";
+import { useSession } from "next-auth/react";
 
 const Navbar = () => {
-  const { user } = useUser();
   const t = useTranslations("Navbar");
+  const { data, status } = useSession();
 
-  const isUserBlocked = user?.isBlocked;
+  if (status === "loading") return null;
+  const isBlocked = data?.user.isBlocked;
+  const isAuth = status === "authenticated";
+
+  const homeButton = !isBlocked && (
+    <Button variant="outline" asChild>
+      <Link href="/">{t("home")}</Link>
+    </Button>
+  );
 
   return (
     <nav className="flex justify-between p-5">
       <div className="flex gap-3">
-        {!isUserBlocked && (
-          <Button variant="outline" asChild>
-            <Link href="/">{t("home")}</Link>
-          </Button>
-        )}
+        {homeButton}
         <ThemeSwitch />
         <LanguageSwitcher />
       </div>
-      {!isUserBlocked &&
-        (user ? (
-          <ProfileButton />
-        ) : (
-          <Button variant="outline" asChild>
-            <Link href="/auth/signin">{t("signin")}</Link>
-          </Button>
-        ))}
+      {!isBlocked && isAuth && <ProfileButton />}
+      {!isAuth && (
+        <Button variant="outline" asChild>
+          <Link href="/auth/signin">{t("signin")}</Link>
+        </Button>
+      )}
     </nav>
   );
 };

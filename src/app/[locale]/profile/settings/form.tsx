@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { useUser } from "../../mainContext";
 import { useState } from "react";
 import MainLoader from "@/components/my-ui/MainLoader";
 import { useTranslations } from "next-intl";
@@ -30,7 +29,6 @@ const getFromSchema = (t: any) =>
   });
 
 export function ProfileSettingsForm() {
-  const { user, setUser } = useUser();
   const [loading, setLoading] = useState(false);
   const t = useTranslations("ProfileSettingsForm");
   const te = useTranslations("ProfileSettingsForm.errors");
@@ -40,13 +38,13 @@ export function ProfileSettingsForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema as any),
     defaultValues: {
-      name: user?.name,
+      // name: user?.name,
     },
   });
 
   const updateProfile = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    const res = await fetch(`/api/users/${user?.id}`, {
+    const res = await fetch(`/api/users/${"user?.id"}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -60,7 +58,7 @@ export function ProfileSettingsForm() {
     toast({
       title: t("update-success"),
     });
-    setUser((prev: any) => ({ ...prev, name: values.name }));
+    // setUser((prev: any) => ({ ...prev, name: values.name }));
     setLoading(false);
   };
 

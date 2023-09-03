@@ -4,18 +4,15 @@ import React from "react";
 import _ from "lodash";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
-import { UserProvider } from "./mainContext";
 
 export function LocaleProviders({
   children,
   locale,
   messages,
-  user,
 }: {
   children: React.ReactNode;
   locale: string;
   messages: any;
-  user: User | null;
 }) {
   return (
     <NextIntlClientProvider
@@ -30,9 +27,7 @@ export function LocaleProviders({
       messages={messages}
     >
       <SessionProvider>
-        <ThemeProvider attribute="class">
-          <UserProvider user={user}>{children}</UserProvider>
-        </ThemeProvider>
+        <ThemeProvider attribute="class">{children}</ThemeProvider>
       </SessionProvider>
     </NextIntlClientProvider>
   );
