@@ -13,8 +13,6 @@ import {
     getUserById,
     updateUserById,
 } from "@/prisma-functions/users";
-import { Account } from "@prisma/client";
-import { Profile } from "next-auth";
 
 export const authOptions: NextAuthOptions = {
     session: {
@@ -78,13 +76,8 @@ async function updateJWTToken(params: {
     trigger?: "update" | "signIn" | "signUp" | undefined;
     session?: any;
 }) {
-    const { token, user, trigger, session } = params;
+    const { token, user } = params;
 
-    if (trigger === "update") {
-        if (session) {
-            token.name = session.user.name;
-        }
-    }
     if (user) {
         token.id = user.id;
         await updateUserById(user.id, {
@@ -94,6 +87,7 @@ async function updateJWTToken(params: {
     if (token) {
         const dbUser = await getUserById(token.id);
         if (dbUser) {
+            token.name = dbUser.name;
             token.isBlocked = dbUser.isBlocked;
             token.isAdmin = dbUser.isAdmin;
         }

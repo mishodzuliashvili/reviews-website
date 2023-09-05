@@ -23,9 +23,10 @@ type Tag = Record<"value" | "label", string>;
 
 type TagsSelectProps = {
     tags: Tag[];
+    onChange: (tags: Tag[]) => void;
 };
 
-export function TagsSelect({ tags }: TagsSelectProps) {
+export function TagsSelect({ tags, onChange }: TagsSelectProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
     const [openCombobox, setOpenCombobox] = useState(false);
@@ -38,15 +39,21 @@ export function TagsSelect({ tags }: TagsSelectProps) {
             label: name,
         };
         setSelectedTags((prev) => [...prev, newTag]);
-        setSelectedValues((prev) => [...prev, newTag]);
+        setSelectedValues((prev) => {
+            const newValues = [...prev, newTag];
+            onChange(newValues);
+            return newValues;
+        });
     };
 
     const toggleTag = (tag: Tag) => {
-        setSelectedValues((currentTags) =>
-            !currentTags.includes(tag)
+        setSelectedValues((currentTags) => {
+            const newValues = !currentTags.includes(tag)
                 ? [...currentTags, tag]
-                : currentTags.filter((l) => l.value !== tag.value)
-        );
+                : currentTags.filter((l) => l.value !== tag.value);
+            onChange(newValues);
+            return newValues;
+        });
         inputRef?.current?.focus();
     };
 

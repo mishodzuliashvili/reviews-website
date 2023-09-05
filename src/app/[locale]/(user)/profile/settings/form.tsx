@@ -56,11 +56,7 @@ export function ProfileSettingsForm({ user }: { user: Session["user"] }) {
             te("update-error");
             return;
         }
-        await update({
-            user: {
-                name: values.name,
-            },
-        }).then((d) => console.log(d));
+        await update();
         toast({
             title: t("update-success"),
         });

@@ -44,17 +44,7 @@ const getFromSchema = (t: any) =>
         title: z.string(),
         item: z.string(),
         group: z.string(),
-        grade: z
-            .string()
-            .refine((val) => !Number.isNaN(parseInt(val, 10)), {
-                message: "Expected number, received a string",
-            })
-            .refine(
-                (val) => parseInt(val, 10) >= 0 && parseInt(val, 10) <= 10,
-                {
-                    message: "Grade must be between 0 and 10",
-                }
-            ),
+        grade: z.coerce.number().min(0).max(10),
     });
 
 export function ReviewNewForm() {
@@ -68,19 +58,32 @@ export function ReviewNewForm() {
     const [uploadedImages, setUploadedImages] = useState<UploadFileResponse[]>(
         []
     );
-
+    const [text, setText] = useState("");
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema as any),
         defaultValues: {
             title: "",
             item: "",
             group: "",
-            grade: "0",
+            grade: 0,
         },
     });
 
     const updateProfile = async (values: z.infer<typeof formSchema>) => {
         setLoading(true);
+        await fetch("/api/reviews", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                ...values,
+                text: text,
+                tags: selectedTags,
+                images: uploadedImages.map((im) => im.url),
+                userId: data?.user.id,
+            }),
+        });
         setLoading(false);
     };
 
@@ -157,7 +160,7 @@ export function ReviewNewForm() {
                                 <FormLabel>Group</FormLabel>
                                 <Select
                                     onValueChange={field.onChange}
-                                    defaultValue={field.value}
+                                    // defaultValue={field.value}
                                 >
                                     <FormControl>
                                         <SelectTrigger>
@@ -165,14 +168,14 @@ export function ReviewNewForm() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="m@example.com">
-                                            m@example.com
+                                        <SelectItem value="Movie">
+                                            Movie
                                         </SelectItem>
-                                        <SelectItem value="m@google.com">
-                                            m@google.com
+                                        <SelectItem value="Book">
+                                            Book
                                         </SelectItem>
-                                        <SelectItem value="m@support.com">
-                                            m@support.com
+                                        <SelectItem value="Music">
+                                            Music
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -210,17 +213,16 @@ export function ReviewNewForm() {
                                         label: "WordPress",
                                     },
                                 ]}
-                                // onChange={(selectedOptions) => {
-                                //   console.log(selectedOptions);
-                                //   setSelectedTags(selectedOptions);
-                                // }}
+                                onChange={(tags) => {
+                                    setSelectedTags(tags.map((t) => t.value));
+                                }}
                             />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
                     <Wysiwyg
                         onChange={(data) => {
-                            console.log(data);
+                            setText(data);
                         }}
                     />
                     <div>

@@ -3,7 +3,7 @@ import ThemeSwitch from "../mainSwitchs/ThemeSwitch";
 import LanguageSwitcher from "../mainSwitchs/LanguageSwitch";
 import ProfileButton from "./ProfileButton";
 import { Button } from "../ui/button";
-import Link from "next-intl/link";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
 
@@ -17,7 +17,9 @@ const Navbar = () => {
 
     const homeButton = !isBlocked && (
         <Button variant="outline" asChild>
-            <Link href="/">{t("home")}</Link>
+            <Link prefetch={false} href="/">
+                {t("home")}
+            </Link>
         </Button>
     );
 

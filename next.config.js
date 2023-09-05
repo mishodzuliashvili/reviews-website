@@ -1,15 +1,22 @@
-const withNextIntl = require("next-intl/plugin")(
-  // This is the default (also the `src` folder is supported out of the box)
-  "./src/i18n/i18n.ts"
-);
+const withNextIntl = require("next-intl/plugin")("./src/i18n/i18n.ts");
 
 module.exports = withNextIntl({
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**",
-      },
-    ],
-  },
+    experimental: {
+        serverActions: true,
+    },
+    images: {
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "**",
+            },
+        ],
+    },
+    webpack: (config, { isServer, webpack }) => {
+        if (!isServer) {
+            config.resolve.fallback.fs = false;
+        }
+        config.plugins.push(new webpack.ContextReplacementPlugin(/keyv/));
+        return config;
+    },
 });

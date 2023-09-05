@@ -1,7 +1,7 @@
+import { useMounted } from "@/hooks/use-mounted";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { useTheme } from "next-themes";
 import { UploadFileResponse } from "uploadthing/client";
-// import "@uploadthing/react/styles.css";
 
 export default function UploadImages({
     onUploadComplete,
@@ -9,6 +9,10 @@ export default function UploadImages({
     onUploadComplete: (im: UploadFileResponse[]) => void;
 }) {
     const { theme } = useTheme();
+    const isMounted = useMounted();
+
+    if (!isMounted) return null;
+
     return (
         <UploadDropzone
             appearance={{
