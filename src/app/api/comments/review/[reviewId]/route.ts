@@ -9,7 +9,7 @@ export async function GET(req: Request, { params: { reviewId } }: paramsType) {
     try {
         const comments = await prisma.comment.findMany({
             where: { reviewId },
-            orderBy: { createdAt: "desc" },
+            orderBy: { createdAt: "asc" },
             include: {
                 author: true,
             },
