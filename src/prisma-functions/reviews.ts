@@ -133,8 +133,9 @@ export function searchFullText(text: string) {
             author: true,
             images: true,
             tags: true,
-            comments: true,
             likes: true,
+            rates: true,
+            piece: true,
         },
     });
 }

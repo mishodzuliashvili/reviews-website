@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { createReview } from "@/prisma-functions/reviews";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -10,79 +9,76 @@ export async function GET() {
                 images: true,
                 group: true,
                 author: true,
-                _count: {
-                    select: {
-                        likes: true,
-                    },
-                },
+                likes: true,
+                piece: true,
+                rates: true,
             },
-            take: 10,
-            skip: 0,
             orderBy: {
                 createdAt: "desc",
             },
         });
         return NextResponse.json({ reviews });
     } catch (e: any) {
-        return NextResponse.json(
-            { error: "Could not get reviews." },
-            { status: 500 }
-        );
+        return new NextResponse("Could not get reviews.", { status: 500 });
     }
 }
 
 export async function POST(request: Request) {
     try {
         const { title, item, grade, text, group, tags, images, userId } =
-            (await request.json()) as {
-                title: string;
-                item: string;
-                grade: number;
-                text: string;
-                group: string;
-                tags: string[];
-                images: string[];
-                userId: string;
-            };
-        // const { title, item, grade, text, group, tags, images, userId } =
-        //     reviewData;
-        const review = await createReview(
-            title,
-            item,
-            grade,
-            text,
-            group,
-            tags,
-            images,
-            userId
-        );
-        return NextResponse.json({ review });
+            await request.json();
+        await prisma.review.create({
+            data: {
+                title,
+                grade,
+                text,
+                piece: {
+                    connectOrCreate: {
+                        where: { value: item },
+                        create: { value: item },
+                    },
+                },
+                tags: {
+                    connectOrCreate: tags.map((tag: string) => ({
+                        where: { value: tag },
+                        create: { value: tag },
+                    })),
+                },
+                images: {
+                    connectOrCreate: images.map((image: string) => ({
+                        where: { url: image },
+                        create: { url: image },
+                    })),
+                },
+                author: {
+                    connect: { id: userId },
+                },
+                group: {
+                    connectOrCreate: {
+                        where: { value: group },
+                        create: { value: group },
+                    },
+                },
+            },
+        });
+        return NextResponse.json({ msg: "Review created." });
     } catch (error) {
-        console.log(error);
-        return NextResponse.json(
-            { error: "Could not create reviews." },
-            { status: 500 }
-        );
+        return new NextResponse("Could not create reviews.", { status: 500 });
     }
 }
 
 export async function DELETE(request: Request) {
-    const { ids } = (await request.json()) as {
-        ids: string[];
-    };
     try {
-        const reviews = await prisma.review.deleteMany({
+        const { ids } = await request.json();
+        await prisma.review.deleteMany({
             where: {
                 id: {
                     in: ids,
                 },
             },
         });
-        return NextResponse.json({ reviews });
+        return NextResponse.json({ msg: "Reviews deleted" });
     } catch (error) {
-        return NextResponse.json(
-            { error: "Could not delete reviews." },
-            { status: 500 }
-        );
+        return new NextResponse("Could not delete reviews.", { status: 500 });
     }
 }

@@ -43,6 +43,7 @@ model User {
   reviews          Review[]
   likes            Like[]
   comments         Comment[]
+  Rate             Rate[]
 }
 
 model ReviewGroup {
@@ -68,6 +69,7 @@ model Review {
   tags       Tag[]
   likes      Like[]
   comments   Comment[]
+  rates      Rate[]
 
   @@index([authorId])
   @@index([groupValue])
@@ -96,6 +98,18 @@ model Like {
   userId   String
   review   Review @relation(fields: [reviewId], references: [id])
   reviewId String
+
+  @@id([userId, reviewId])
+  @@index([userId])
+  @@index([reviewId])
+}
+
+model Rate {
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  review   Review @relation(fields: [reviewId], references: [id])
+  reviewId String
+  value    Int
 
   @@id([userId, reviewId])
   @@index([userId])

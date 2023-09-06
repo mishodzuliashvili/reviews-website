@@ -12,17 +12,10 @@ import LikeButton from "./LikeButton";
 import RatingButton from "./RatingButton";
 import HTMLSanitized from "./HTMLSanitized";
 import { getCurrentUser } from "@/lib/session";
-import Comments from "./Comments";
-import { ably } from "@/lib/ably";
-import { prisma } from "@/lib/prisma";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { FaStar } from "react-icons/fa";
-import { useLocale } from "next-intl";
-import Link from "next/link";
 import { GrScorecard } from "react-icons/gr";
 import { GoCommentDiscussion } from "react-icons/go";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 type ReviewCardProps = {
     review: ResultOfSearchFullText[number];
 };
@@ -56,7 +49,7 @@ export default async function ReviewCard({ review }: ReviewCardProps) {
                         </CardDescription>
                         <h3 className="text-sm">{review.author.name}</h3>
                         <h3 className="flex items-center gap-3">
-                            <GrScorecard />
+                            <span>Grade:</span>
                             <span className="pt-1">{review.grade} /10</span>
                         </h3>
                     </CardHeader>
@@ -74,12 +67,12 @@ export default async function ReviewCard({ review }: ReviewCardProps) {
                             ))}
                         </div>
                         {review.images.length > 0 && <div className="h-5" />}
-                        <Link
+                        {/* <Link
                             href={""}
                             className="text-lg hover:underline cursor-pointer"
                         >
                             {review.pieceValue}
-                        </Link>
+                        </Link> */}
                         <div className="mt-2">
                             <HTMLSanitized text={review.text} />
                         </div>
@@ -99,11 +92,12 @@ export default async function ReviewCard({ review }: ReviewCardProps) {
                             ))}
                         </div>
                         <div className="pt-1 flex gap-3 items-center">
-                            <span className="text-xl font-sans text-[orange] font-bold">
-                                4.6
-                            </span>
-                            <RatingButton />
-                        </div>{" "}
+                            <RatingButton
+                                reviewId={review.id}
+                                rates={review.rates}
+                                userId={user?.id || ""}
+                            />
+                        </div>
                     </CardFooter>
                 </div>
             </div>
