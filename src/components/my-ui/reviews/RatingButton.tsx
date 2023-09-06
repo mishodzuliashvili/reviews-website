@@ -1,5 +1,6 @@
 "use client";
 import { Rate } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import StarRatings from "react-star-ratings";
 
@@ -15,6 +16,7 @@ export default function RatingButton({
     userId,
 }: RatingButtonProps) {
     const [myRates, setMyRates] = useState(rates);
+    const { data, status } = useSession();
     const [rating, setRating] = useState(() => {
         const rate = rates.find((rate) => rate.userId === userId);
         if (!rate) return 0;
@@ -23,7 +25,8 @@ export default function RatingButton({
     const [isRating, setIsRating] = useState(false);
 
     const handleRating = async (rate: number) => {
-        if (isRating) return;
+        if (isRating || status === "unauthenticated" || status === "loading")
+            return;
         setIsRating(true);
         setRating(rate);
         setMyRates((prev) => {

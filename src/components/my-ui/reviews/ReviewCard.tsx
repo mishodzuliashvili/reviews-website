@@ -16,6 +16,7 @@ import { GrScorecard } from "react-icons/gr";
 import { GoCommentDiscussion } from "react-icons/go";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Comments from "./Comments";
 type ReviewCardProps = {
     review: ResultOfSearchFullText[number];
 };
@@ -98,6 +99,7 @@ export default async function ReviewCard({ review }: ReviewCardProps) {
                                 userId={user?.id || ""}
                             />
                         </div>
+                        <Comments reviewId={review.id} />
                     </CardFooter>
                 </div>
             </div>

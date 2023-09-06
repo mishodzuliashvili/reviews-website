@@ -29,7 +29,7 @@ const blockedPages = ["/blocked"];
 const defaultBlockedPage = "/blocked";
 const adminPages = ["/admin"];
 
-const publicApiRoutes = ["/register", "/uploadthing", "/reviews"];
+const publicApiRoutes = ["/register", "/uploadthing", "/reviews", "/comments"];
 
 export default withAuth(
     function onSuccess(req) {

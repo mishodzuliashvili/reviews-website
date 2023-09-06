@@ -44,7 +44,7 @@ export default function LikeButton({
     return (
         <Button
             disabled={isLoading || status === "loading" || !data}
-            className="px-4 py-8"
+            className="px-4 py-8 disabled:opacity-100"
             variant={liked ? "destructive" : "outline"}
             onClick={handleClick}
         >
