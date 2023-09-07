@@ -17,12 +17,14 @@ import { GoCommentDiscussion } from "react-icons/go";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Comments from "./Comments";
+import { redirect } from "next/navigation";
 type ReviewCardProps = {
     review: ResultOfSearchFullText[number];
 };
 
 export default async function ReviewCard({ review }: ReviewCardProps) {
     const user = await getCurrentUser();
+
     return (
         <Card className="bg-transparent">
             <div className="flex">
@@ -35,7 +37,13 @@ export default async function ReviewCard({ review }: ReviewCardProps) {
                         )}
                     />
 
-                    <Button className="px-4 py-7 text-xl" variant="outline">
+                    <Button
+                        className="px-4 py-7 text-xl"
+                        variant="outline"
+                        // onClick={() => {
+                        //     redirect(`/reviews/${review.id}`);
+                        // }}
+                    >
                         <GoCommentDiscussion />
                     </Button>
                 </div>
@@ -99,7 +107,7 @@ export default async function ReviewCard({ review }: ReviewCardProps) {
                                 userId={user?.id || ""}
                             />
                         </div>
-                        <Comments reviewId={review.id} />
+                        {/* <Comments reviewId={review.id} /> */}
                     </CardFooter>
                 </div>
             </div>
