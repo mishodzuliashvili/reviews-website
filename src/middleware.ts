@@ -5,7 +5,7 @@ import { locales, defaultLocale } from "./i18n/locals";
 
 function doesPathMatchPages(req: NextRequest, pages: string[]) {
     return RegExp(
-        `^(/(${locales.join("|")}))?(${pages.join("|")})/?$`,
+        `^(/(${locales.join("|")}))?(${pages.join("|")})/?.*$`,
         "i"
     ).test(req.nextUrl.pathname);
 }
@@ -21,7 +21,7 @@ const intlMiddleware = createIntlMiddleware({
     defaultLocale,
 });
 
-const publicPages = [""]; // path returns /ka not /ka/
+const publicPages = ["", "/profile"]; // path returns /ka not /ka/
 const defaultPublicPage = "";
 const authPages = ["/login", "/register"];
 const defaultAuthPage = "/login";
@@ -34,7 +34,6 @@ const publicApiRoutes = ["/register", "/uploadthing", "/reviews", "/comments"];
 export default withAuth(
     function onSuccess(req) {
         const token = req.nextauth.token;
-
         if (req.nextUrl.pathname.startsWith("/api")) {
             if (
                 !publicApiRoutes.some((route) =>
@@ -54,7 +53,7 @@ export default withAuth(
                 return NextResponse.next();
             }
         }
-
+        console.log(req.nextUrl.pathname);
         if (!token) {
             if (
                 !doesPathMatchPages(req, authPages) &&

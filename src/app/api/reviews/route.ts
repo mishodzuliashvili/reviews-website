@@ -1,33 +1,17 @@
+import getQueries from "@/lib/getQueries";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/session";
 import { NextResponse } from "next/server";
-export const dynamic = "force-dynamic";
+import { Prisma } from "@prisma/client";
 
-export async function GET() {
-    try {
-        const reviews = await prisma.review.findMany({
-            include: {
-                tags: true,
-                images: true,
-                group: true,
-                author: true,
-                likes: true,
-                piece: true,
-                rates: true,
-            },
-            orderBy: {
-                createdAt: "desc",
-            },
-        });
-        return NextResponse.json({ reviews });
-    } catch (e: any) {
-        return new NextResponse("Could not get reviews.", { status: 500 });
-    }
-}
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
     try {
-        const { title, item, grade, text, group, tags, images, userId } =
+        const { title, item, grade, text, group, tags, images } =
             await request.json();
+        const user = await getCurrentUser();
+        const userId = user?.id;
         await prisma.review.create({
             data: {
                 title,

@@ -1,4 +1,4 @@
-import { useMounted } from "@/hooks/use-mounted";
+import { useMounted } from "@/hooks/useMounted";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { useTheme } from "next-themes";
 import { UploadFileResponse } from "uploadthing/client";

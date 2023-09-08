@@ -1,7 +1,7 @@
 "use client";
-import { useMounted } from "@/hooks/use-mounted";
+import { useMounted } from "@/hooks/useMounted";
 import * as sanitizeHtml from "sanitize-html";
-export default function HTMLSanitized({ text }: { text: string }) {
+export default function ReviewTextSanitized({ text }: { text: string }) {
     const isMounted = useMounted();
 
     if (!isMounted) return null;

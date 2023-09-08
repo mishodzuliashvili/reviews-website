@@ -56,11 +56,11 @@ model ReviewGroup {
 model Review {
   id         String      @id @default(cuid())
   title      String
-  piece      Piece?      @relation(fields: [pieceValue], references: [value])
+  piece      Piece?      @relation(fields: [pieceValue], references: [value], onDelete: Cascade)
   pieceValue String
-  group      ReviewGroup @relation(fields: [groupValue], references: [value])
+  group      ReviewGroup @relation(fields: [groupValue], references: [value], onDelete: Cascade)
   groupValue String
-  author     User        @relation(fields: [authorId], references: [id])
+  author     User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId   String
   text       String      @db.Text
   grade      Int
@@ -87,16 +87,16 @@ model Tag {
 model Image {
   id       String @id @default(cuid())
   url      String @unique
-  review   Review @relation(fields: [reviewId], references: [id])
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
   reviewId String
 
   @@index([reviewId])
 }
 
 model Like {
-  user     User   @relation(fields: [userId], references: [id])
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String
-  review   Review @relation(fields: [reviewId], references: [id])
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
   reviewId String
 
   @@id([userId, reviewId])
@@ -105,9 +105,9 @@ model Like {
 }
 
 model Rate {
-  user     User   @relation(fields: [userId], references: [id])
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String
-  review   Review @relation(fields: [reviewId], references: [id])
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
   reviewId String
   value    Int
 
@@ -119,9 +119,9 @@ model Rate {
 model Comment {
   id        String   @id @default(cuid())
   text      String
-  review    Review   @relation(fields: [reviewId], references: [id])
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
   reviewId  String
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   createdAt DateTime @default(now()) @db.Timestamp(0)
 

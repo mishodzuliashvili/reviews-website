@@ -3,11 +3,12 @@
 import { useState } from "react";
 import useComments from "@/hooks/useComments";
 import { useSession } from "next-auth/react";
+import useUser from "@/hooks/useUser";
 
 export default function Comments({ reviewId }: { reviewId: string }) {
     const { comments, addComment, loading, error } = useComments({ reviewId });
     const [sendText, setSendText] = useState("");
-    const { status } = useSession();
+    const { isAuth } = useUser();
     return (
         <div>
             <h2>Comments:</h2>
@@ -22,7 +23,7 @@ export default function Comments({ reviewId }: { reviewId: string }) {
                     </div>
                 ))}
             </div>
-            {status === "authenticated" && (
+            {isAuth && (
                 <div>
                     <input
                         onChange={(e) => setSendText(e.target.value)}

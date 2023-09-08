@@ -1,41 +1,12 @@
 import TagCloud from "@/components/my-ui/TagCloud";
-import ReviewCard from "@/components/my-ui/reviews/ReviewCard";
 import { prisma } from "@/lib/prisma";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ReviewsList from "@/components/my-ui/reviews/ReviewsList";
+import SearchReviews from "@/components/my-ui/SearchReviews";
+
+export const revalidate = 0;
 
 export default async function Home() {
-    const recentlyAddedReviews = await prisma.review.findMany({
-        orderBy: {
-            createdAt: "desc",
-        },
-        take: 5,
-        include: {
-            author: true,
-            likes: true,
-            images: true,
-            group: true,
-            piece: true,
-            rates: true,
-            tags: true,
-        },
-    });
-
-    const highestGradesReviews = await prisma.review.findMany({
-        orderBy: {
-            grade: "desc",
-        },
-        take: 5,
-        include: {
-            author: true,
-            likes: true,
-            images: true,
-            group: true,
-            piece: true,
-            rates: true,
-            tags: true,
-        },
-    });
-
     const tags = await prisma.tag.findMany({
         include: {
             _count: {
@@ -45,12 +16,15 @@ export default async function Home() {
             },
         },
     });
-
     return (
         <main className="px-5 flex flex-col gap-3">
-            <TagCloud tags={tags} />
-
-            <Tabs defaultValue="recentlyAdded" className="">
+            <TagCloud
+                tags={tags.map((tag) => ({
+                    value: tag.value,
+                    count: tag._count.reviews,
+                }))}
+            />
+            <Tabs defaultValue={"recentlyAdded"} className="">
                 <TabsList>
                     <TabsTrigger value="recentlyAdded" className="">
                         Recently Added Reviewes
@@ -61,19 +35,15 @@ export default async function Home() {
                 </TabsList>
                 <TabsContent
                     value="recentlyAdded"
-                    className="flex flex-col gap-3"
+                    className="flex flex-col gap-4"
                 >
-                    {recentlyAddedReviews.map((review) => (
-                        <ReviewCard key={review.id} review={review} />
-                    ))}
+                    <ReviewsList sortBy="createdAt" take={2} />
                 </TabsContent>
                 <TabsContent
                     value="highestGrades"
-                    className="flex flex-col gap-3"
+                    className="flex flex-col gap-4"
                 >
-                    {highestGradesReviews.map((review) => (
-                        <ReviewCard key={review.id} review={review} />
-                    ))}
+                    <ReviewsList sortBy="grade" take={2} />
                 </TabsContent>
             </Tabs>
         </main>

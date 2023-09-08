@@ -80,16 +80,24 @@ async function updateJWTToken(params: {
 
     if (user) {
         token.id = user.id;
-        await updateUserById(user.id, {
-            lastLoginTime: new Date(),
-        });
+        try {
+            await updateUserById(user.id, {
+                lastLoginTime: new Date(),
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
     if (token) {
-        const dbUser = await getUserById(token.id);
-        if (dbUser) {
-            token.name = dbUser.name;
-            token.isBlocked = dbUser.isBlocked;
-            token.isAdmin = dbUser.isAdmin;
+        try {
+            const dbUser = await getUserById(token.id);
+            if (dbUser) {
+                token.name = dbUser.name;
+                token.isBlocked = dbUser.isBlocked;
+                token.isAdmin = dbUser.isAdmin;
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
     return token;

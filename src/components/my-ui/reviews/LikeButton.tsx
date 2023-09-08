@@ -1,56 +1,37 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import { RiArrowUpDoubleFill } from "react-icons/ri";
+import useLikes from "@/hooks/useLikes";
+import { Like } from "@prisma/client";
+import { AiOutlineLike } from "react-icons/ai";
 type LikeButtonProps = {
-    numberOfLikes: number;
     reviewId: string;
-    isLiked: boolean;
+    likes: Like[];
+    disabled?: boolean;
+    userId?: string;
 };
 
 export default function LikeButton({
-    numberOfLikes,
     reviewId,
-    isLiked,
+    likes,
+    disabled,
+    userId,
 }: LikeButtonProps) {
-    const [likes, setLikes] = useState<number>(numberOfLikes);
-    const [liked, setLiked] = useState<boolean>(isLiked);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { data, status } = useSession();
-    const handleClick = async () => {
-        if (isLoading) {
-            return;
-        }
-        setIsLoading(true);
-        setLikes((prev) => (liked ? prev - 1 : prev + 1));
-        const fetchMethod = liked ? "DELETE" : "POST";
-        setLiked((prev) => !prev);
-        const res = await fetch(`/api/likes`, {
-            method: fetchMethod,
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                reviewId,
-            }),
-        });
+    const { loading, isLikedByUser, toggleLike, numberOfLikes } = useLikes({
+        likes: likes,
+        reviewId,
+        userId,
+    });
 
-        if (!res.ok) {
-            throw new Error("Something went wrong");
-        }
-        setIsLoading(false);
-    };
     return (
         <Button
-            disabled={isLoading || status === "loading" || !data}
-            className="px-4 py-8 disabled:opacity-100"
-            variant={liked ? "destructive" : "outline"}
-            onClick={handleClick}
+            disabled={loading || disabled}
+            className="disabled:opacity-100"
+            variant={isLikedByUser ? "destructive" : "outline"}
+            onClick={toggleLike}
         >
-            <div className="flex flex-col gap-2 items-center ">
-                <RiArrowUpDoubleFill />
-                <span>{likes}</span>
+            <div className="flex gap-2 items-center ">
+                <AiOutlineLike />
+                <span>{numberOfLikes}</span>
             </div>
         </Button>
     );

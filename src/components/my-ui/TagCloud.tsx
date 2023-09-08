@@ -1,45 +1,44 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { TagCloud as ReactTagCloud } from "react-tagcloud";
+import { useMounted } from "@/hooks/useMounted";
 
 type TagCloudProps = {
     tags: {
         value: string;
-        _count: {
-            reviews: number;
-        };
+        count: number;
     }[];
 };
 
 export default function TagCloud({ tags }: TagCloudProps) {
-    const router = useRouter();
+    const isMounted = useMounted();
+
+    if (!isMounted) return null;
+
+    const counts = tags.map((tag) => tag.count);
+    const minCount = Math.min(...counts);
+    const maxCount = Math.max(...counts);
+
+    const calculateTagSize = (count: number) => {
+        const minSize = 14;
+        const maxSize = 30;
+        return (
+            minSize +
+            ((count - minCount) / (maxCount - minCount)) * (maxSize - minSize)
+        );
+    };
 
     return (
-        <ReactTagCloud
-            minSize={14}
-            maxSize={35}
-            renderer={(tag: any, size: any) => (
+        <div className="tag-cloud">
+            {tags.map((tag, index) => (
                 <span
-                    key={tag.value}
-                    className="inline-block cursor-pointer hover:scale-110 duration-300"
+                    key={index}
+                    className="cursor-pointer mr-1 inline-block hover:scale-110 duration-300"
                     style={{
-                        fontSize: `${size}pt`,
-                        margin: "3px",
-                        lineHeight: "1",
+                        fontSize: calculateTagSize(tag.count) + "px",
                     }}
                 >
                     {tag.value}
                 </span>
-            )}
-            disableRandomColor={true}
-            shuffle={false}
-            tags={tags.map((tag) => ({
-                value: tag.value,
-                count: tag._count.reviews,
-            }))}
-            onClick={(tag: any) => {
-                router.push(`/?searchText=${tag.value}`);
-            }}
-        />
+            ))}
+        </div>
     );
 }
