@@ -7,7 +7,7 @@ import MainLoader from "./MainLoader";
 
 export default function SearchReviews() {
     const [searchText, setSearchText] = useState("");
-    const { reviews, loading, search } = useReviews({ isSearch: true });
+    const { reviews, loading, search } = useReviews({ isQuery: false });
 
     if (loading) return <MainLoader />;
 
@@ -20,9 +20,9 @@ export default function SearchReviews() {
                 />
             </form>
             <div className="flex flex-col gap-3">
-                {reviews.map((review) => (
+                {/* {reviews.map((review) => (
                     <Review key={review.id} review={review} />
-                ))}
+                ))} */}
             </div>
         </div>
     );
