@@ -10,17 +10,20 @@ type RatingButtonProps = {
     rates: Rate[];
     disabled?: boolean;
     userId?: string;
+    pieceValue: string;
 };
 
 export default function RatingButton({
     reviewId,
     rates,
     userId,
+    pieceValue,
 }: RatingButtonProps) {
     const { loading, sumOfRates, rateReview, userRating } = useRates({
         rates,
         reviewId,
         userId,
+        pieceValue,
     });
 
     return (

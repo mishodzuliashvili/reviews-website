@@ -8,8 +8,11 @@ export type ReviewReturnedType = Prisma.ReviewGetPayload<{
         likes: true;
         images: true;
         group: true;
-        piece: true;
-        rates: true;
+        piece: {
+            include: {
+                rates: true;
+            };
+        };
         tags: true;
     };
 }>;
@@ -45,7 +48,6 @@ export default function useReviews({
             sortBy,
             searchTerm,
         });
-
         fetch(`/api/reviews/query?${queryParams}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -79,7 +81,8 @@ export default function useReviews({
         fetchReviews(text);
     };
 
-    const addReview = async (newReview: {
+    const addOrUpdateReview = async (newReview: {
+        reviewId?: string;
         title: string;
         item: string;
         grade: number;
@@ -95,10 +98,7 @@ export default function useReviews({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newReview),
         });
-        if (response.ok) {
-            const newReview = await response.json();
-            setReviews([...reviews, newReview]);
-        } else {
+        if (!response.ok) {
             setError("Review could not be added");
         }
         setLoading(false);
@@ -118,7 +118,7 @@ export default function useReviews({
         setLoading(false);
     };
 
-    return { reviews, loading, error, addReview, deleteReview, search };
+    return { reviews, loading, error, addOrUpdateReview, deleteReview, search };
 }
 
 export function buildQueryParams(params: Record<string, string | undefined>) {

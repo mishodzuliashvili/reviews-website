@@ -37,8 +37,10 @@ export async function POST(request: Request) {
             },
             rates: {
                 orderBy: {
-                    rates: {
-                        _count: "desc",
+                    piece: {
+                        rates: {
+                            _count: "desc",
+                        },
                     },
                 },
             },
@@ -123,12 +125,15 @@ export async function POST(request: Request) {
                 images: true,
                 group: true,
                 author: true,
-                piece: true,
+                piece: {
+                    include: {
+                        rates: true,
+                    },
+                },
                 likes: true,
-                rates: true,
             },
         });
-
+        console.log(reviews);
         return NextResponse.json(reviews);
     } catch (error) {
         return new NextResponse("Could not get reviews.", { status: 500 });

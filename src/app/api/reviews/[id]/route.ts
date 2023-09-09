@@ -17,8 +17,11 @@ export async function GET(
                 group: true,
                 author: true,
                 likes: true,
-                piece: true,
-                rates: true,
+                piece: {
+                    include: {
+                        rates: true,
+                    },
+                },
                 comments: {
                     orderBy: {
                         createdAt: "desc",

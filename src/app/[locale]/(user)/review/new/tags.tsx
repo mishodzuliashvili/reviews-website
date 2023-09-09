@@ -24,14 +24,17 @@ type Tag = Record<"value" | "label", string>;
 type TagsSelectProps = {
     tags: Tag[];
     onChange: (tags: Tag[]) => void;
+    defatulValue?: Tag[];
 };
 
-export function TagsSelect({ tags, onChange }: TagsSelectProps) {
+export function TagsSelect({ tags, defatulValue, onChange }: TagsSelectProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
     const [openCombobox, setOpenCombobox] = useState(false);
     const [inputValue, setInputValue] = useState<string>("");
-    const [selectedValues, setSelectedValues] = useState<Tag[]>([]);
+    const [selectedValues, setSelectedValues] = useState<Tag[]>(
+        defatulValue ?? []
+    );
 
     const createTag = (name: string) => {
         const newTag = {
@@ -93,7 +96,9 @@ export function TagsSelect({ tags, onChange }: TagsSelectProps) {
                         <CommandGroup className="max-h-[145px] overflow-auto">
                             {selectedTags.map((framework) => {
                                 const isActive =
-                                    selectedValues.includes(framework);
+                                    selectedValues.findIndex(
+                                        (v) => v.value === framework.value
+                                    ) > -1;
                                 return (
                                     <CommandItem
                                         key={framework.value}

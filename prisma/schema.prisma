@@ -69,7 +69,6 @@ model Review {
   tags       Tag[]
   likes      Like[]
   comments   Comment[]
-  rates      Rate[]
 
   @@index([authorId])
   @@index([groupValue])
@@ -105,15 +104,15 @@ model Like {
 }
 
 model Rate {
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   String
-  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  reviewId String
-  value    Int
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  piece      Piece  @relation(fields: [pieceValue], references: [value], onDelete: Cascade)
+  pieceValue String
+  value      Int
 
-  @@id([userId, reviewId])
+  @@id([userId, pieceValue])
   @@index([userId])
-  @@index([reviewId])
+  @@index([pieceValue])
 }
 
 model Comment {
@@ -133,6 +132,7 @@ model Comment {
 model Piece {
   value   String   @id @unique
   reviews Review[]
+  rates   Rate[]
 
   @@fulltext([value])
 }

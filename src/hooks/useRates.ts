@@ -5,12 +5,14 @@ type UseRatesProps = {
     reviewId: string;
     rates: Rate[];
     userId?: string;
+    pieceValue: string;
 };
 
 export default function useRates({
     reviewId,
     rates: _rates,
     userId,
+    pieceValue,
 }: UseRatesProps) {
     const [rates, setRates] = useState(_rates);
     const [loading, setLoading] = useState(false);
@@ -29,7 +31,7 @@ export default function useRates({
                 newRates.push({
                     userId: userId as string,
                     value: rateValue,
-                    reviewId,
+                    pieceValue,
                 });
             } else {
                 newRates[index].value = rateValue;
@@ -42,7 +44,7 @@ export default function useRates({
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                reviewId,
+                pieceValue: pieceValue,
                 value: rateValue,
             }),
         });
@@ -54,7 +56,9 @@ export default function useRates({
     };
 
     const sumOfRates =
-        rates.reduce((acc, curr) => acc + curr.value, 0) / rates.length;
+        rates.length > 0
+            ? rates.reduce((acc, curr) => acc + curr.value, 0) / rates.length
+            : 0;
     const userRating = rates.find((rate) => rate.userId === userId)?.value || 0;
     return { sumOfRates, rateReview, loading, error, userRating };
 }

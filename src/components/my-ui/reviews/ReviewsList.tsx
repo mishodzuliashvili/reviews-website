@@ -21,7 +21,6 @@ export default function ReviewsList({
         tagValues,
         take,
     });
-
     return (
         <div className="flex flex-col gap-3">
             {loading && <MainLoader />}

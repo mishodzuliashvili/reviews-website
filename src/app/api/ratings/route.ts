@@ -4,14 +4,14 @@ import { getCurrentUser } from "@/lib/session";
 
 export async function POST(req: Request) {
     try {
-        const { reviewId, value } = await req.json();
+        const { pieceValue, value } = await req.json();
         const user = await getCurrentUser();
         const userId = user?.id as string;
-        console.log(userId, reviewId, value);
+        console.log(pieceValue, value);
         await prisma.rate.upsert({
             where: {
-                userId_reviewId: {
-                    reviewId,
+                userId_pieceValue: {
+                    pieceValue,
                     userId,
                 },
             },
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
                 value,
             },
             create: {
-                reviewId,
+                pieceValue,
                 userId,
                 value,
             },
@@ -37,14 +37,14 @@ export async function DELETE(req: Request) {
         const { reviewId } = await req.json();
         const user = await getCurrentUser();
         const userId = user?.id as string;
-        await prisma.rate.delete({
-            where: {
-                userId_reviewId: {
-                    reviewId,
-                    userId,
-                },
-            },
-        });
+        // await prisma.rate.delete({
+        //     where: {
+        //         userId_reviewId: {
+        //             reviewId,
+        //             userId,
+        //         },
+        //     },
+        // });
         return NextResponse.json({
             msg: "Raiting deleted successfully",
         });
