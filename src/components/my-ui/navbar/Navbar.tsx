@@ -35,7 +35,7 @@ const Navbar = () => {
             {!isBlocked && isAuth && <ProfileButton />}
             {!isAuth && (
                 <Button variant="outline" asChild>
-                    <Link href="/auth/signin">{t("signin")}</Link>
+                    <Link href="/login">{t("signin")}</Link>
                 </Button>
             )}
         </nav>

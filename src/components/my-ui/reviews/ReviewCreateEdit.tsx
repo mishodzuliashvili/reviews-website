@@ -34,6 +34,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { MultiSelect } from "@/components/my-ui/inputs/MultiSelect";
 import { Piece, ReviewGroup, Tag } from "@prisma/client";
+import { useRouter } from "next/navigation";
 const Wysiwyg = dynamic(() => import("../inputs/Wysiwyg"), {
     ssr: false,
 });
@@ -62,6 +63,7 @@ export default function ReviewCreateEdit({
     const { addOrUpdateReview } = useReviews({
         isQuery: false,
     });
+    const router = useRouter();
     const t = useTranslations("ReviewNewForm");
     const [selectedTags, setSelectedTags] = useState<string[]>(
         review?.tags.map((t) => t.value) || []
@@ -81,7 +83,7 @@ export default function ReviewCreateEdit({
         },
     });
     const handleSubmit = async (data: any) => {
-        addOrUpdateReview({
+        const reviewId = await addOrUpdateReview({
             ...(review
                 ? {
                       reviewId: review.id,
@@ -95,6 +97,8 @@ export default function ReviewCreateEdit({
             tags: selectedTags,
             text: text,
         });
+        console.log(reviewId);
+        // router.push(`/review/${reviewId}`);
     };
 
     const onUploadComplete = (im: UploadFileResponse[]) => {

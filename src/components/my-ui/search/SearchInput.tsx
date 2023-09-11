@@ -1,17 +1,14 @@
 "use client";
-import React, { useState, useTransition } from "react";
+import React, { useState } from "react";
 import { Input } from "../../ui/input";
-import { redirect, usePathname, useRouter } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import MainLoader from "../main/MainLoader";
-import useReviews from "@/hooks/useReviews";
+import { useRouter } from "next/navigation";
 
 export default function SearchInput() {
     const [searchText, setSearchText] = useState("");
-
+    const router = useRouter();
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        redirect("/search/" + searchText);
+        router.push(`/search/${searchText}`);
     };
 
     return (
@@ -21,7 +18,6 @@ export default function SearchInput() {
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
             />
-            {loading && <MainLoader />}
         </form>
     );
 }

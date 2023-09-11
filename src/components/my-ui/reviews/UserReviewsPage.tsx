@@ -49,7 +49,7 @@ export default function UserReviewsPage({
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
-                            <SelectLabel>Fruits</SelectLabel>
+                            <SelectLabel>Sort By</SelectLabel>
                             <SelectItem value="createdAt">Time</SelectItem>
                             <SelectItem value="likes">Likes</SelectItem>
                             <SelectItem value="grade">Grade</SelectItem>
@@ -58,6 +58,8 @@ export default function UserReviewsPage({
                     </SelectContent>
                 </Select>
                 <MultiSelect
+                    placeholder="Select Tags"
+                    canCreate={false}
                     options={tags.map((tag) => ({
                         value: tag.value,
                         label: tag.value,
@@ -67,6 +69,8 @@ export default function UserReviewsPage({
                     }}
                 />
                 <MultiSelect
+                    canCreate={false}
+                    placeholder="Select Groups"
                     options={groups.map((group) => ({
                         value: group.value,
                         label: group.value,
@@ -76,6 +80,7 @@ export default function UserReviewsPage({
                     }}
                 />
                 <MultiSelect
+                    canCreate={false}
                     options={pieces.map((piece) => ({
                         value: piece.value,
                         label: piece.value,

@@ -21,6 +21,7 @@ import ReviewPrinting from "./ReviewPrinting";
 import { Button } from "@/components/ui/button";
 import { AiFillPrinter } from "react-icons/ai";
 import { FiPrinter } from "react-icons/fi";
+import Link from "next/link";
 type ReviewProps = {
     review: ReviewReturnedType;
     onDelete: () => void;
@@ -47,7 +48,11 @@ export default function Review({ review, onDelete }: ReviewProps) {
                 <ReviewImages images={review.images} />
             </CardContent>
             <CardFooter className="flex-col items-start gap-3">
-                <h2>{review.author.name}</h2>
+                <h2>
+                    <Link href={`/profile/${review.author.id}`}>
+                        {review.author.name}
+                    </Link>
+                </h2>
                 <div className="flex gap-3">
                     <LikeButton
                         reviewId={review.id}
@@ -68,7 +73,6 @@ export default function Review({ review, onDelete }: ReviewProps) {
                     />
                     <RatingButton
                         pieceValue={review.piece?.value as string}
-                        reviewId={review.id}
                         rates={review.piece?.rates || []}
                         disabled={!isAuth}
                         userId={user?.id}

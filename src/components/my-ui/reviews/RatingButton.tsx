@@ -6,7 +6,6 @@ import { useState } from "react";
 import StarRatings from "react-star-ratings";
 
 type RatingButtonProps = {
-    reviewId: string;
     rates: Rate[];
     disabled?: boolean;
     userId?: string;
@@ -14,14 +13,12 @@ type RatingButtonProps = {
 };
 
 export default function RatingButton({
-    reviewId,
     rates,
     userId,
     pieceValue,
 }: RatingButtonProps) {
     const { loading, sumOfRates, rateReview, userRating } = useRates({
         rates,
-        reviewId,
         userId,
         pieceValue,
     });
@@ -36,7 +33,11 @@ export default function RatingButton({
                 {sumOfRates.toFixed(1)}
             </span>
             <StarRatings
-                changeRating={(newRating) => rateReview(newRating)}
+                changeRating={(newRating) => {
+                    if (userId) {
+                        rateReview(newRating);
+                    }
+                }}
                 rating={userRating}
                 starRatedColor="orange"
                 starHoverColor="orange"

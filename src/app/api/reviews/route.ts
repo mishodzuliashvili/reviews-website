@@ -10,7 +10,7 @@ export async function POST(request: Request) {
             await request.json();
         const user = await getCurrentUser();
         const userId = user?.id;
-        await prisma.review.upsert({
+        const review = await prisma.review.upsert({
             where: {
                 id: reviewId,
             },
@@ -85,7 +85,10 @@ export async function POST(request: Request) {
                 },
             },
         });
-        return NextResponse.json({ message: "Review created or updated." });
+        return NextResponse.json({
+            message: "Review created or updated.",
+            id: review.id,
+        });
     } catch (error) {
         return NextResponse.json(
             {

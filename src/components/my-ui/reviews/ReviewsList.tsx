@@ -15,7 +15,7 @@ export default function ReviewsList({
     take,
     searchTerm,
 }: ReviewsListProps) {
-    const { loading, reviews, deleteReview } = useReviews({
+    const { loading, reviews, deleteReview, error } = useReviews({
         userId,
         groupValues,
         pieceValues,
@@ -43,7 +43,7 @@ export default function ReviewsList({
                     <h2 className="text-xl">No reviews found</h2>
                 </div>
             )}
-            {reviews.map((review) => (
+            {reviews?.map((review) => (
                 <Review
                     key={review.id}
                     review={review}

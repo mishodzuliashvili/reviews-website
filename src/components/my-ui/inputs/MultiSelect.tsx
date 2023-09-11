@@ -25,12 +25,16 @@ type MultiSelectProps = {
     options: Option[];
     onChange: (options: Option[]) => void;
     defaultValue?: Option[];
+    canCreate?: boolean;
+    placeholder?: string;
 };
 
 export function MultiSelect({
     options,
     defaultValue,
     onChange,
+    canCreate = true,
+    placeholder,
 }: MultiSelectProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [selectedOptions, setSelectedOptions] = useState<Option[]>(options);
@@ -46,21 +50,17 @@ export function MultiSelect({
             label: name,
         };
         setSelectedOptions((prev) => [...prev, newOption]);
-        setSelectedValues((prev) => {
-            const newValues = [...prev, newOption];
-            onChange(newValues);
-            return newValues;
-        });
+        const newValues = [...selectedValues, newOption];
+        setSelectedValues(newValues);
+        onChange(newValues);
     };
 
-    const toggleTag = (tag: Option) => {
-        setSelectedValues((currentTags) => {
-            const newValues = !currentTags.includes(tag)
-                ? [...currentTags, tag]
-                : currentTags.filter((l) => l.value !== tag.value);
-            onChange(newValues);
-            return newValues;
-        });
+    const toggleOption = (option: Option) => {
+        const newValues = !selectedValues.includes(option)
+            ? [...selectedValues, option]
+            : selectedValues.filter((l) => l.value !== option.value);
+        setSelectedValues(newValues);
+        onChange(newValues);
         inputRef?.current?.focus();
     };
 
@@ -80,7 +80,7 @@ export function MultiSelect({
                         className="w-[200px] justify-between text-foreground"
                     >
                         <span className="truncate">
-                            {selectedValues.length === 0 && "Select labels"}
+                            {selectedValues.length === 0 && placeholder}
                             {selectedValues.length >= 1 &&
                                 selectedValues
                                     .map(({ label }) => label)
@@ -93,7 +93,7 @@ export function MultiSelect({
                     <Command loop>
                         <CommandInput
                             ref={inputRef}
-                            placeholder="Search framework..."
+                            placeholder="Search option..."
                             value={inputValue}
                             onValueChange={setInputValue}
                         />
@@ -107,7 +107,7 @@ export function MultiSelect({
                                     <CommandItem
                                         key={option.value}
                                         value={option.value}
-                                        onSelect={() => toggleTag(option)}
+                                        onSelect={() => toggleOption(option)}
                                     >
                                         <Check
                                             className={cn(
@@ -123,10 +123,15 @@ export function MultiSelect({
                                     </CommandItem>
                                 );
                             })}
-                            <CommandItemCreate
-                                onSelect={() => createOption(inputValue)}
-                                {...{ inputValue, options: selectedOptions }}
-                            />
+                            {canCreate && (
+                                <CommandItemCreate
+                                    onSelect={() => createOption(inputValue)}
+                                    {...{
+                                        inputValue,
+                                        options: selectedOptions,
+                                    }}
+                                />
+                            )}
                         </CommandGroup>
                     </Command>
                 </PopoverContent>
@@ -144,11 +149,11 @@ const CommandItemCreate = ({
     options: Option[];
     onSelect: () => void;
 }) => {
-    const hasNoFramework = !options
+    const hasNoOption = !options
         .map(({ value }) => value)
         .includes(`${inputValue.toLowerCase()}`);
 
-    const render = inputValue !== "" && hasNoFramework;
+    const render = inputValue !== "" && hasNoOption;
 
     if (!render) return null;
 

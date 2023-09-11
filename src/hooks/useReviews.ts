@@ -62,8 +62,11 @@ export default function useReviews({
             }),
         })
             .then((res) => res.json())
-            .then((reviews) => {
-                setReviews(reviews);
+            .then((data) => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                setReviews(data);
                 setLoading(false);
             })
             .catch((error) => {
@@ -78,7 +81,7 @@ export default function useReviews({
         } else {
             setLoading(false);
         }
-    }, [userId, sortBy, tagValues, groupValues, pieceValues]);
+    }, [userId, sortBy, tagValues, groupValues, pieceValues, searchTerm]);
 
     const search = (text: string) => {
         fetchReviews(text);
@@ -101,10 +104,12 @@ export default function useReviews({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newReview),
         });
-        if (!response.ok) {
+        const data = await response.json();
+        if (!response.ok || data.error) {
             setError("Review could not be added");
         }
         setLoading(false);
+        return data.id;
     };
 
     const deleteReview = async (review: Review) => {

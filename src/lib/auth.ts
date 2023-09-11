@@ -87,7 +87,7 @@ async function updateJWTToken(params: {
                 },
             });
         } catch (error) {
-            // ! no error handling
+            throw new Error("Cannot be connected with DB user");
         }
     }
     if (token) {
@@ -103,7 +103,7 @@ async function updateJWTToken(params: {
                 token.isAdmin = dbUser.isAdmin;
             }
         } catch (error) {
-            // ! no error handling
+            throw new Error("Cannot be connected with DB user");
         }
     }
     return token;
