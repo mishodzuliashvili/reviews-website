@@ -24,9 +24,12 @@ export async function GET(
         });
         return NextResponse.json(user);
     } catch (error) {
-        return new NextResponse("Could not get user.", {
-            status: 500,
-        });
+        return NextResponse.json(
+            {
+                error: "User could not be fetched.",
+            },
+            { status: 500 }
+        );
     }
 }
 
@@ -45,10 +48,13 @@ export async function PUT(
             },
         });
 
-        return NextResponse.json({ msg: "User updated." });
+        return NextResponse.json({ message: "User updated." });
     } catch (error) {
-        return new NextResponse("Could not update user.", {
-            status: 500,
-        });
+        return NextResponse.json(
+            {
+                error: "User could not be updated.",
+            },
+            { status: 500 }
+        );
     }
 }

@@ -16,11 +16,16 @@ export async function POST(request: Request) {
     try {
         const { ids } = await request.json();
         await updateUsersByIds(ids, { isBlocked: true });
-        return NextResponse.json({ msg: "Users blocked successfully" });
+        return NextResponse.json({ message: "Users blocked successfully" });
     } catch (error) {
-        return new NextResponse("Changing users blocked property failed.", {
-            status: 500,
-        });
+        return NextResponse.json(
+            {
+                error: "Changing users blocked property failed.",
+            },
+            {
+                status: 500,
+            }
+        );
     }
 }
 
@@ -28,10 +33,15 @@ export async function DELETE(request: Request) {
     try {
         const { ids } = await request.json();
         await updateUsersByIds(ids, { isBlocked: false });
-        return NextResponse.json({ msg: "Users unblocked successfully" });
+        return NextResponse.json({ message: "Users unblocked successfully" });
     } catch (error) {
-        return new NextResponse("Changing users blocked property failed.", {
-            status: 500,
-        });
+        return NextResponse.json(
+            {
+                error: "Changing users blocked property failed.",
+            },
+            {
+                status: 500,
+            }
+        );
     }
 }

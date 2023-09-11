@@ -2,13 +2,17 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
-// TODO: get tags by searching and autocomplete for optimization
 export async function GET() {
     try {
         const tags = await prisma.tag.findMany();
         return NextResponse.json(tags);
     } catch (e: any) {
-        return NextResponse.json("Something went wrong", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Tags could not be fetched.",
+            },
+            { status: 500 }
+        );
     }
 }
 
@@ -19,9 +23,14 @@ export async function POST(request: Request) {
             data: data,
             skipDuplicates: true,
         });
-        return NextResponse.json({ msg: "Tags added successfully" });
+        return NextResponse.json({ message: "Tags added successfully" });
     } catch (error) {
-        return new NextResponse("Something went wrong", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Tags could not be added.",
+            },
+            { status: 500 }
+        );
     }
 }
 
@@ -35,8 +44,13 @@ export async function DELETE(request: Request) {
                 },
             },
         });
-        return NextResponse.json({ msg: "Tags deleted successfully" });
+        return NextResponse.json({ message: "Tags deleted successfully" });
     } catch (error) {
-        return NextResponse.json("Could not delete tags.", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Tags could not be deleted.",
+            },
+            { status: 500 }
+        );
     }
 }

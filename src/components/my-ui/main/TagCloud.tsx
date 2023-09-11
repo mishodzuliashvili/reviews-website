@@ -1,5 +1,6 @@
 "use client";
 import { useMounted } from "@/hooks/useMounted";
+import { useRouter } from "next/navigation";
 
 type TagCloudProps = {
     tags: {
@@ -10,7 +11,7 @@ type TagCloudProps = {
 
 export default function TagCloud({ tags }: TagCloudProps) {
     const isMounted = useMounted();
-
+    const router = useRouter();
     if (!isMounted) return null;
 
     const counts = tags.map((tag) => tag.count);
@@ -35,6 +36,7 @@ export default function TagCloud({ tags }: TagCloudProps) {
                     style={{
                         fontSize: calculateTagSize(tag.count) + "px",
                     }}
+                    onClick={() => router.push(`/tags/${tag.value}`)}
                 >
                     {tag.value}
                 </span>

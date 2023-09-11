@@ -12,6 +12,11 @@ export async function GET(req: Request, { params: { reviewId } }: paramsType) {
         });
         return NextResponse.json(likes);
     } catch (error) {
-        return new NextResponse("Something went wrong", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Likes could not be fetched.",
+            },
+            { status: 500 }
+        );
     }
 }

@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import MainLoader from "@/components/my-ui/MainLoader";
+import MainLoader from "@/components/my-ui/main/MainLoader";
 import { useTranslations } from "next-intl";
 import { useToast } from "@/components/ui/use-toast";
 import { Session } from "next-auth";

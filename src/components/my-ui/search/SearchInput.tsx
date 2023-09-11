@@ -1,18 +1,17 @@
 "use client";
 import React, { useState, useTransition } from "react";
-import { Input } from "../ui/input";
+import { Input } from "../../ui/input";
 import { redirect, usePathname, useRouter } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import MainLoader from "./MainLoader";
+import MainLoader from "../main/MainLoader";
 import useReviews from "@/hooks/useReviews";
 
 export default function SearchInput() {
     const [searchText, setSearchText] = useState("");
-    const { search, loading } = useReviews({});
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        search(searchText);
+        redirect("/search/" + searchText);
     };
 
     return (

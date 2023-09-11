@@ -7,7 +7,6 @@ export async function POST(req: Request) {
         const { pieceValue, value } = await req.json();
         const user = await getCurrentUser();
         const userId = user?.id as string;
-        console.log(pieceValue, value);
         await prisma.rate.upsert({
             where: {
                 userId_pieceValue: {
@@ -25,30 +24,14 @@ export async function POST(req: Request) {
             },
         });
         return NextResponse.json({
-            msg: "Raiting added successfully",
+            message: "Raiting added successfully",
         });
     } catch (error) {
-        return new NextResponse("Something went wrong", { status: 500 });
-    }
-}
-
-export async function DELETE(req: Request) {
-    try {
-        const { reviewId } = await req.json();
-        const user = await getCurrentUser();
-        const userId = user?.id as string;
-        // await prisma.rate.delete({
-        //     where: {
-        //         userId_reviewId: {
-        //             reviewId,
-        //             userId,
-        //         },
-        //     },
-        // });
-        return NextResponse.json({
-            msg: "Raiting deleted successfully",
-        });
-    } catch (error) {
-        return new NextResponse("Something went wrong", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Raiting could not be created.",
+            },
+            { status: 500 }
+        );
     }
 }

@@ -16,6 +16,8 @@ import { usePathname, useRouter } from "next-intl/client";
 import { useSearchParams } from "next/navigation";
 import { useMounted } from "@/hooks/useMounted";
 
+type Locale = keyof typeof localeLabels;
+
 export default function LanguageSwitch() {
     const mounted = useMounted();
     const router = useRouter();
@@ -38,12 +40,10 @@ export default function LanguageSwitch() {
                 <DropdownMenuTrigger asChild className="outline-none">
                     <Button variant="outline">
                         <span className="hidden sm:block">
-                            {localeLabels[locale as keyof typeof localeLabels]}
+                            {localeLabels[locale as Locale]}
                         </span>
                         <span className="block sm:hidden">
-                            {localeLabels[
-                                locale as keyof typeof localeLabels
-                            ].slice(0, 2)}
+                            {localeLabels[locale as Locale].slice(0, 2)}
                         </span>
                     </Button>
                 </DropdownMenuTrigger>
@@ -58,11 +58,7 @@ export default function LanguageSwitch() {
                     >
                         {locales.map((locale: string) => (
                             <DropdownMenuRadioItem key={locale} value={locale}>
-                                {
-                                    localeLabels[
-                                        locale as keyof typeof localeLabels
-                                    ]
-                                }
+                                {localeLabels[locale as Locale]}
                             </DropdownMenuRadioItem>
                         ))}
                     </DropdownMenuRadioGroup>

@@ -10,10 +10,9 @@ export async function POST(request: Request) {
             await request.json();
         const user = await getCurrentUser();
         const userId = user?.id;
-        console.log(images);
         await prisma.review.upsert({
             where: {
-                id: "",
+                id: reviewId,
             },
             create: {
                 title,
@@ -86,10 +85,14 @@ export async function POST(request: Request) {
                 },
             },
         });
-        return NextResponse.json({ msg: "Review created." });
+        return NextResponse.json({ message: "Review created or updated." });
     } catch (error) {
-        console.log(error);
-        return new NextResponse("Could not create reviews.", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Review could not be created.",
+            },
+            { status: 500 }
+        );
     }
 }
 
@@ -103,8 +106,13 @@ export async function DELETE(request: Request) {
                 },
             },
         });
-        return NextResponse.json({ msg: "Reviews deleted" });
+        return NextResponse.json({ message: "Reviews deleted" });
     } catch (error) {
-        return new NextResponse("Could not delete reviews.", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Reviews could not be deleted.",
+            },
+            { status: 500 }
+        );
     }
 }

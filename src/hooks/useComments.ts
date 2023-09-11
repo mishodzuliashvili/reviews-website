@@ -1,7 +1,9 @@
 import { subscribeAbly } from "@/lib/ably";
+import { createCommentSchema } from "@/lib/validations/comments";
 import { Comment } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import useUser from "./useUser";
 
 type OptimisiticComment = Comment & { pending: boolean };
 
@@ -13,12 +15,12 @@ export default function useComments({ reviewId }: useCommentsProps) {
     const [comments, setComments] = useState<OptimisiticComment[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
-    const { data, status } = useSession();
+    const { user, isLoading: userLoading } = useUser();
 
     const createOptimisticComment = (text: string) => {
         return {
             text,
-            authorId: data?.user.id as string,
+            authorId: user?.id as string,
             reviewId,
             createdAt: new Date(),
             id: crypto.randomUUID(),
@@ -27,6 +29,11 @@ export default function useComments({ reviewId }: useCommentsProps) {
     };
 
     const sendComment = async (comment: OptimisiticComment) => {
+        try {
+            createCommentSchema.parse({ text: comment.text });
+        } catch (e) {
+            setError(new Error("Comment is not valid"));
+        }
         const res = await fetch(`/api/comments`, {
             method: "POST",
             headers: {
@@ -40,6 +47,8 @@ export default function useComments({ reviewId }: useCommentsProps) {
         if (!res.ok) {
             setError(new Error("Something went wrong"));
         }
+        const { commentId } = await res.json();
+        return commentId;
     };
 
     const addComment = async (text: string) => {
@@ -56,7 +65,6 @@ export default function useComments({ reviewId }: useCommentsProps) {
     const fetchComments = async () => {
         setLoading(true);
         const res = await fetch(`/api/comments/review/${reviewId}`);
-        console.log(res);
         if (!res.ok) {
             setError(new Error("Something went wrong"));
             setLoading(false);
@@ -72,13 +80,13 @@ export default function useComments({ reviewId }: useCommentsProps) {
     }, []);
 
     useEffect(() => {
-        if (status !== "loading") {
+        if (!userLoading) {
             subscribeAbly(reviewId, (comment: Comment) => {
-                if (comment.authorId === data?.user.id) return;
+                if (comment.authorId === user?.id) return;
                 setComments((prev) => [...prev, comment as OptimisiticComment]);
             });
         }
-    }, [status]);
+    }, [userLoading]);
 
     return { comments, addComment, loading, error } as const;
 }

@@ -53,7 +53,6 @@ export default withAuth(
                 return NextResponse.next();
             }
         }
-        console.log(req.nextUrl.pathname);
         if (!token) {
             if (
                 !doesPathMatchPages(req, authPages) &&

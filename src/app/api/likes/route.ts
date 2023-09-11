@@ -14,10 +14,15 @@ export async function POST(req: Request) {
             },
         });
         return NextResponse.json({
-            msg: "Like added successfully",
+            message: "Like added successfully",
         });
     } catch (error) {
-        return new NextResponse("Something went wrong", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Like could not be created.",
+            },
+            { status: 500 }
+        );
     }
 }
 
@@ -35,9 +40,14 @@ export async function DELETE(req: Request) {
             },
         });
         return NextResponse.json({
-            msg: "Like deleted successfully",
+            message: "Like deleted successfully",
         });
     } catch (error) {
-        return new NextResponse("Something went wrong", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Like could not be deleted.",
+            },
+            { status: 500 }
+        );
     }
 }

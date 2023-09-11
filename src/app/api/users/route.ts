@@ -7,15 +7,15 @@ export async function GET() {
         const users = await prisma.user.findMany();
         return NextResponse.json(users);
     } catch (e: any) {
-        return new NextResponse("Could not get users.", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Users could not be fetched.",
+            },
+            { status: 500 }
+        );
     }
 }
-// TODO: start from here refactoring
-// 1. users
-// 2. reviews
-// 3. comments
-// and see how can we manage with server side components
-// maybe add enfpoint for reviwgroups and images
+
 export async function DELETE(request: Request) {
     try {
         const { ids } = await request.json();
@@ -26,8 +26,13 @@ export async function DELETE(request: Request) {
                 },
             },
         });
-        return NextResponse.json({ msg: "Users deleted." });
+        return NextResponse.json({ message: "Users deleted." });
     } catch (error) {
-        return new NextResponse("Something went wrong.", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Users could not be deleted.",
+            },
+            { status: 500 }
+        );
     }
 }

@@ -1,3 +1,4 @@
+import getQueries from "@/lib/getQueries";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -6,6 +7,7 @@ export const dynamic = "force-dynamic";
 type paramsType = { params: { reviewId: string } };
 
 export async function GET(req: Request, { params: { reviewId } }: paramsType) {
+    const { take, skip } = getQueries(req, ["take", "skip"]);
     try {
         const comments = await prisma.comment.findMany({
             where: { reviewId },
@@ -13,9 +15,16 @@ export async function GET(req: Request, { params: { reviewId } }: paramsType) {
             include: {
                 author: true,
             },
+            ...(skip && { skip: Number(skip) }),
+            ...(take && { take: Number(take) }),
         });
         return NextResponse.json(comments);
     } catch (error) {
-        return new NextResponse("Something went wrong", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Comments could not be fetched.",
+            },
+            { status: 500 }
+        );
     }
 }

@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { Input } from "../ui/input";
+import { Input } from "../../ui/input";
 import useReviews from "@/hooks/useReviews";
-import Review from "./reviews/Review";
-import MainLoader from "./MainLoader";
+import Review from "../reviews/Review";
+import MainLoader from "../main/MainLoader";
 
 export default function SearchReviews() {
     const [searchText, setSearchText] = useState("");

@@ -2,14 +2,12 @@ import { Like, Rate } from "@prisma/client";
 import { useState } from "react";
 
 type UseRatesProps = {
-    reviewId: string;
     rates: Rate[];
     userId?: string;
     pieceValue: string;
 };
 
 export default function useRates({
-    reviewId,
     rates: _rates,
     userId,
     pieceValue,

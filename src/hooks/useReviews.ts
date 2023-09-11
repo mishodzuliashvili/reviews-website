@@ -1,4 +1,5 @@
 "use client";
+import { buildQueryParams } from "@/lib/utils";
 import { Prisma, Review } from "@prisma/client";
 import { useEffect, useState } from "react";
 
@@ -25,6 +26,7 @@ export type UseReviewsProps = {
     pieceValues?: string[];
     isQuery?: boolean;
     take?: number;
+    searchTerm?: string;
 };
 
 export default function useReviews({
@@ -35,6 +37,7 @@ export default function useReviews({
     pieceValues,
     isQuery = true,
     take,
+    searchTerm,
 }: UseReviewsProps) {
     const [reviews, setReviews] = useState<ReviewReturnedType[]>([]);
     const [loading, setLoading] = useState(true);
@@ -71,7 +74,7 @@ export default function useReviews({
 
     useEffect(() => {
         if (isQuery) {
-            fetchReviews();
+            fetchReviews(searchTerm);
         } else {
             setLoading(false);
         }
@@ -118,17 +121,13 @@ export default function useReviews({
         setLoading(false);
     };
 
-    return { reviews, loading, error, addOrUpdateReview, deleteReview, search };
-}
-
-export function buildQueryParams(params: Record<string, string | undefined>) {
-    const queryParams = new URLSearchParams();
-
-    for (const [key, value] of Object.entries(params)) {
-        if (value !== undefined) {
-            queryParams.append(key, value);
-        }
-    }
-
-    return queryParams.toString();
+    return {
+        reviews,
+        loading,
+        error,
+        addOrUpdateReview,
+        deleteReview,
+        search,
+        fetchReviews,
+    };
 }

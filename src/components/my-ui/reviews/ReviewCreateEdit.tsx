@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import MainLoader from "@/components/my-ui/MainLoader";
+import MainLoader from "@/components/my-ui/main/MainLoader";
 import { useTranslations } from "next-intl";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -28,13 +28,13 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import dynamic from "next/dynamic";
-import UploadImages from "@/components/my-ui/UploadImages";
+import UploadImages from "@/components/my-ui/inputs/UploadImages";
 import { UploadFileResponse } from "uploadthing/client";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { TagsSelect } from "@/app/[locale]/(user)/review/new/tags";
-import { ReviewGroup, Tag } from "@prisma/client";
-const Wysiwyg = dynamic(() => import("../Wysiwyg"), {
+import { MultiSelect } from "@/components/my-ui/inputs/MultiSelect";
+import { Piece, ReviewGroup, Tag } from "@prisma/client";
+const Wysiwyg = dynamic(() => import("../inputs/Wysiwyg"), {
     ssr: false,
 });
 
@@ -50,12 +50,14 @@ type ReviewCreateEditProps = {
     review?: ReviewReturnedType;
     tags: Tag[];
     groups: ReviewGroup[];
+    pieces: Piece[];
 };
 
 export default function ReviewCreateEdit({
     review,
     tags,
     groups,
+    pieces,
 }: ReviewCreateEditProps) {
     const { addOrUpdateReview } = useReviews({
         isQuery: false,
@@ -69,7 +71,6 @@ export default function ReviewCreateEdit({
     );
     const formSchema = getFromSchema(t);
     const [text, setText] = useState(review?.text || "");
-    console.log(review);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema as any),
         defaultValues: {
@@ -190,12 +191,12 @@ export default function ReviewCreateEdit({
                 <FormItem>
                     <FormLabel>{t("tags")}</FormLabel>
                     <FormControl>
-                        <TagsSelect
-                            tags={tags.map((tag) => ({
+                        <MultiSelect
+                            options={tags.map((tag) => ({
                                 label: tag.value,
                                 value: tag.value,
                             }))}
-                            defatulValue={review?.tags.map((t) => ({
+                            defaultValue={review?.tags.map((t) => ({
                                 value: t.value,
                                 label: t.value,
                             }))}

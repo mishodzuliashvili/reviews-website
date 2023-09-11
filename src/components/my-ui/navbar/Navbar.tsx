@@ -1,11 +1,12 @@
 "use client";
-import ThemeSwitch from "../mainSwitchs/ThemeSwitch";
-import LanguageSwitcher from "../mainSwitchs/LanguageSwitch";
+import ThemeSwitch from "../../mainSwitchs/ThemeSwitch";
+import LanguageSwitcher from "../../mainSwitchs/LanguageSwitch";
 import ProfileButton from "./ProfileButton";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
+import SearchInput from "../search/SearchInput";
 
 const Navbar = () => {
     const t = useTranslations("Navbar");
@@ -29,6 +30,7 @@ const Navbar = () => {
                 {homeButton}
                 <ThemeSwitch />
                 <LanguageSwitcher />
+                <SearchInput />
             </div>
             {!isBlocked && isAuth && <ProfileButton />}
             {!isAuth && (

@@ -11,7 +11,7 @@ import {
 import ReviewsList from "./ReviewsList";
 import { useState } from "react";
 import { Piece, ReviewGroup, Tag } from "@prisma/client";
-import { TagsSelect } from "@/app/[locale]/(user)/review/new/tags";
+import { MultiSelect } from "@/components/my-ui/inputs/MultiSelect";
 
 type UserReviewsPageProps = {
     userId: string;
@@ -57,8 +57,8 @@ export default function UserReviewsPage({
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-                <TagsSelect
-                    tags={tags.map((tag) => ({
+                <MultiSelect
+                    options={tags.map((tag) => ({
                         value: tag.value,
                         label: tag.value,
                     }))}
@@ -66,8 +66,8 @@ export default function UserReviewsPage({
                         setSelectedTagValues(tags.map((t) => t.value));
                     }}
                 />
-                <TagsSelect
-                    tags={groups.map((group) => ({
+                <MultiSelect
+                    options={groups.map((group) => ({
                         value: group.value,
                         label: group.value,
                     }))}
@@ -75,8 +75,8 @@ export default function UserReviewsPage({
                         setSelectedGroupValues(groups.map((g) => g.value));
                     }}
                 />
-                <TagsSelect
-                    tags={pieces.map((piece) => ({
+                <MultiSelect
+                    options={pieces.map((piece) => ({
                         value: piece.value,
                         label: piece.value,
                     }))}

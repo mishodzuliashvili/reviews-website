@@ -1,8 +1,9 @@
-import TagCloud from "@/components/my-ui/TagCloud";
 import { prisma } from "@/lib/prisma";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReviewsList from "@/components/my-ui/reviews/ReviewsList";
-import SearchReviews from "@/components/my-ui/SearchReviews";
+import { createCommentSchema } from "@/lib/validations/comments";
+import Comments from "@/components/my-ui/reviews/Comments";
+import TagCloud from "@/components/my-ui/main/TagCloud";
 
 export const revalidate = 0;
 
@@ -16,6 +17,7 @@ export default async function Home() {
             },
         },
     });
+
     return (
         <main className="px-5 flex flex-col gap-3">
             <TagCloud

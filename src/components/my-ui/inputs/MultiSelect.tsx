@@ -19,37 +19,41 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 
-type Tag = Record<"value" | "label", string>;
+type Option = Record<"value" | "label", string>;
 
-type TagsSelectProps = {
-    tags: Tag[];
-    onChange: (tags: Tag[]) => void;
-    defatulValue?: Tag[];
+type MultiSelectProps = {
+    options: Option[];
+    onChange: (options: Option[]) => void;
+    defaultValue?: Option[];
 };
 
-export function TagsSelect({ tags, defatulValue, onChange }: TagsSelectProps) {
+export function MultiSelect({
+    options,
+    defaultValue,
+    onChange,
+}: MultiSelectProps) {
     const inputRef = useRef<HTMLInputElement>(null);
-    const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
+    const [selectedOptions, setSelectedOptions] = useState<Option[]>(options);
     const [openCombobox, setOpenCombobox] = useState(false);
     const [inputValue, setInputValue] = useState<string>("");
-    const [selectedValues, setSelectedValues] = useState<Tag[]>(
-        defatulValue ?? []
+    const [selectedValues, setSelectedValues] = useState<Option[]>(
+        defaultValue ?? []
     );
 
-    const createTag = (name: string) => {
-        const newTag = {
+    const createOption = (name: string) => {
+        const newOption = {
             value: name.toLowerCase(),
             label: name,
         };
-        setSelectedTags((prev) => [...prev, newTag]);
+        setSelectedOptions((prev) => [...prev, newOption]);
         setSelectedValues((prev) => {
-            const newValues = [...prev, newTag];
+            const newValues = [...prev, newOption];
             onChange(newValues);
             return newValues;
         });
     };
 
-    const toggleTag = (tag: Tag) => {
+    const toggleTag = (tag: Option) => {
         setSelectedValues((currentTags) => {
             const newValues = !currentTags.includes(tag)
                 ? [...currentTags, tag]
@@ -94,16 +98,16 @@ export function TagsSelect({ tags, defatulValue, onChange }: TagsSelectProps) {
                             onValueChange={setInputValue}
                         />
                         <CommandGroup className="max-h-[145px] overflow-auto">
-                            {selectedTags.map((framework) => {
+                            {selectedOptions.map((option) => {
                                 const isActive =
                                     selectedValues.findIndex(
-                                        (v) => v.value === framework.value
+                                        (v) => v.value === option.value
                                     ) > -1;
                                 return (
                                     <CommandItem
-                                        key={framework.value}
-                                        value={framework.value}
-                                        onSelect={() => toggleTag(framework)}
+                                        key={option.value}
+                                        value={option.value}
+                                        onSelect={() => toggleTag(option)}
                                     >
                                         <Check
                                             className={cn(
@@ -114,14 +118,14 @@ export function TagsSelect({ tags, defatulValue, onChange }: TagsSelectProps) {
                                             )}
                                         />
                                         <div className="flex-1">
-                                            {framework.label}
+                                            {option.label}
                                         </div>
                                     </CommandItem>
                                 );
                             })}
                             <CommandItemCreate
-                                onSelect={() => createTag(inputValue)}
-                                {...{ inputValue, frameworks: selectedTags }}
+                                onSelect={() => createOption(inputValue)}
+                                {...{ inputValue, options: selectedOptions }}
                             />
                         </CommandGroup>
                     </Command>
@@ -133,14 +137,14 @@ export function TagsSelect({ tags, defatulValue, onChange }: TagsSelectProps) {
 
 const CommandItemCreate = ({
     inputValue,
-    frameworks,
+    options,
     onSelect,
 }: {
     inputValue: string;
-    frameworks: Tag[];
+    options: Option[];
     onSelect: () => void;
 }) => {
-    const hasNoFramework = !frameworks
+    const hasNoFramework = !options
         .map(({ value }) => value)
         .includes(`${inputValue.toLowerCase()}`);
 

@@ -8,11 +8,6 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import { JWT } from "next-auth/jwt";
 import { AdapterUser } from "next-auth/adapters";
-import {
-    getUserByEmail,
-    getUserById,
-    updateUserById,
-} from "@/prisma-functions/users";
 
 export const authOptions: NextAuthOptions = {
     session: {
@@ -58,7 +53,9 @@ async function authorizeCredentials(
         throw new Error("Invalid credentials");
     }
     const { email, password } = credentials;
-    const user = await getUserByEmail(email);
+    const user = await prisma.user.findUnique({
+        where: { email },
+    });
     if (!user || !user.password || !(await compare(password, user.password))) {
         throw new Error("Email or password is incorrect");
     }
@@ -81,23 +78,32 @@ async function updateJWTToken(params: {
     if (user) {
         token.id = user.id;
         try {
-            await updateUserById(user.id, {
-                lastLoginTime: new Date(),
+            await prisma.user.update({
+                where: {
+                    id: user.id,
+                },
+                data: {
+                    lastLoginTime: new Date(),
+                },
             });
         } catch (error) {
-            console.log(error);
+            // ! no error handling
         }
     }
     if (token) {
         try {
-            const dbUser = await getUserById(token.id);
+            const dbUser = await prisma.user.findUnique({
+                where: {
+                    id: token.id,
+                },
+            });
             if (dbUser) {
                 token.name = dbUser.name;
                 token.isBlocked = dbUser.isBlocked;
                 token.isAdmin = dbUser.isAdmin;
             }
         } catch (error) {
-            console.log(error);
+            // ! no error handling
         }
     }
     return token;

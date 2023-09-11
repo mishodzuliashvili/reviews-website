@@ -14,7 +14,7 @@ import { useMounted } from "@/hooks/useMounted";
 
 const ThemeSwitch = () => {
     const mounted = useMounted();
-    const { theme, setTheme } = useTheme();
+    const { setTheme } = useTheme();
     const t = useTranslations("ThemeSwitch");
 
     if (!mounted) return null;

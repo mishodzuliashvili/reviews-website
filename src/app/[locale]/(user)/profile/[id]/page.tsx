@@ -1,5 +1,4 @@
 import ReviewCreateEdit from "@/components/my-ui/reviews/ReviewCreateEdit";
-import ReviewsList from "@/components/my-ui/reviews/ReviewsList";
 import UserReviewsPage from "@/components/my-ui/reviews/UserReviewsPage";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ReviewReturnedType } from "@/hooks/useReviews";
@@ -67,6 +66,7 @@ export default async function Profile({
                         <ReviewCreateEdit
                             tags={tags}
                             groups={groups}
+                            pieces={pieces}
                             review={reviewForEdit}
                         />
                     </TabsContent>

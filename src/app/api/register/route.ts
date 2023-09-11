@@ -7,9 +7,12 @@ export async function POST(req: Request) {
     try {
         const { name, email, password } = await req.json();
         if (!name || !email || !password) {
-            return new NextResponse("Please fill all fields.", {
-                status: 400,
-            });
+            return NextResponse.json(
+                {
+                    error: "Please fill in all fields.",
+                },
+                { status: 400 }
+            );
         }
         const userExists = await prisma.user.findUnique({
             where: {
@@ -17,9 +20,12 @@ export async function POST(req: Request) {
             },
         });
         if (userExists) {
-            return new NextResponse("User with this email already exists.", {
-                status: 400,
-            });
+            return NextResponse.json(
+                {
+                    error: "User already exists.",
+                },
+                { status: 400 }
+            );
         }
         const hashed_password = await hash(password, 12);
         await prisma.user.create({
@@ -37,9 +43,14 @@ export async function POST(req: Request) {
             },
         });
         return NextResponse.json({
-            msg: "User created successfully",
+            message: "User created successfully",
         });
     } catch (error: any) {
-        return new NextResponse("Something went wrong", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "User could not be created.",
+            },
+            { status: 500 }
+        );
     }
 }

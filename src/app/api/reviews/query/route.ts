@@ -1,6 +1,7 @@
 import getQueries from "@/lib/getQueries";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { DefaultArgs } from "@prisma/client/runtime/library";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -47,7 +48,7 @@ export async function POST(request: Request) {
         };
         const reviews = await prisma.review.findMany({
             ...sortByObj[sortBy || "createdAt"],
-            take: take || 10,
+            ...(take && { take: Number(take) }),
             where: {
                 ...(userId && { authorId: userId }),
                 ...(tagValues?.length > 0 && {
@@ -120,22 +121,30 @@ export async function POST(request: Request) {
                     ],
                 }),
             },
-            include: {
-                tags: true,
-                images: true,
-                group: true,
-                author: true,
-                piece: {
-                    include: {
-                        rates: true,
-                    },
-                },
-                likes: true,
-            },
+            include: reviewInclude,
         });
-        console.log(reviews);
         return NextResponse.json(reviews);
     } catch (error) {
-        return new NextResponse("Could not get reviews.", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Reviews could not be fetched.",
+            },
+            {
+                status: 500,
+            }
+        );
     }
 }
+
+export const reviewInclude: Prisma.ReviewInclude<DefaultArgs> = {
+    tags: true,
+    images: true,
+    group: true,
+    author: true,
+    piece: {
+        include: {
+            rates: true,
+        },
+    },
+    likes: true,
+};

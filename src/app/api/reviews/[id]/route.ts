@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { reviewInclude } from "../query/route";
+import { getCurrentUser } from "@/lib/session";
 export const dynamic = "force-dynamic";
 
 export async function GET(
@@ -11,27 +13,16 @@ export async function GET(
             where: {
                 id: id,
             },
-            include: {
-                tags: true,
-                images: true,
-                group: true,
-                author: true,
-                likes: true,
-                piece: {
-                    include: {
-                        rates: true,
-                    },
-                },
-                comments: {
-                    orderBy: {
-                        createdAt: "desc",
-                    },
-                },
-            },
+            include: reviewInclude,
         });
         return NextResponse.json(review);
     } catch (e: any) {
-        return new NextResponse("Could not get review.", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Review could not be fetched.",
+            },
+            { status: 500 }
+        );
     }
 }
 
@@ -40,16 +31,61 @@ export async function PUT(
     { params: { id } }: { params: { id: string } }
 ) {
     try {
-        const { data } = await request.json();
+        const { title, item, grade, text, group, tags, images } =
+            await request.json();
+        const user = await getCurrentUser();
+        const userId = user?.id;
         await prisma.review.update({
             where: {
                 id: id,
             },
-            data: data,
+            data: {
+                title,
+                grade,
+                text,
+                piece: {
+                    connectOrCreate: {
+                        where: { value: item },
+                        create: { value: item },
+                    },
+                },
+                tags: {
+                    set: [],
+                    connectOrCreate: tags.map((tag: string) => ({
+                        where: { value: tag },
+                        create: { value: tag },
+                    })),
+                },
+                images: {
+                    deleteMany: {
+                        url: {
+                            notIn: images,
+                        },
+                    },
+                    connectOrCreate: images.map((image: string) => ({
+                        where: { url: image },
+                        create: { url: image },
+                    })),
+                },
+                author: {
+                    connect: { id: userId },
+                },
+                group: {
+                    connectOrCreate: {
+                        where: { value: group },
+                        create: { value: group },
+                    },
+                },
+            },
         });
-        return NextResponse.json({ msg: "Review updated." });
+        return NextResponse.json({ message: "Review updated." });
     } catch (error) {
-        return new NextResponse("Could not delete review.", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Review could not be updated.",
+            },
+            { status: 500 }
+        );
     }
 }
 
@@ -65,6 +101,11 @@ export async function DELETE(
         });
         return NextResponse.json({ msg: "Review deleted." });
     } catch (error) {
-        return new NextResponse("Could not delete review.", { status: 500 });
+        return NextResponse.json(
+            {
+                error: "Review could not be deleted.",
+            },
+            { status: 500 }
+        );
     }
 }
