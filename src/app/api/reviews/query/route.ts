@@ -4,6 +4,8 @@ import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
     try {
         const { tagValues, groupValues, pieceValues, take } =

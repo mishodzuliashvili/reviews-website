@@ -99,12 +99,14 @@ export default function useReviews({
     }) => {
         setLoading(true);
         setError(null);
+        console.log("sss", newReview.tags);
         const response = await fetch("/api/reviews", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newReview),
         });
         const data = await response.json();
+
         if (!response.ok || data.error) {
             setError("Review could not be added");
         }

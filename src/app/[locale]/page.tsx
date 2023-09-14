@@ -26,9 +26,9 @@ export default async function Home() {
                     count: tag._count.reviews,
                 }))}
             />
-            <Tabs defaultValue={"recentlyAdded"} className="">
+            <Tabs defaultValue="recentlyAdded">
                 <TabsList>
-                    <TabsTrigger value="recentlyAdded" className="">
+                    <TabsTrigger value="recentlyAdded">
                         Recently Added Reviewes
                     </TabsTrigger>
                     <TabsTrigger value="highestGrades">

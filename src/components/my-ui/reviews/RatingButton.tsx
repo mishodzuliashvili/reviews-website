@@ -1,7 +1,9 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import useRates from "@/hooks/useRates";
 import { Rate } from "@prisma/client";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useState } from "react";
 import StarRatings from "react-star-ratings";
 
@@ -29,6 +31,9 @@ export default function RatingButton({
                 (loading ? "opacity-50 " : "") + "flex items-center gap-3"
             }
         >
+            <Button variant="outline" disabled={loading} asChild>
+                <Link href={`/pieces/${pieceValue}`}>{pieceValue}</Link>
+            </Button>
             <span className="text-xl font-sans text-[orange] font-bold">
                 {sumOfRates.toFixed(1)}
             </span>

@@ -83,6 +83,7 @@ export default function ReviewCreateEdit({
         },
     });
     const handleSubmit = async (data: any) => {
+        console.log(selectedTags);
         const reviewId = await addOrUpdateReview({
             ...(review
                 ? {
@@ -205,7 +206,7 @@ export default function ReviewCreateEdit({
                                 label: t.value,
                             }))}
                             onChange={(tags) => {
-                                setSelectedTags(tags.map((t) => t.value));
+                                setSelectedTags(tags.map((t) => t.label));
                             }}
                         />
                     </FormControl>

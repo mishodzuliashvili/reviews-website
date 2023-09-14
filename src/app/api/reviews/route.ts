@@ -8,11 +8,12 @@ export async function POST(request: Request) {
     try {
         const { reviewId, title, item, grade, text, group, tags, images } =
             await request.json();
+        console.log(tags);
         const user = await getCurrentUser();
         const userId = user?.id;
         const review = await prisma.review.upsert({
             where: {
-                id: reviewId,
+                id: reviewId || "",
             },
             create: {
                 title,
@@ -85,11 +86,13 @@ export async function POST(request: Request) {
                 },
             },
         });
+
         return NextResponse.json({
             message: "Review created or updated.",
             id: review.id,
         });
     } catch (error) {
+        console.log(error, "eeee");
         return NextResponse.json(
             {
                 error: "Review could not be created.",

@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { AiFillPrinter } from "react-icons/ai";
 import { FiPrinter } from "react-icons/fi";
 import Link from "next/link";
+import TagLinks from "./TagLinks";
 type ReviewProps = {
     review: ReviewReturnedType;
     onDelete: () => void;
@@ -53,6 +54,9 @@ export default function Review({ review, onDelete }: ReviewProps) {
                         {review.author.name}
                     </Link>
                 </h2>
+                <div>
+                    <TagLinks tags={review.tags} />
+                </div>
                 <div className="flex gap-3">
                     <LikeButton
                         reviewId={review.id}

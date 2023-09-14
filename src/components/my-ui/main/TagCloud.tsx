@@ -36,7 +36,9 @@ export default function TagCloud({ tags }: TagCloudProps) {
                     style={{
                         fontSize: calculateTagSize(tag.count) + "px",
                     }}
-                    onClick={() => router.push(`/tags/${tag.value}`)}
+                    onClick={() =>
+                        router.push(`/reviews?tagValue=${tag.value}`)
+                    }
                 >
                     {tag.value}
                 </span>
