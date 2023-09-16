@@ -4,6 +4,7 @@ import useRates from "@/hooks/useRates";
 import { Rate } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import StarRatings from "react-star-ratings";
 
@@ -12,19 +13,21 @@ type RatingButtonProps = {
     disabled?: boolean;
     userId?: string;
     pieceValue: string;
+    changeRateByPiece: (pieceValue: string, rate: number) => void;
 };
 
 export default function RatingButton({
     rates,
     userId,
     pieceValue,
+    changeRateByPiece,
 }: RatingButtonProps) {
     const { loading, sumOfRates, rateReview, userRating } = useRates({
         rates,
         userId,
         pieceValue,
     });
-
+    const router = useRouter();
     return (
         <div
             className={
@@ -32,7 +35,9 @@ export default function RatingButton({
             }
         >
             <Button variant="outline" disabled={loading} asChild>
-                <Link href={`/pieces/${pieceValue}`}>{pieceValue}</Link>
+                <Link href={`/reviews?pieceValue=${pieceValue}`}>
+                    {pieceValue}
+                </Link>
             </Button>
             <span className="text-xl font-sans text-[orange] font-bold">
                 {sumOfRates.toFixed(1)}
@@ -41,6 +46,7 @@ export default function RatingButton({
                 changeRating={(newRating) => {
                     if (userId) {
                         rateReview(newRating);
+                        changeRateByPiece(pieceValue, newRating);
                     }
                 }}
                 rating={userRating}

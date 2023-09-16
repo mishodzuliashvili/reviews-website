@@ -18,6 +18,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import { useTranslations } from "next-intl";
 
 type Option = Record<"value" | "label", string>;
 
@@ -43,6 +44,7 @@ export function MultiSelect({
     const [selectedValues, setSelectedValues] = useState<Option[]>(
         defaultValue ?? []
     );
+    const t = useTranslations("MultiSelect");
 
     const createOption = (name: string) => {
         const newOption = {
@@ -70,14 +72,14 @@ export function MultiSelect({
     };
 
     return (
-        <div className="max-w-[200px]">
+        <div className="w-full sm:w-[180px]">
             <Popover open={openCombobox} onOpenChange={onComboboxOpenChange}>
                 <PopoverTrigger asChild>
                     <Button
                         variant="outline"
                         role="combobox"
                         aria-expanded={openCombobox}
-                        className="w-[200px] justify-between text-foreground"
+                        className="w-full justify-between text-foreground"
                     >
                         <span className="truncate">
                             {selectedValues.length === 0 && placeholder}
@@ -89,15 +91,15 @@ export function MultiSelect({
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
+                <PopoverContent className="w-full p-0">
                     <Command loop>
                         <CommandInput
                             ref={inputRef}
-                            placeholder="Search option..."
+                            placeholder={t("search")}
                             value={inputValue}
                             onValueChange={setInputValue}
                         />
-                        <CommandGroup className="max-h-[145px] overflow-auto">
+                        <CommandGroup className="w-full overflow-auto">
                             {selectedOptions.map((option) => {
                                 const isActive =
                                     selectedValues.findIndex(
@@ -108,6 +110,7 @@ export function MultiSelect({
                                         key={option.value}
                                         value={option.value}
                                         onSelect={() => toggleOption(option)}
+                                        className="w-full"
                                     >
                                         <Check
                                             className={cn(

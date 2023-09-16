@@ -1,4 +1,39 @@
 {
+  "Home": {
+    "title": "მთავარი",
+    "description": "მოგესალმებით მთავარ გვერდზე!",
+    "recently-added": "ბოლოს დამატებული რევიუები",
+    "highest-grades": "საუკეთესო შეფასების რევიუები"
+
+  },
+  "SearchInput": {
+    "search": "ძებნა...",
+    "no-results": "შედეგები არ არის",
+    "searching": "ძებნა...",
+    "search-error": "ძებნა ვერ ხერხდება."
+  },
+  "ProfileHeader": {
+    "title-my": "ჩემი პროფილი",
+    "title-other": "მომხმარებლის პროფილი",
+    "description": "ეს მომხმარებლის პროფილის გვერდია."
+  },
+  "ProfileTabs": {
+    "reviews": "რევიუები",
+    "create-or-edit": "რევიუების დამატება ან რედაქტირება"
+  },
+  "UserReviewsPage": {
+    "sort-by": "დახარისხება",
+    "created-at": "შექმნის თარიღი",
+    "likes": "მოწონებები",
+    "grade": "შეფასება",
+    "rates": "შეფასებები",
+    "select-tags": "აირჩიეთ ტეგები",
+    "select-groups": "აირჩიეთ ჯგუფები",
+    "select-pieces": "აირჩიეთ ნამუშევრები"
+  },
+  "MultiSelect": {
+    "search": "ძებნა..."
+  },  
   "Navbar": {
     "home": "მთავარი",
     "signin": "შესვლა"
@@ -129,5 +164,29 @@
     "errors": {
       "update-error": "შეცდომა განახლებისას."
     }
+  },
+  "ReviewNewForm": {
+    "title": "რევიუს დამატება",
+    "description": "შექმენით ახალი რევიუ.",
+    "title-field": "სათაური",
+    "title-field-placeholder": "შეიყვანეთ სათაური",
+    "tags": "ტეგები",
+    "tags-placeholder": "შეიყვანეთ ტეგები",
+    "submit": "რევიუს დამატება",
+    "item": "ნამუშევრი",
+    "item-placeholder": "ნამუშევრის სახელი",
+    "grade": "შეფასება",
+    "grade-placeholder": "შეიყვანეთ შეფასება",
+    "group": "ჯგუფი",
+    "group-placeholder": "შეიყვანეთ ჯგუფი",
+    "images": "სურათები",
+    "images-placeholder": "შეიყვანეთ სურათები",
+    "text-placeholder": "შეიყვანეთ ტექსტი",
+    "errors": {
+      "create-error": "რევიუს დამატება ვერ ხერხდება."
+    }
+  },
+  "ReviewsList": {
+    "no-reviews": "რევიუები არ არის."
   }
 }

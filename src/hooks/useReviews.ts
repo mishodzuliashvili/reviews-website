@@ -2,6 +2,7 @@
 import { buildQueryParams } from "@/lib/utils";
 import { Prisma, Review } from "@prisma/client";
 import { useEffect, useState } from "react";
+import useUser from "./useUser";
 
 export type ReviewReturnedType = Prisma.ReviewGetPayload<{
     include: {
@@ -42,7 +43,7 @@ export default function useReviews({
     const [reviews, setReviews] = useState<ReviewReturnedType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
+    const { user } = useUser();
     const fetchReviews = async (searchTerm?: string) => {
         setLoading(true);
         setError(null);
@@ -96,10 +97,10 @@ export default function useReviews({
         group: string;
         tags: string[];
         images: string[];
+        authorId?: string;
     }) => {
         setLoading(true);
         setError(null);
-        console.log("sss", newReview.tags);
         const response = await fetch("/api/reviews", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -128,6 +129,30 @@ export default function useReviews({
         setLoading(false);
     };
 
+    const changeRateByPiece = (pieceValue: string, value: number) => {
+        setReviews((prev) =>
+            prev.map((review) => {
+                if (review.piece?.value !== pieceValue) return review;
+                const index: number = !review.piece?.rates
+                    ? -1
+                    : review.piece.rates.findIndex((rate) => {
+                          return rate.userId === user?.id;
+                      });
+
+                if (index === -1) {
+                    review.piece?.rates?.push({
+                        userId: user?.id as string,
+                        value,
+                        pieceValue,
+                    });
+                } else if (review.piece?.rates) {
+                    review.piece.rates[index].value = value;
+                }
+                return review;
+            })
+        );
+    };
+
     return {
         reviews,
         loading,
@@ -136,5 +161,6 @@ export default function useReviews({
         deleteReview,
         search,
         fetchReviews,
+        changeRateByPiece,
     };
 }

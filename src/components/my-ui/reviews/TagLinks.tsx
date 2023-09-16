@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Tag } from "@prisma/client";
 import { redirect, useRouter } from "next/navigation";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 
 type TagLinksProps = {
     tags: Tag[];
@@ -14,15 +15,16 @@ export default function TagLinks({ tags }: TagLinksProps) {
     return (
         <div className="flex gap-3">
             {tags.map((tag) => (
-                <Button
+                <Badge
+                    className="font-medium text-sm px-3 py-1 cursor-pointer"
                     variant="outline"
                     key={tag.value}
                     onClick={() => {
-                        router.push(`/tags/${tag.value}`);
+                        router.push(`/reviews?tagValue=${tag.value}`);
                     }}
                 >
                     {tag.value}
-                </Button>
+                </Badge>
             ))}
         </div>
     );

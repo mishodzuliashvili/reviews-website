@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { reviewInclude } from "../query/route";
+import { reviewInclude } from "../route";
 import { getCurrentUser } from "@/lib/session";
 export const dynamic = "force-dynamic";
 

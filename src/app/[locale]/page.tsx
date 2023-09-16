@@ -4,6 +4,7 @@ import ReviewsList from "@/components/my-ui/reviews/ReviewsList";
 import { createCommentSchema } from "@/lib/validations/comments";
 import Comments from "@/components/my-ui/reviews/Comments";
 import TagCloud from "@/components/my-ui/main/TagCloud";
+import { useTranslations } from "next-intl";
 
 export const revalidate = 0;
 
@@ -17,7 +18,6 @@ export default async function Home() {
             },
         },
     });
-
     return (
         <main className="px-5 flex flex-col gap-3">
             <TagCloud
@@ -26,28 +26,31 @@ export default async function Home() {
                     count: tag._count.reviews,
                 }))}
             />
-            <Tabs defaultValue="recentlyAdded">
-                <TabsList>
-                    <TabsTrigger value="recentlyAdded">
-                        Recently Added Reviewes
-                    </TabsTrigger>
-                    <TabsTrigger value="highestGrades">
-                        Reviews with highest grades
-                    </TabsTrigger>
-                </TabsList>
-                <TabsContent
-                    value="recentlyAdded"
-                    className="flex flex-col gap-4"
-                >
-                    <ReviewsList sortBy="createdAt" take={2} />
-                </TabsContent>
-                <TabsContent
-                    value="highestGrades"
-                    className="flex flex-col gap-4"
-                >
-                    <ReviewsList sortBy="grade" take={2} />
-                </TabsContent>
-            </Tabs>
+            <TabsComponent />
         </main>
+    );
+}
+
+// TabsComponentAlone
+function TabsComponent() {
+    const t = useTranslations("Home");
+
+    return (
+        <Tabs defaultValue="recentlyAdded">
+            <TabsList>
+                <TabsTrigger value="recentlyAdded">
+                    {t("recently-added")}
+                </TabsTrigger>
+                <TabsTrigger value="highestGrades">
+                    {t("highest-grades")}
+                </TabsTrigger>
+            </TabsList>
+            <TabsContent value="recentlyAdded" className="flex flex-col gap-4">
+                <ReviewsList sortBy="createdAt" take={2} />
+            </TabsContent>
+            <TabsContent value="highestGrades" className="flex flex-col gap-4">
+                <ReviewsList sortBy="grade" take={2} />
+            </TabsContent>
+        </Tabs>
     );
 }

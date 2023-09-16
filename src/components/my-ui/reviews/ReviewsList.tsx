@@ -3,6 +3,7 @@ import useReviews, { UseReviewsProps } from "@/hooks/useReviews";
 import Review from "./Review";
 import MainLoader from "../main/MainLoader";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 type ReviewsListProps = UseReviewsProps;
 
@@ -15,15 +16,17 @@ export default function ReviewsList({
     take,
     searchTerm,
 }: ReviewsListProps) {
-    const { loading, reviews, deleteReview, error } = useReviews({
-        userId,
-        groupValues,
-        pieceValues,
-        sortBy,
-        tagValues,
-        take,
-        searchTerm,
-    });
+    const { loading, reviews, deleteReview, error, changeRateByPiece } =
+        useReviews({
+            userId,
+            groupValues,
+            pieceValues,
+            sortBy,
+            tagValues,
+            take,
+            searchTerm,
+        });
+    const t = useTranslations("ReviewsList");
     return (
         <div className="flex flex-col gap-3">
             {loading &&
@@ -40,7 +43,7 @@ export default function ReviewsList({
                     ))}
             {!loading && reviews.length === 0 && (
                 <div>
-                    <h2 className="text-xl">No reviews found</h2>
+                    <h2 className="text-xl">{t("no-reviews")}</h2>
                 </div>
             )}
             {reviews?.map((review) => (
@@ -50,6 +53,7 @@ export default function ReviewsList({
                     onDelete={() => {
                         deleteReview(review);
                     }}
+                    changeRateByPiece={changeRateByPiece}
                 />
             ))}
         </div>

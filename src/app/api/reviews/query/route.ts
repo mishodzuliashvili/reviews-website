@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 import { NextResponse } from "next/server";
+import { reviewInclude } from "../route";
 
 export const dynamic = "force-dynamic";
 
@@ -138,16 +139,3 @@ export async function POST(request: Request) {
         );
     }
 }
-
-export const reviewInclude: Prisma.ReviewInclude<DefaultArgs> = {
-    tags: true,
-    images: true,
-    group: true,
-    author: true,
-    piece: {
-        include: {
-            rates: true,
-        },
-    },
-    likes: true,
-};

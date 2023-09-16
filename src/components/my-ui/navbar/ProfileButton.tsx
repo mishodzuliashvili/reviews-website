@@ -59,12 +59,12 @@ const ProfileButton = () => {
                             </DropdownMenuItem>
                         </Link>
                     )}
-                    <Link href="/review/new">
+                    {/* <Link href="/review/new">
                         <DropdownMenuItem>
                             <Plus className="mr-2 h-4 w-4" />
                             <span>{t("new-review")}</span>
                         </DropdownMenuItem>
-                    </Link>
+                    </Link> */}
                 </DropdownMenuGroup>
 
                 <DropdownMenuSeparator />

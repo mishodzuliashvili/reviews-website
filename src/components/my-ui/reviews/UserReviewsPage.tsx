@@ -12,6 +12,7 @@ import ReviewsList from "./ReviewsList";
 import { useState } from "react";
 import { Piece, ReviewGroup, Tag } from "@prisma/client";
 import { MultiSelect } from "@/components/my-ui/inputs/MultiSelect";
+import { useTranslations } from "next-intl";
 
 type UserReviewsPageProps = {
     userId: string;
@@ -29,7 +30,7 @@ export default function UserReviewsPage({
     const [sortBy, setSortBy] = useState<
         "createdAt" | "likes" | "grade" | "rates" | undefined
     >("createdAt");
-
+    const t = useTranslations("UserReviewsPage");
     const [selectedTagValues, setSelectedTagValues] = useState<string[]>([]);
     const [selectedGroupValues, setSelectedGroupValues] = useState<string[]>(
         []
@@ -39,26 +40,28 @@ export default function UserReviewsPage({
     );
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex gap-4">
+            <div className="flex gap-4 flex-wrap">
                 <Select
                     value={sortBy}
                     onValueChange={(e) => setSortBy(e as any)}
                 >
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-full sm:w-[180px]">
                         <SelectValue placeholder="Select a sort " />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
-                            <SelectLabel>Sort By</SelectLabel>
-                            <SelectItem value="createdAt">Time</SelectItem>
-                            <SelectItem value="likes">Likes</SelectItem>
-                            <SelectItem value="grade">Grade</SelectItem>
-                            <SelectItem value="rates">Rates</SelectItem>
+                            <SelectLabel>{t("sort-by")}</SelectLabel>
+                            <SelectItem value="createdAt">
+                                {t("created-at")}
+                            </SelectItem>
+                            <SelectItem value="likes">{t("likes")}</SelectItem>
+                            <SelectItem value="grade">{t("grade")}</SelectItem>
+                            <SelectItem value="rates">{t("rates")}</SelectItem>
                         </SelectGroup>
                     </SelectContent>
                 </Select>
                 <MultiSelect
-                    placeholder="Select Tags"
+                    placeholder={t("select-tags")}
                     canCreate={false}
                     options={tags.map((tag) => ({
                         value: tag.value,
@@ -70,7 +73,7 @@ export default function UserReviewsPage({
                 />
                 <MultiSelect
                     canCreate={false}
-                    placeholder="Select Groups"
+                    placeholder={t("select-groups")}
                     options={groups.map((group) => ({
                         value: group.value,
                         label: group.value,
@@ -80,6 +83,7 @@ export default function UserReviewsPage({
                     }}
                 />
                 <MultiSelect
+                    placeholder={t("select-pieces")}
                     canCreate={false}
                     options={pieces.map((piece) => ({
                         value: piece.value,

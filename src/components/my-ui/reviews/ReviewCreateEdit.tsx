@@ -52,6 +52,7 @@ type ReviewCreateEditProps = {
     tags: Tag[];
     groups: ReviewGroup[];
     pieces: Piece[];
+    authorId: string;
 };
 
 export default function ReviewCreateEdit({
@@ -59,6 +60,7 @@ export default function ReviewCreateEdit({
     tags,
     groups,
     pieces,
+    authorId,
 }: ReviewCreateEditProps) {
     const { addOrUpdateReview } = useReviews({
         isQuery: false,
@@ -76,10 +78,10 @@ export default function ReviewCreateEdit({
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema as any),
         defaultValues: {
-            title: review?.title || "",
-            item: review?.piece?.value || "",
-            group: review?.group.value || "",
-            grade: review?.grade || 0,
+            title: review?.title,
+            item: review?.piece?.value,
+            group: review?.group.value,
+            grade: review?.grade,
         },
     });
     const handleSubmit = async (data: any) => {
@@ -97,9 +99,10 @@ export default function ReviewCreateEdit({
             item: data.item,
             tags: selectedTags,
             text: text,
+            authorId: authorId,
         });
         console.log(reviewId);
-        // router.push(`/review/${reviewId}`);
+        router.push(`/profile`);
     };
 
     const onUploadComplete = (im: UploadFileResponse[]) => {
@@ -168,14 +171,16 @@ export default function ReviewCreateEdit({
                     name="group"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Group</FormLabel>
+                            <FormLabel>{t("group")}</FormLabel>
                             <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
                             >
                                 <FormControl>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select a verified group" />
+                                        <SelectValue
+                                            placeholder={t("group-placeholder")}
+                                        />
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
@@ -197,6 +202,7 @@ export default function ReviewCreateEdit({
                     <FormLabel>{t("tags")}</FormLabel>
                     <FormControl>
                         <MultiSelect
+                            placeholder={t("tags-placeholder")}
                             options={tags.map((tag) => ({
                                 label: tag.value,
                                 value: tag.value,
@@ -213,14 +219,15 @@ export default function ReviewCreateEdit({
                     <FormMessage />
                 </FormItem>
                 <Wysiwyg
+                    placeholder={t("text-placeholder")}
                     defaultValue={text ?? ""}
                     onChange={(data) => {
                         setText(data);
                     }}
                 />
                 <div>
-                    <h1>Images</h1>
-                    <p>Upload images for your review</p>
+                    <h1>{t("images")}</h1>
+                    <p>{t("images-placeholder")}</p>
                     {uploadedImages.map((im) => (
                         <Image
                             onClick={() => {

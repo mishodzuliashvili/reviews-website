@@ -7,9 +7,11 @@ import htmlToDraft from "html-to-draftjs";
 export default function Wysiwyg({
     onChange,
     defaultValue = "<p>Hey this <strong>editor</strong> rocks 😀</p>",
+    placeholder = "Write your review here...",
 }: {
     onChange: (html: string) => void;
     defaultValue?: string;
+    placeholder?: string;
 }) {
     const contentBlock = htmlToDraft(defaultValue);
     const contentState = ContentState.createFromBlockArray(
@@ -19,7 +21,7 @@ export default function Wysiwyg({
     return (
         <div className="bg-white dark:bg-transparent dark:text-black border rounded-lg">
             <Editor
-                placeholder="Write your review here..."
+                placeholder={placeholder}
                 toolbarClassName="dark:bg-transparent dark:border-gray-800 dark:shadow-none"
                 editorClassName="px-3 dark:text-white"
                 onEditorStateChange={(d) => {

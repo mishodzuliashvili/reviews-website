@@ -1,4 +1,39 @@
 {
+  "Home": {
+    "title": "Home",
+    "description": "Welcome to the home page!",
+    "recently-added": "Recently Added Reviewes",
+    "highest-grades": "Reviews with highest grades"
+  },
+
+  "SearchInput": {
+    "search": "Search...",
+    "no-results": "No results",
+    "searching": "Searching...",
+    "search-error": "Unable to search."
+  },
+  "ProfileHeader": {
+    "title-my": "My profile",
+    "title-other": "User Profile",
+    "description": "This is a user profile page."
+  },
+  "ProfileTabs": {
+    "reviews": "Reviews",
+    "create-or-edit": "Create or edit"
+  },
+  "UserReviewsPage": {
+    "sort-by": "Sort by",
+    "created-at": "Created at",
+    "likes": "Likes",
+    "grade": "Grade",
+    "rates": "Rates",
+    "select-tags": "Select tags",
+    "select-groups": "Select groups",
+    "select-pieces": "Select pieces"
+  },
+  "MultiSelect": {
+    "search": "Search option.."
+  },
   "Navbar": {
     "home": "Home",
     "signin": "Sign in"
@@ -142,8 +177,16 @@
     "item-placeholder": "Name of the reviewed piece of art",
     "grade": "Grade",
     "grade-placeholder": "Enter grade",
+    "group": "Group",
+    "group-placeholder": "Enter group",
+    "images": "Images",
+    "images-placeholder": "Enter images",
+    "text-placeholder": "Enter text",
     "errors": {
       "create-error": "Unable to create review."
     }
+  },
+  "ReviewsList": {
+    "no-reviews": "No reviews found"
   }
 }

@@ -1,16 +1,24 @@
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/session";
+import { Prisma } from "@prisma/client";
+import { DefaultArgs } from "@prisma/client/runtime/library";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
     try {
-        const { reviewId, title, item, grade, text, group, tags, images } =
-            await request.json();
+        const {
+            reviewId,
+            title,
+            item,
+            grade,
+            text,
+            group,
+            tags,
+            images,
+            authorId,
+        } = await request.json();
         console.log(tags);
-        const user = await getCurrentUser();
-        const userId = user?.id;
         const review = await prisma.review.upsert({
             where: {
                 id: reviewId || "",
@@ -38,7 +46,7 @@ export async function POST(request: Request) {
                     })),
                 },
                 author: {
-                    connect: { id: userId },
+                    connect: { id: authorId },
                 },
                 group: {
                     connectOrCreate: {
@@ -74,9 +82,6 @@ export async function POST(request: Request) {
                         where: { url: image },
                         create: { url: image },
                     })),
-                },
-                author: {
-                    connect: { id: userId },
                 },
                 group: {
                     connectOrCreate: {
@@ -122,3 +127,16 @@ export async function DELETE(request: Request) {
         );
     }
 }
+
+export const reviewInclude: Prisma.ReviewInclude<DefaultArgs> = {
+    tags: true,
+    images: true,
+    group: true,
+    author: true,
+    piece: {
+        include: {
+            rates: true,
+        },
+    },
+    likes: true,
+};

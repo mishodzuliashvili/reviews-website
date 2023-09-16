@@ -15,7 +15,7 @@ import DeleteButton from "./DeleteButton";
 import EditButton from "./EditButton";
 import CommentsButton from "./CommentsButton";
 import RatingButton from "./RatingButton";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import ReactToPrint from "react-to-print";
 import ReviewPrinting from "./ReviewPrinting";
 import { Button } from "@/components/ui/button";
@@ -23,14 +23,21 @@ import { AiFillPrinter } from "react-icons/ai";
 import { FiPrinter } from "react-icons/fi";
 import Link from "next/link";
 import TagLinks from "./TagLinks";
+import Comments from "./Comments";
+import { BsFillBookmarkHeartFill } from "react-icons/bs";
 type ReviewProps = {
     review: ReviewReturnedType;
     onDelete: () => void;
+    changeRateByPiece: (pieceValue: string, rate: number) => void;
 };
 
-export default function Review({ review, onDelete }: ReviewProps) {
+export default function Review({
+    review,
+    onDelete,
+    changeRateByPiece,
+}: ReviewProps) {
     const { user, isAuth, isAdmin } = useUser();
-
+    const [isReadMode, setIsReadMode] = useState(true);
     const canDeleteOrEdit = isAdmin || user?.id === review.author.id;
     const componentRef = useRef<HTMLDivElement>(null);
 
@@ -39,10 +46,12 @@ export default function Review({ review, onDelete }: ReviewProps) {
             <ReviewPrinting review={review} ref={componentRef} />
             <CardHeader>
                 <CardTitle>{review.title}</CardTitle>
-                <h3>{review.piece?.value}</h3>
                 <CardDescription>
                     {review.createdAt.toLocaleString()}
                 </CardDescription>
+                <p>
+                    Grade: <span className="font-bold">{review.grade}</span>
+                </p>
             </CardHeader>
             <CardContent>
                 <ReviewTextSanitized text={review.text} />
@@ -65,8 +74,8 @@ export default function Review({ review, onDelete }: ReviewProps) {
                         userId={user?.id}
                     />
                     {canDeleteOrEdit && <DeleteButton onDelete={onDelete} />}
-                    {/* {canDeleteOrEdit && <EditButton />} */}
-                    {/* <CommentsButton /> */}
+                    {canDeleteOrEdit && <EditButton reviewId={review.id} />}
+                    <CommentsButton setIsReadMode={setIsReadMode} />
                     <ReactToPrint
                         trigger={() => (
                             <Button variant="outline">
@@ -80,8 +89,14 @@ export default function Review({ review, onDelete }: ReviewProps) {
                         rates={review.piece?.rates || []}
                         disabled={!isAuth}
                         userId={user?.id}
+                        changeRateByPiece={changeRateByPiece}
                     />
                 </div>
+                {!isReadMode && (
+                    <div className="border-t w-full pt-3 mt-2">
+                        <Comments reviewId={review.id} />
+                    </div>
+                )}
             </CardFooter>
         </Card>
     );
