@@ -1,7 +1,7 @@
 import ReviewCreateEdit from "@/components/my-ui/reviews/ReviewCreateEdit";
 import UserReviewsPage from "@/components/my-ui/reviews/UserReviewsPage";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ReviewReturnedType } from "@/hooks/useReviews";
+import { ReviewReturnedType } from "@/contexts/ReviewsContext";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { useTranslations } from "next-intl";
