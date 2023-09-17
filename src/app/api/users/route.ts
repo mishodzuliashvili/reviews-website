@@ -4,7 +4,19 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
     try {
-        const users = await prisma.user.findMany();
+        const users = await prisma.user.findMany({
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                isAdmin: true,
+                isBlocked: true,
+                registrationTime: true,
+                lastLoginTime: true,
+                emailVerified: true,
+                image: true,
+            },
+        });
         return NextResponse.json(users);
     } catch (e: any) {
         return NextResponse.json(

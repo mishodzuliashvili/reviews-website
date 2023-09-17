@@ -30,10 +30,10 @@ export default function UploadImages({
             onClientUploadComplete={(data) => {
                 if (data) {
                     onUploadComplete(data);
-                }   
+                }
             }}
             onUploadError={(error: Error) => {
-                //  console.log(error);
+                //  err
             }}
         />
     );

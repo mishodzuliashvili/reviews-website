@@ -1,192 +1,200 @@
 {
-  "Home": {
-    "title": "Home",
-    "description": "Welcome to the home page!",
-    "recently-added": "Recently Added Reviewes",
-    "highest-grades": "Reviews with highest grades"
-  },
+    "Home": {
+        "title": "Home",
+        "description": "Welcome to the home page!",
+        "recently-added": "Recently Added Reviewes",
+        "highest-grades": "Reviews with highest grades"
+    },
 
-  "SearchInput": {
-    "search": "Search...",
-    "no-results": "No results",
-    "searching": "Searching...",
-    "search-error": "Unable to search."
-  },
-  "ProfileHeader": {
-    "title-my": "My profile",
-    "title-other": "User Profile",
-    "description": "This is a user profile page."
-  },
-  "ProfileTabs": {
-    "reviews": "Reviews",
-    "create-or-edit": "Create or edit"
-  },
-  "UserReviewsPage": {
-    "sort-by": "Sort by",
-    "created-at": "Created at",
-    "likes": "Likes",
-    "grade": "Grade",
-    "rates": "Rates",
-    "select-tags": "Select tags",
-    "select-groups": "Select groups",
-    "select-pieces": "Select pieces"
-  },
-  "MultiSelect": {
-    "search": "Search option.."
-  },
-  "Navbar": {
-    "home": "Home",
-    "signin": "Sign in"
-  },
-  "LanguageSwitch": {
-    "choose-language": "Choose language"
-  },
-  "ThemeSwitch": {
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System"
-  },
-  "ProfileButton": {
-    "my-account": "My account",
-    "profile": "Profile",
-    "settings": "Settings",
-    "admin": "Admin panel",
-    "new-review": "New review",
-    "logout": "Log out"
-  },
-  "Blocked": {
-    "title": "You are blocked",
-    "description": "You are blocked by the administrator. You can not use the site.",
-    "signout": "Sign out"
-  },
-  "LoginForm": {
-    "title": "Sign in",
-    "description": "Sign in to your account using your email address and password.",
-    "email": "Email",
-    "email-placeholder": "Enter your email address",
-    "password": "Password",
-    "password-placeholder": "Enter your password",
-    "submit": "Sign in",
-    "wait": "Please wait...",
-    "no-account": "Don't have an account?",
-    "signup": "Sign up here.",
-    "other-options": "Or sign in with:",
-    "error-heading": "Unable to sign in.",
-    "errors": {
-      "Signin": "Try signing with a different account.",
-      "OAuthSignin": "Try signing with a different account.",
-      "OAuthCallback": "Try signing with a different account.",
-      "OAuthCreateAccount": "Try signing with a different account.",
-      "EmailCreateAccount": "Try signing with a different account.",
-      "Callback": "Try signing with a different account.",
-      "OAuthAccountNotLinked": "To confirm your identity, sign in with the same account you used originally.",
-      "EmailSignin": "Check your email address.",
-      "CredentialsSignin": "Sign in failed. Check the details you provided are correct.",
-      "default": "Unable to sign in.",
-      "Email or password is incorrect": "Email or password is incorrect.",
-      "Invalid credentials": "Invalid credentials.",
-      "User is blocked": "User is blocked."
-    }
-  },
-  "RegisterForm": {
-    "title": "Sign up",
-    "description": "Create a new account using your email address and password.",
-    "name": "Name",
-    "name-placeholder": "Enter your name",
-    "email": "Email",
-    "email-placeholder": "Enter your email address",
-    "password": "Password",
-    "password-placeholder": "Enter your password",
-    "submit": "Sign up",
-    "wait": "Please wait...",
-    "have-account": "Already have an account?",
-    "signin": "Sign in here.",
-    "other-options": "Or sign up with:",
-    "error-heading": "Unable to sign up.",
-    "errors": {
-      "Please fill all fields.": "Please fill all fields.",
-      "Not authenticated.": "Not authenticated.",
-      "User with this email already exists.": "User with this email already exists."
+    "SearchInput": {
+        "search": "Search...",
+        "no-results": "No results",
+        "searching": "Searching...",
+        "search-error": "Unable to search."
     },
-    "form": {
-      "invalid-email": "Invalid email address.",
-      "email-min": "Username must be at least 2 characters.",
-      "password-min": "Password must be at least 6 characters.",
-      "name-min": "Name must be at least 2 characters."
+    "ProfileHeader": {
+        "title-my": "My profile",
+        "title-other": "User Profile",
+        "description": "This is a user profile page."
     },
-    "success-title": "Registration was successful!",
-    "success-description": "You can now sign in to your account."
-  },
-  "DataTable": {
-    "delete": "Delete",
-    "block": "Block",
-    "unblock": "Unblock",
-    "make-admin": "Make admin",
-    "make-non-admin": "Make non-admin",
-    "filter-emails-placeholder": "Filter emails",
-    "columns": "Columns",
-    "name": "Name",
-    "email": "Email",
-    "isadmin": "Is admin",
-    "isblocked": "Is blocked",
-    "lastlogintime": "Last login time",
-    "registrationtime": "Registration time",
-    "id": "ID",
-    "no-results": "No results",
-    "of": "of",
-    "rows-selected": "row(s) selected",
-    "previous": "Previous",
-    "next": "Next",
-    "view-profile": "View profile",
-    "success-title": "Successfully",
-    "success-description": ""
-  },
-  "MainError": {
-    "error": "Error",
-    "User not found.": "User not found.",
-    "Not authenticated.": "Not authenticated.",
-    "Could not fetch user.": "Could not fetch user."
-  },
-  "ProfileSettingsForm": {
-    "name": "Name",
-    "name-placeholder": "Enter your name",
-    "submit": "Update User",
-    "name-min": "Name must be at least 2 characters.",
-    "update-success": "User updated successfully.",
-    "title": "Profile settings",
-    "description": "Update your profile settings.",
-    "errors": {
-      "update-error": "Unable to update user."
+    "ProfileTabs": {
+        "reviews": "Reviews",
+        "create-or-edit": "Create or edit"
+    },
+    "UserReviewsPage": {
+        "sort-by": "Sort by",
+        "created-at": "Created at",
+        "likes": "Likes",
+        "grade": "Grade",
+        "rates": "Rates",
+        "select-tags": "Select tags",
+        "select-groups": "Select groups",
+        "select-pieces": "Select pieces"
+    },
+    "MultiSelect": {
+        "search": "Search option.."
+    },
+    "Navbar": {
+        "home": "Home",
+        "signin": "Sign in"
+    },
+    "LanguageSwitch": {
+        "choose-language": "Choose language"
+    },
+    "ThemeSwitch": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+    },
+    "ProfileButton": {
+        "my-account": "My account",
+        "profile": "Profile",
+        "settings": "Settings",
+        "admin": "Admin panel",
+        "new-review": "New review",
+        "logout": "Log out"
+    },
+    "Blocked": {
+        "title": "You are blocked",
+        "description": "You are blocked by the administrator. You can not use the site.",
+        "signout": "Sign out"
+    },
+    "LoginForm": {
+        "title": "Sign in",
+        "description": "Sign in to your account using your email address and password.",
+        "email": "Email",
+        "email-placeholder": "Enter your email address",
+        "password": "Password",
+        "password-placeholder": "Enter your password",
+        "submit": "Sign in",
+        "wait": "Please wait...",
+        "no-account": "Don't have an account?",
+        "signup": "Sign up here.",
+        "other-options": "Or sign in with:",
+        "error-heading": "Unable to sign in.",
+        "errors": {
+            "Signin": "Try signing with a different account.",
+            "OAuthSignin": "Try signing with a different account.",
+            "OAuthCallback": "Try signing with a different account.",
+            "OAuthCreateAccount": "Try signing with a different account.",
+            "EmailCreateAccount": "Try signing with a different account.",
+            "Callback": "Try signing with a different account.",
+            "OAuthAccountNotLinked": "To confirm your identity, sign in with the same account you used originally.",
+            "EmailSignin": "Check your email address.",
+            "CredentialsSignin": "Sign in failed. Check the details you provided are correct.",
+            "default": "Unable to sign in.",
+            "Email or password is incorrect": "Email or password is incorrect.",
+            "Invalid credentials": "Invalid credentials.",
+            "User is blocked": "User is blocked."
+        }
+    },
+    "RegisterForm": {
+        "title": "Sign up",
+        "description": "Create a new account using your email address and password.",
+        "name": "Name",
+        "name-placeholder": "Enter your name",
+        "email": "Email",
+        "email-placeholder": "Enter your email address",
+        "password": "Password",
+        "password-placeholder": "Enter your password",
+        "submit": "Sign up",
+        "wait": "Please wait...",
+        "have-account": "Already have an account?",
+        "signin": "Sign in here.",
+        "other-options": "Or sign up with:",
+        "error-heading": "Unable to sign up.",
+        "errors": {
+            "Please fill all fields.": "Please fill all fields.",
+            "Not authenticated.": "Not authenticated.",
+            "User with this email already exists.": "User with this email already exists."
+        },
+        "form": {
+            "invalid-email": "Invalid email address.",
+            "email-min": "Username must be at least 2 characters.",
+            "password-min": "Password must be at least 6 characters.",
+            "name-min": "Name must be at least 2 characters."
+        },
+        "success-title": "Registration was successful!",
+        "success-description": "You can now sign in to your account."
+    },
+    "DataTable": {
+        "delete": "Delete",
+        "block": "Block",
+        "unblock": "Unblock",
+        "make-admin": "Make admin",
+        "make-non-admin": "Make non-admin",
+        "filter-emails-placeholder": "Filter emails",
+        "columns": "Columns",
+        "name": "Name",
+        "email": "Email",
+        "isadmin": "Is admin",
+        "isblocked": "Is blocked",
+        "lastlogintime": "Last login time",
+        "registrationtime": "Registration time",
+        "id": "ID",
+        "no-results": "No results",
+        "of": "of",
+        "rows-selected": "row(s) selected",
+        "previous": "Previous",
+        "next": "Next",
+        "view-profile": "View profile",
+        "success-title": "Successfully",
+        "success-description": ""
+    },
+    "MainError": {
+        "error": "Error",
+        "User not found.": "User not found.",
+        "Not authenticated.": "Not authenticated.",
+        "Could not fetch user.": "Could not fetch user."
+    },
+    "ProfileSettingsForm": {
+        "name": "Name",
+        "name-placeholder": "Enter your name",
+        "submit": "Update User",
+        "name-min": "Name must be at least 2 characters.",
+        "update-success": "User updated successfully.",
+        "title": "Profile settings",
+        "description": "Update your profile settings.",
+        "errors": {
+            "update-error": "Unable to update user."
+        }
+    },
+    "TagsSelect": {
+        "tags": "Tags",
+        "tags-placeholder": "Enter tags",
+        "no-options": "No options",
+        "search": "Search..."
+    },
+    "ReviewNewForm": {
+        "title": "Create review",
+        "description": "Create a new review.",
+        "title-field": "Title",
+        "title-field-placeholder": "Enter title",
+        "tags": "Tags",
+        "tags-placeholder": "Enter tags",
+        "submit": "Create review",
+        "item": "Item",
+        "item-placeholder": "Name of the reviewed piece of art",
+        "grade": "Grade",
+        "grade-placeholder": "Enter grade",
+        "group": "Group",
+        "group-placeholder": "Enter group",
+        "images": "Images",
+        "images-placeholder": "Enter images",
+        "text-placeholder": "Enter text",
+        "errors": {
+            "create-error": "Unable to create review."
+        }
+    },
+    "ReviewsList": {
+        "no-reviews": "No reviews found"
+    },
+    "ReviewPrinting": {
+        "grade": "Grade",
+        "avarage-rate": "Avarage rate",
+        "likes": "Likes"
+    },
+    "ReviewBody": {
+        "grade": "Grade"
     }
-  },
-  "TagsSelect": {
-    "tags": "Tags",
-    "tags-placeholder": "Enter tags",
-    "no-options": "No options",
-    "search": "Search..."
-  },
-  "ReviewNewForm": {
-    "title": "Create review",
-    "description": "Create a new review.",
-    "title-field": "Title",
-    "title-field-placeholder": "Enter title",
-    "tags": "Tags",
-    "tags-placeholder": "Enter tags",
-    "submit": "Create review",
-    "item": "Item",
-    "item-placeholder": "Name of the reviewed piece of art",
-    "grade": "Grade",
-    "grade-placeholder": "Enter grade",
-    "group": "Group",
-    "group-placeholder": "Enter group",
-    "images": "Images",
-    "images-placeholder": "Enter images",
-    "text-placeholder": "Enter text",
-    "errors": {
-      "create-error": "Unable to create review."
-    }
-  },
-  "ReviewsList": {
-    "no-reviews": "No reviews found"
-  }
 }

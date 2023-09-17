@@ -1,30 +1,31 @@
+import { ReviewReturnedType } from "@/contexts/ReviewsContext";
+import { useUser } from "@/contexts/UserContext";
 import { subscribeAbly } from "@/lib/ably";
 import { createCommentSchema } from "@/lib/validations/comments";
 import { Comment } from "@prisma/client";
-import { useSession } from "next-auth/react";
+import { User } from "next-auth";
 import { useEffect, useState } from "react";
-import useUser from "./useUser";
 
-type OptimisiticComment = Comment & { pending: boolean };
+type OptimisiticComment = Comment & { pending: boolean; author: User };
 
 type useCommentsProps = {
-    reviewId: string;
+    review: ReviewReturnedType;
 };
 
-export default function useComments({ reviewId }: useCommentsProps) {
+export default function useComments({ review }: useCommentsProps) {
     const [comments, setComments] = useState<OptimisiticComment[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<Error | null>(null);
-    const { user, isLoading: userLoading } = useUser();
-
+    const [commentsLoading, setCommentsLoading] = useState(false);
+    const [commentsError, setCommentsError] = useState<Error | null>(null);
+    const { user } = useUser();
     const createOptimisticComment = (text: string) => {
         return {
             text,
             authorId: user?.id as string,
-            reviewId,
+            reviewId: review.id,
             createdAt: new Date(),
             id: crypto.randomUUID(),
             pending: true,
+            author: user,
         } as OptimisiticComment;
     };
 
@@ -32,7 +33,7 @@ export default function useComments({ reviewId }: useCommentsProps) {
         try {
             createCommentSchema.parse({ text: comment.text });
         } catch (e) {
-            setError(new Error("Comment is not valid"));
+            setCommentsError(new Error("Comment is not valid"));
         }
         const res = await fetch(`/api/comments`, {
             method: "POST",
@@ -40,53 +41,66 @@ export default function useComments({ reviewId }: useCommentsProps) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                reviewId,
+                reviewId: review.id,
                 text: comment.text,
             }),
         });
-        if (!res.ok) {
-            setError(new Error("Something went wrong"));
+        const data = await res.json();
+        if (!res.ok || data.error) {
+            setCommentsError(new Error("Something went wrong"));
         }
-        const { commentId } = await res.json();
-        return commentId;
+        return data;
     };
 
     const addComment = async (text: string) => {
         const comment = createOptimisticComment(text);
         setComments((prev) => [...prev, comment]);
-        await sendComment(comment);
+        const data = await sendComment(comment);
         setComments((prev) => {
             const index = prev.findIndex((c) => c.id === comment.id);
             const newComments = [...prev];
             newComments[index].pending = false;
+            newComments[index].id = data?.commentId;
             return newComments;
         });
     };
+
     const fetchComments = async () => {
-        setLoading(true);
-        const res = await fetch(`/api/comments/review/${reviewId}`);
-        if (!res.ok) {
-            setError(new Error("Something went wrong"));
-            setLoading(false);
-            return;
-        }
+        setCommentsLoading(true);
+        const res = await fetch(`/api/comments/review/${review.id}`);
         const comments = await res.json();
-        setComments(comments);
-        setLoading(false);
+        if (!res.ok || comments.error) {
+            setCommentsError(new Error("Something went wrong"));
+        } else {
+            setComments(comments);
+        }
+        setCommentsLoading(false);
+    };
+
+    const deleteComment = async (commentId: string) => {
+        setComments((prev) => prev.filter((c) => c.id !== commentId));
+        const res = await fetch(`/api/comments/${commentId}`, {
+            method: "DELETE",
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) {
+            setCommentsError(new Error("Something went wrong"));
+        }
     };
 
     useEffect(() => {
         fetchComments();
+        subscribeAbly(review.id, (comment: Comment) => {
+            if (comment.authorId === user?.id) return;
+            setComments((prev) => [...prev, comment as OptimisiticComment]);
+        });
     }, []);
 
-    useEffect(() => {
-        if (!userLoading) {
-            subscribeAbly(reviewId, (comment: Comment) => {
-                if (comment.authorId === user?.id) return;
-                setComments((prev) => [...prev, comment as OptimisiticComment]);
-            });
-        }
-    }, [userLoading]);
-
-    return { comments, addComment, loading, error } as const;
+    return {
+        comments,
+        addComment,
+        deleteComment,
+        commentsLoading,
+        commentsError,
+    } as const;
 }

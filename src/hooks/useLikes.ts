@@ -1,25 +1,25 @@
-import { Like } from "@prisma/client";
+import { ReviewReturnedType } from "@/contexts/ReviewsContext";
+import { useUser } from "@/contexts/UserContext";
 import { useState } from "react";
 
 type UseLikesProps = {
-    reviewId: string;
-    likes: Like[];
-    userId?: string;
+    review: ReviewReturnedType;
 };
 
-export default function useLikes({ reviewId, likes, userId }: UseLikesProps) {
-    const [numberOfLikes, setNumberOfLikes] = useState(likes.length);
+export default function useLikes({ review }: UseLikesProps) {
+    const [numberOfLikes, setNumberOfLikes] = useState(review.likes.length);
+    const { user } = useUser();
     const [isLikedByUser, setIsLikedByUser] = useState(
-        likes.some((like) => like.userId === userId)
+        review.likes.some((like) => like.userId === user?.id)
     );
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<Error | null>(null);
+    const [likesLoading, setLikesLoading] = useState(false);
+    const [likesError, setLikesError] = useState<Error | null>(null);
 
     const toggleLike = async () => {
-        if (loading) {
+        if (likesLoading) {
             return;
         }
-        setLoading(true);
+        setLikesLoading(true);
         setNumberOfLikes((prev) => (isLikedByUser ? prev - 1 : prev + 1));
         const fetchMethod = isLikedByUser ? "DELETE" : "POST";
         setIsLikedByUser((prev) => !prev);
@@ -29,14 +29,20 @@ export default function useLikes({ reviewId, likes, userId }: UseLikesProps) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                reviewId,
+                reviewID: review.id,
             }),
         });
-
-        if (!res.ok) {
-            setError(new Error("Could not like review"));
+        const data = await res.json();
+        if (!res.ok || data.error) {
+            setLikesError(new Error("Could not like review"));
         }
-        setLoading(false);
+        setLikesLoading(false);
     };
-    return { numberOfLikes, loading, error, toggleLike, isLikedByUser };
+    return {
+        numberOfLikes,
+        likesLoading,
+        likesError,
+        toggleLike,
+        isLikedByUser,
+    };
 }

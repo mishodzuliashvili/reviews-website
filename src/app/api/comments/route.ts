@@ -30,6 +30,9 @@ export async function POST(req: Request) {
                 authorId,
                 reviewId,
             },
+            include: {
+                author: true,
+            },
         });
         publishAbly(reviewId, comment);
         return NextResponse.json(

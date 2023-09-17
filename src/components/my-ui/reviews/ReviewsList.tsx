@@ -1,11 +1,9 @@
 "use client";
-import useReviews, { UseReviewsProps } from "@/hooks/useReviews";
 import Review from "./Review";
-import MainLoader from "../main/MainLoader";
 import { Skeleton } from "@/components/ui/skeleton";
+import { RefetchReviewsParams, useReviews } from "@/contexts/ReviewsContext";
 import { useTranslations } from "next-intl";
-
-type ReviewsListProps = UseReviewsProps;
+import { useEffect } from "react";
 
 export default function ReviewsList({
     userId,
@@ -15,9 +13,12 @@ export default function ReviewsList({
     tagValues,
     take,
     searchTerm,
-}: ReviewsListProps) {
-    const { loading, reviews, deleteReview, error, changeRateByPiece } =
-        useReviews({
+}: RefetchReviewsParams) {
+    const { reviewsError, reviewsLoading, reviews, refetchReviews } =
+        useReviews();
+    const t = useTranslations("ReviewsList");
+    useEffect(() => {
+        refetchReviews({
             userId,
             groupValues,
             pieceValues,
@@ -26,10 +27,11 @@ export default function ReviewsList({
             take,
             searchTerm,
         });
-    const t = useTranslations("ReviewsList");
+    }, [userId, groupValues, pieceValues, sortBy, tagValues, take, searchTerm]);
+
     return (
         <div className="flex flex-col gap-3">
-            {loading &&
+            {reviewsLoading &&
                 Array(10)
                     .fill(0)
                     .map((_, i) => (
@@ -41,21 +43,15 @@ export default function ReviewsList({
                             <Skeleton className="h-20 w-full rounded-lg" />
                         </div>
                     ))}
-            {!loading && reviews.length === 0 && (
+            {!reviewsLoading && reviews?.length === 0 && (
                 <div>
                     <h2 className="text-xl">{t("no-reviews")}</h2>
                 </div>
             )}
-            {reviews?.map((review) => (
-                <Review
-                    key={review.id}
-                    review={review}
-                    onDelete={() => {
-                        deleteReview(review);
-                    }}
-                    changeRateByPiece={changeRateByPiece}
-                />
-            ))}
+            {!reviewsLoading &&
+                reviews?.map((review) => (
+                    <Review key={review.id} review={review} />
+                ))}
         </div>
     );
 }

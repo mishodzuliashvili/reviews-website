@@ -128,7 +128,6 @@ export async function POST(request: Request) {
         });
         return NextResponse.json(reviews);
     } catch (error) {
-        console.log(error);
         return NextResponse.json(
             {
                 error: "Reviews could not be fetched.",

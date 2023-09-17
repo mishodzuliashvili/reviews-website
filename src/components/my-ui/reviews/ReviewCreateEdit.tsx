@@ -1,5 +1,4 @@
 "use client";
-import useReviews, { ReviewReturnedType } from "@/hooks/useReviews";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -17,9 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import MainLoader from "@/components/my-ui/main/MainLoader";
 import { useTranslations } from "next-intl";
-import { useToast } from "@/components/ui/use-toast";
 import {
     Select,
     SelectContent,
@@ -31,10 +28,10 @@ import dynamic from "next/dynamic";
 import UploadImages from "@/components/my-ui/inputs/UploadImages";
 import { UploadFileResponse } from "uploadthing/client";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { MultiSelect } from "@/components/my-ui/inputs/MultiSelect";
 import { Piece, ReviewGroup, Tag } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { ReviewReturnedType, useReviews } from "@/contexts/ReviewsContext";
 const Wysiwyg = dynamic(() => import("../inputs/Wysiwyg"), {
     ssr: false,
 });
@@ -62,9 +59,7 @@ export default function ReviewCreateEdit({
     pieces,
     authorId,
 }: ReviewCreateEditProps) {
-    const { addOrUpdateReview } = useReviews({
-        isQuery: false,
-    });
+    const { addOrUpdateReview } = useReviews();
     const router = useRouter();
     const t = useTranslations("ReviewNewForm");
     const [selectedTags, setSelectedTags] = useState<string[]>(
@@ -85,7 +80,6 @@ export default function ReviewCreateEdit({
         },
     });
     const handleSubmit = async (data: any) => {
-        console.log(selectedTags);
         const reviewId = await addOrUpdateReview({
             ...(review
                 ? {
@@ -101,7 +95,6 @@ export default function ReviewCreateEdit({
             text: text,
             authorId: authorId,
         });
-        console.log(reviewId);
         router.push(`/profile`);
     };
 

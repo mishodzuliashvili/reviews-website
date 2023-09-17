@@ -1,22 +1,20 @@
-import { type Image } from "@prisma/client";
-import NextImage from "next/image";
+import { ReviewReturnedType } from "@/contexts/ReviewsContext";
+import Image from "next/image";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from "react-responsive-carousel";
 
 type ReviewImagesProps = {
-    images: Image[];
+    review: ReviewReturnedType;
 };
-export default function ReviewImages({ images }: ReviewImagesProps) {
+export default function ReviewImages({ review }: ReviewImagesProps) {
+    if (!review.images || review.images.length <= 0) return null;
     return (
-        <div>
-            {images.length > 0 && <br />}
-            {images.map((image) => (
-                <NextImage
-                    key={image.id}
-                    src={image.url}
-                    alt="review image"
-                    width={400}
-                    height={400}
-                />
+        <Carousel>
+            {review.images.map((image) => (
+                <div key={image.id}>
+                    <img src={image.url} />
+                </div>
             ))}
-        </div>
+        </Carousel>
     );
 }

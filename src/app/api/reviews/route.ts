@@ -18,7 +18,6 @@ export async function POST(request: Request) {
             images,
             authorId,
         } = await request.json();
-        console.log(tags);
         const review = await prisma.review.upsert({
             where: {
                 id: reviewId || "",
@@ -97,7 +96,6 @@ export async function POST(request: Request) {
             id: review.id,
         });
     } catch (error) {
-        console.log(error, "eeee");
         return NextResponse.json(
             {
                 error: "Review could not be created.",

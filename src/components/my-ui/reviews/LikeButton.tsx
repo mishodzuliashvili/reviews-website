@@ -1,30 +1,23 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { ReviewReturnedType } from "@/contexts/ReviewsContext";
+import { useUser } from "@/contexts/UserContext";
 import useLikes from "@/hooks/useLikes";
-import { Like } from "@prisma/client";
 import { AiOutlineLike } from "react-icons/ai";
 type LikeButtonProps = {
-    reviewId: string;
-    likes: Like[];
-    disabled?: boolean;
-    userId?: string;
+    review: ReviewReturnedType;
 };
 
-export default function LikeButton({
-    reviewId,
-    likes,
-    disabled,
-    userId,
-}: LikeButtonProps) {
-    const { loading, isLikedByUser, toggleLike, numberOfLikes } = useLikes({
-        likes: likes,
-        reviewId,
-        userId,
-    });
-
+export default function LikeButton({ review }: LikeButtonProps) {
+    const { isLikedByUser, toggleLike, numberOfLikes, likesLoading } = useLikes(
+        {
+            review,
+        }
+    );
+    const { user } = useUser();
     return (
         <Button
-            disabled={loading || disabled}
+            disabled={likesLoading || !user}
             className="disabled:opacity-100"
             variant={isLikedByUser ? "destructive" : "outline"}
             onClick={toggleLike}

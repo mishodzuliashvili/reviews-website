@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReviewsList from "@/components/my-ui/reviews/ReviewsList";
-import { createCommentSchema } from "@/lib/validations/comments";
-import Comments from "@/components/my-ui/reviews/Comments";
 import TagCloud from "@/components/my-ui/main/TagCloud";
 import { useTranslations } from "next-intl";
 
@@ -31,13 +29,12 @@ export default async function Home() {
     );
 }
 
-// TabsComponentAlone
 function TabsComponent() {
     const t = useTranslations("Home");
 
     return (
         <Tabs defaultValue="recentlyAdded">
-            <TabsList>
+            <TabsList className="flex flex-col items-start overflow-hidden h-20 sm:flex-row sm:h-auto w-full sm:w-fit">
                 <TabsTrigger value="recentlyAdded">
                     {t("recently-added")}
                 </TabsTrigger>

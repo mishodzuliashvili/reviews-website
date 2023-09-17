@@ -1,62 +1,74 @@
-import { Like, Rate } from "@prisma/client";
+import { ReviewReturnedType, useReviews } from "@/contexts/ReviewsContext";
+import { useUser } from "@/contexts/UserContext";
+import { calculateAvarageRate } from "@/lib/utils";
+import { Rate } from "@prisma/client";
 import { useState } from "react";
 
 type UseRatesProps = {
-    rates: Rate[];
-    userId?: string;
-    pieceValue: string;
+    review: ReviewReturnedType;
 };
 
-export default function useRates({
-    rates: _rates,
-    userId,
-    pieceValue,
-}: UseRatesProps) {
-    const [rates, setRates] = useState(_rates);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<Error | null>(null);
+export default function useRates({ review }: UseRatesProps) {
+    const [ratesLoading, setRatesLoading] = useState<boolean>(false);
+    const [ratesError, setRatesError] = useState<Error | null>(null);
+    const { setReviews } = useReviews();
+    const { user } = useUser();
 
-    const rateReview = async (rateValue: number) => {
-        if (loading) {
-            return;
-        }
-        setLoading(true);
-        setError(null);
-        // setRates((prev) => {
-        //     const newRates = [...prev];
-        //     const index = newRates.findIndex((rate) => rate.userId === userId);
-        //     if (index === -1) {
-        //         newRates.push({
-        //             userId: userId as string,
-        //             value: rateValue,
-        //             pieceValue,
-        //         });
-        //     } else {
-        //         newRates[index].value = rateValue;
-        //     }
-        //     return newRates;
-        // });
-        const res = await fetch(`/api/ratings`, {
+    const changeRateByPieceValue = async (
+        pieceValue: string,
+        value: number
+    ) => {
+        setRatesLoading(true);
+        setRatesError(null);
+        setReviews(
+            (prev) =>
+                prev &&
+                prev.map((review) => {
+                    if (review.piece?.value !== pieceValue) return review;
+                    const index: number = !review.piece?.rates
+                        ? -1
+                        : review.piece.rates.findIndex((rate) => {
+                              return rate.userId === user?.id;
+                          });
+                    if (index === -1) {
+                        review.piece?.rates?.push({
+                            userId: user?.id as string,
+                            value,
+                            pieceValue,
+                        });
+                    } else if (review.piece?.rates) {
+                        review.piece.rates[index].value = value;
+                    }
+                    return review;
+                })
+        );
+        const result = await fetch(`/api/ratings`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
                 pieceValue: pieceValue,
-                value: rateValue,
+                value: value,
             }),
         });
-
-        if (!res.ok) {
-            setError(new Error("Could not rate review"));
+        const data = await result.json();
+        if (!result.ok || data.error) {
+            setRatesError(new Error("Could not rate"));
         }
-        setLoading(false);
+        setRatesLoading(false);
     };
-    const sumOfRates =
-        rates.length > 0
-            ? rates.reduce((acc, curr) => acc + curr.value, 0) / rates.length
-            : 0;
-    const userRating = rates.find((rate) => rate.userId === userId)?.value || 0;
 
-    return { sumOfRates, rateReview, loading, error, userRating };
+    const rates: Rate[] = review?.piece?.rates || [];
+    const avarageRate = calculateAvarageRate(rates);
+    const userRating =
+        rates.find((rate) => rate.userId === user?.id)?.value || 0;
+
+    return {
+        ratesLoading,
+        ratesError,
+        changeRateByPieceValue,
+        avarageRate,
+        userRating,
+    };
 }
