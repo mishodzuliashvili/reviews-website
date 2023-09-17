@@ -7,6 +7,7 @@
     },
     "SearchInput": {
         "search": "ძებნა...",
+        "submit": "ძებნა",
         "no-results": "შედეგები არ არის",
         "searching": "ძებნა...",
         "search-error": "ძებნა ვერ ხერხდება."

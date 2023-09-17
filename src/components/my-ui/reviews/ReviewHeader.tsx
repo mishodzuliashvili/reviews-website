@@ -38,8 +38,6 @@ export default function ReviewHeader({
         </header>
     );
 }
-// TODO: see if responsive site, like navbar
-
 // TODO: infinite scrool,
 // TODO: is ragac language packaghe lodash urevs
 // TODO: edit and add correctly,

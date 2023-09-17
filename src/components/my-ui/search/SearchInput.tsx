@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Input } from "../../ui/input";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 
 export default function SearchInput() {
     const [searchText, setSearchText] = useState("");
@@ -14,12 +15,16 @@ export default function SearchInput() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="flex gap-2">
             <Input
+                className="max-w-xs"
                 placeholder={t("search")}
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
             />
+            <Button className="mr-3" type="submit">
+                {t("submit")}
+            </Button>
         </form>
     );
 }

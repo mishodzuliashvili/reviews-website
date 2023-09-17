@@ -8,6 +8,7 @@
 
     "SearchInput": {
         "search": "Search...",
+        "submit": "Search",
         "no-results": "No results",
         "searching": "Searching...",
         "search-error": "Unable to search."

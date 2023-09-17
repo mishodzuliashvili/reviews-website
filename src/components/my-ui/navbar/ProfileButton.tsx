@@ -26,9 +26,9 @@ const ProfileButton = () => {
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline">
                         <Settings2 className="sm:hidden" />
-                        <span className="hidden sm:block">
+                        <p className="hidden sm:block truncate max-w-[100px] overflow-hidden ">
                             {data?.user.name}
-                        </span>
+                        </p>
                     </Button>
                 </DropdownMenuTrigger>
             </div>
