@@ -17,14 +17,11 @@ export default function SearchInput() {
     return (
         <form onSubmit={handleSubmit} className="flex gap-2">
             <Input
-                className="max-w-xs"
                 placeholder={t("search")}
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
             />
-            <Button className="mr-3" type="submit">
-                {t("submit")}
-            </Button>
+            <Button type="submit">{t("submit")}</Button>
         </form>
     );
 }

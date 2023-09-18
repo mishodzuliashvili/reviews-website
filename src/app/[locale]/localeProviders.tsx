@@ -23,7 +23,7 @@ export function LocaleProviders({
                 if (!nestedMessages) return key;
                 if (error.code === "MISSING_MESSAGE")
                     return nestedMessages["default"];
-                return nestedMessages[key];
+                return _.get(nestedMessages, key);
             }}
             locale={locale}
             messages={messages}

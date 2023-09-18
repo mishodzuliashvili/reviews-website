@@ -33,14 +33,14 @@ const Navbar = () => {
     return (
         <>
             <nav className="flex justify-between p-5">
-                <div className="flex gap-3">
+                <div className="flex gap-3 mr-3">
                     {homeButton}
                     <ThemeSwitch />
                     <LanguageSwitcher />
-                    <div className="hidden sm:block">
+                    {/* <div className="hidden md:block">
                         <SearchInput />
-                    </div>
-                    <div className="block sm:hidden">
+                    </div> */}
+                    <div className="">
                         <Button
                             onClick={() => setIsSearchOpen((p) => !p)}
                             variant="outline"
@@ -57,7 +57,7 @@ const Navbar = () => {
                 )}
             </nav>
             {isSearchOpen && (
-                <div className="w-full px-5 pb-5 sm:hidden">
+                <div className="w-full px-5 pb-5">
                     <SearchInput />
                 </div>
             )}

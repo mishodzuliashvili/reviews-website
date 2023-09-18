@@ -34,18 +34,20 @@ function TabsComponent() {
 
     return (
         <Tabs defaultValue="recentlyAdded">
-            <TabsList className="flex flex-col items-start overflow-hidden h-20 sm:flex-row sm:h-auto w-full sm:w-fit">
-                <TabsTrigger value="recentlyAdded">
-                    {t("recently-added")}
-                </TabsTrigger>
-                <TabsTrigger value="highestGrades">
-                    {t("highest-grades")}
-                </TabsTrigger>
-            </TabsList>
-            <TabsContent value="recentlyAdded" className="flex flex-col gap-4">
+            <div className="flex justify-center">
+                <TabsList className="flex flex-col items-start overflow-hidden h-20 sm:flex-row sm:h-auto w-full sm:w-fit">
+                    <TabsTrigger value="recentlyAdded">
+                        {t("recently-added")}
+                    </TabsTrigger>
+                    <TabsTrigger value="highestGrades">
+                        {t("highest-grades")}
+                    </TabsTrigger>
+                </TabsList>
+            </div>
+            <TabsContent value="recentlyAdded">
                 <ReviewsList sortBy="createdAt" take={2} />
             </TabsContent>
-            <TabsContent value="highestGrades" className="flex flex-col gap-4">
+            <TabsContent value="highestGrades">
                 <ReviewsList sortBy="grade" take={2} />
             </TabsContent>
         </Tabs>

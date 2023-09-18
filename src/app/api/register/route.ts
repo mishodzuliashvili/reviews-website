@@ -9,7 +9,7 @@ export async function POST(req: Request) {
         if (!name || !email || !password) {
             return NextResponse.json(
                 {
-                    error: "Please fill in all fields.",
+                    error: "PleaseFillAllFields",
                 },
                 { status: 400 }
             );
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
         if (userExists) {
             return NextResponse.json(
                 {
-                    error: "User already exists.",
+                    error: "UserAlreadyExists",
                 },
                 { status: 400 }
             );
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     } catch (error: any) {
         return NextResponse.json(
             {
-                error: "User could not be created.",
+                error: "User could not be created",
             },
             { status: 500 }
         );

@@ -28,7 +28,7 @@ export default function TagCloud({ tags }: TagCloudProps) {
     };
 
     return (
-        <div className="tag-cloud">
+        <div className="tag-cloud text-center">
             {tags.map((tag, index) => (
                 <span
                     key={index}

@@ -69,7 +69,7 @@ export function ProfileSettingsForm({ user }: { user: Session["user"] }) {
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(updateProfile)}
-                    className="space-y-8"
+                    className="space-y-8 max-w-xs w-full"
                 >
                     <h1 className="text-2xl">{t("title")}</h1>
                     <FormDescription>{t("description")}</FormDescription>

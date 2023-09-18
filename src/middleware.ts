@@ -43,7 +43,7 @@ export default withAuth(
             ) {
                 return NextResponse.json(
                     {
-                        error: "Not authenticated.",
+                        error: "Not authenticated",
                     },
                     {
                         status: 401,

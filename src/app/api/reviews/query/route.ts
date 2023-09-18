@@ -4,6 +4,8 @@ import { Prisma } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 import { NextResponse } from "next/server";
 import { reviewInclude } from "../route";
+import { calculateAvarageRate } from "@/lib/utils";
+import { ReviewReturnedType } from "@/contexts/ReviewsContext";
 
 export const dynamic = "force-dynamic";
 
@@ -39,93 +41,95 @@ export async function POST(request: Request) {
                     },
                 },
             },
-            rates: {
-                orderBy: {
-                    piece: {
-                        rates: {
-                            _count: "desc",
-                        },
-                    },
-                },
-            },
+            rates: {},
         };
-        const reviews = await prisma.review.findMany({
-            ...sortByObj[sortBy || "createdAt"],
-            ...(take && { take: Number(take) }),
-            where: {
-                ...(userId && { authorId: userId }),
-                ...(tagValues?.length > 0 && {
-                    tags: {
-                        some: {
+        const reviews = await prisma.review
+            .findMany({
+                ...sortByObj[sortBy || "createdAt"],
+                ...(take && { take: Number(take) }),
+                where: {
+                    ...(userId && { authorId: userId }),
+                    ...(tagValues?.length > 0 && {
+                        tags: {
+                            some: {
+                                value: {
+                                    in: tagValues,
+                                },
+                            },
+                        },
+                    }),
+                    ...(groupValues?.length > 0 && {
+                        group: {
                             value: {
-                                in: tagValues,
+                                in: groupValues,
                             },
                         },
-                    },
-                }),
-                ...(groupValues?.length > 0 && {
-                    group: {
-                        value: {
-                            in: groupValues,
-                        },
-                    },
-                }),
-                ...(pieceValues?.length > 0 && {
-                    piece: {
-                        value: {
-                            in: pieceValues,
-                        },
-                    },
-                }),
-                ...(searchTerm && {
-                    OR: [
-                        {
-                            title: {
-                                contains: searchTerm,
+                    }),
+                    ...(pieceValues?.length > 0 && {
+                        piece: {
+                            value: {
+                                in: pieceValues,
                             },
                         },
-                        {
-                            text: {
-                                contains: searchTerm,
-                            },
-                        },
-                        {
-                            piece: {
-                                value: {
+                    }),
+                    ...(searchTerm && {
+                        OR: [
+                            {
+                                title: {
                                     contains: searchTerm,
                                 },
                             },
-                        },
-                        {
-                            group: {
-                                value: {
+                            {
+                                text: {
                                     contains: searchTerm,
                                 },
                             },
-                        },
-                        {
-                            comments: {
-                                some: {
-                                    text: {
-                                        contains: searchTerm,
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            tags: {
-                                some: {
+                            {
+                                piece: {
                                     value: {
                                         contains: searchTerm,
                                     },
                                 },
                             },
-                        },
-                    ],
-                }),
-            },
-            include: reviewInclude,
-        });
+                            {
+                                group: {
+                                    value: {
+                                        contains: searchTerm,
+                                    },
+                                },
+                            },
+                            {
+                                comments: {
+                                    some: {
+                                        text: {
+                                            contains: searchTerm,
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                tags: {
+                                    some: {
+                                        value: {
+                                            contains: searchTerm,
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    }),
+                },
+                include: reviewInclude,
+            })
+            .then((reviews: any[]) =>
+                sortBy === "rates"
+                    ? reviews.sort(
+                          (a, b) =>
+                              calculateAvarageRate(b.piece?.rates || []) -
+                              calculateAvarageRate(a.piece?.rates || [])
+                      )
+                    : reviews
+            );
         return NextResponse.json(reviews);
     } catch (error) {
         return NextResponse.json(

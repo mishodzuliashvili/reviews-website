@@ -69,8 +69,8 @@ const RegisterForm = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
             });
-            if (!res.ok) {
-                const data = await res.json();
+            const data = await res.json();
+            if (!res.ok || data.error) {
                 throw new Error(data.error);
             } else {
                 toast({

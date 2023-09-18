@@ -38,8 +38,6 @@ export default function ReviewHeader({
         </header>
     );
 }
-// TODO: infinite scrool,
-// TODO: is ragac language packaghe lodash urevs
 // TODO: edit and add correctly,
 // TODO: dont be redirect to profile if admin edits
 
@@ -48,3 +46,5 @@ export default function ReviewHeader({
 //TODO: admin page if have time
 // todo: validation also with zod i dunno
 // TODO: handle errors like returned from hooks
+
+// TODO: infinite scrool,

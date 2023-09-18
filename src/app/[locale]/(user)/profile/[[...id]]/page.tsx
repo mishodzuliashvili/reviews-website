@@ -77,21 +77,23 @@ function ProfileTabs({
             defaultValue={idOfEditReview ? "createoredit" : "reviews"}
             className=""
         >
-            <TabsList>
-                <TabsTrigger value="reviews" className="">
-                    {t("reviews")}
-                </TabsTrigger>
-                {(isCurrentUserProfile || user?.isAdmin) && (
-                    <TabsTrigger value="createoredit">
-                        <span className="flex items-center gap-1">
-                            <PiPencilLineLight className="sm:hidden text-lg" />
-                            <span className="w-16 overflow-hidden gap-1 text-ellipsis sm:w-fit">
-                                {t("create-or-edit")}
-                            </span>
-                        </span>
+            <div className="flex items-center justify-center mb-5">
+                <TabsList className="">
+                    <TabsTrigger value="reviews" className="">
+                        {t("reviews")}
                     </TabsTrigger>
-                )}
-            </TabsList>
+                    {(isCurrentUserProfile || user?.isAdmin) && (
+                        <TabsTrigger value="createoredit">
+                            <span className="flex items-center gap-1">
+                                <PiPencilLineLight className="sm:hidden text-lg" />
+                                <span className="w-16 overflow-hidden gap-1 text-ellipsis sm:w-fit">
+                                    {t("create-or-edit")}
+                                </span>
+                            </span>
+                        </TabsTrigger>
+                    )}
+                </TabsList>
+            </div>
             <TabsContent value="reviews" className="flex flex-col gap-4">
                 <UserReviewsPage
                     userId={
@@ -133,7 +135,7 @@ function ProfileHeader({
 }) {
     const t = useTranslations("ProfileHeader");
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex mt-5 flex-col gap-3 items-center">
             <h1 className="text-3xl font-bold">
                 {isCurrentUserProfile ? t("title-my") : t("title-other")}
             </h1>

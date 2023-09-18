@@ -71,7 +71,6 @@
         "no-account": "არ გაქვთ ანგარიში?",
         "signup": "დარეგისტრირდით აქ.",
         "other-options": "ან შესვლა:",
-
         "error-heading": "შესვლა ვერ ხერხდება.",
         "errors": {
             "Signin": "სცადეთ შესვლა სხვა ანგარიშით.",
@@ -84,9 +83,9 @@
             "EmailSignin": "შეამოწმეთ თქვენი ელ.ფოსტა.",
             "CredentialsSignin": "შესვლა ვერ ხერხდება. შეამოწმეთ მონაცემები.",
             "default": "შესვლა ვერ ხერხდება.",
-            "Email or password is incorrect": "ელ.ფოსტა ან პაროლი არასწორია.",
-            "Invalid credentials": "არასწორი მონაცემები.",
-            "User is blocked": "მომხმარებელი დაბლოკილია."
+            "EmailOrPasswordIsIncorrect": "ელ.ფოსტა ან პაროლი არასწორია.",
+            "InvalidCredentials": "არასწორი მონაცემები.",
+            "UserIsBlocked": "მომხმარებელი დაბლოკილია."
         },
         "form": {
             "invalid-email": "არასწორი ელ.ფოსტა.",
@@ -110,9 +109,9 @@
         "other-options": "ან რეგისტრაცია:",
         "error-heading": "რეგისტრაცია ვერ ხერხდება.",
         "errors": {
-            "Please fill all fields.": "გთხოვთ შეავსოთ ყველა ველი.",
-            "Not authenticated.": "ავტორიზაცია ვერ ხერხდება.",
-            "User with this email already exists.": "მომხმარებელი ამ ელ.ფოსტით უკვე არსებობს."
+            "PleaseFillAllFields": "გთხოვთ შეავსოთ ყველა ველი.",
+            "NotAuthenticated": "ავტორიზაცია ვერ ხერხდება.",
+            "UserAlreadyExists": "მომხმარებელი ამ ელ.ფოსტით უკვე არსებობს."
         },
         "form": {
             "invalid-email": "არასწორი ელ.ფოსტა.",
@@ -149,9 +148,9 @@
     },
     "MainError": {
         "error": "შეცდომა",
-        "User not found.": "მომხმარებელი ვერ მოიძებნა.",
-        "Not authenticated.": "არა ავტორიზებული",
-        "Could not fetch user.": "მომხმარებლის მონაცემების წამოღება ვერ ხერხდება."
+        "UserNotFound": "მომხმარებელი ვერ მოიძებნა.",
+        "NotAuthenticated": "არა ავტორიზებული",
+        "CouldNotFetchUsers": "მომხმარებლის მონაცემების წამოღება ვერ ხერხდება."
     },
     "ProfileSettingsForm": {
         "name": "სახელი",
@@ -162,7 +161,7 @@
         "title": "პარამეტრები",
         "description": "შეცვალეთ თქვენი პარამეტრები.",
         "errors": {
-            "update-error": "შეცდომა განახლებისას."
+            "UpdateError": "შეცდომა განახლებისას."
         }
     },
     "ReviewNewForm": {
@@ -183,7 +182,7 @@
         "images-placeholder": "შეიყვანეთ სურათები",
         "text-placeholder": "შეიყვანეთ ტექსტი",
         "errors": {
-            "create-error": "რევიუს დამატება ვერ ხერხდება."
+            "CreateError": "რევიუს დამატება ვერ ხერხდება."
         }
     },
     "ReviewsList": {

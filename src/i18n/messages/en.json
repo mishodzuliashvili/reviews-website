@@ -5,7 +5,6 @@
         "recently-added": "Recently Added Reviewes",
         "highest-grades": "Reviews with highest grades"
     },
-
     "SearchInput": {
         "search": "Search...",
         "submit": "Search",
@@ -84,9 +83,14 @@
             "EmailSignin": "Check your email address.",
             "CredentialsSignin": "Sign in failed. Check the details you provided are correct.",
             "default": "Unable to sign in.",
-            "Email or password is incorrect": "Email or password is incorrect.",
-            "Invalid credentials": "Invalid credentials.",
-            "User is blocked": "User is blocked."
+            "EmailOrPasswordIsIncorrect": "Email or password is incorrect.",
+            "InvalidCredentials": "Invalid credentials.",
+            "UserIsBlocked": "User is blocked."
+        },
+        "form": {
+            "invalid-email": "Invalid email address.",
+            "email-min": "Email must be at least 2 characters.",
+            "password-min": "Password must be at least 6 characters."
         }
     },
     "RegisterForm": {
@@ -105,9 +109,9 @@
         "other-options": "Or sign up with:",
         "error-heading": "Unable to sign up.",
         "errors": {
-            "Please fill all fields.": "Please fill all fields.",
-            "Not authenticated.": "Not authenticated.",
-            "User with this email already exists.": "User with this email already exists."
+            "PleaseFillAllFields": "Please fill all fields.",
+            "NotAuthenticated": "Not authenticated.",
+            "UserAlreadyExists": "User with this email already exists."
         },
         "form": {
             "invalid-email": "Invalid email address.",
@@ -144,9 +148,9 @@
     },
     "MainError": {
         "error": "Error",
-        "User not found.": "User not found.",
-        "Not authenticated.": "Not authenticated.",
-        "Could not fetch user.": "Could not fetch user."
+        "UserNotFound": "User not found.",
+        "NotAuthenticated": "Not authenticated.",
+        "CouldNotFetchUsers": "Could not fetch user."
     },
     "ProfileSettingsForm": {
         "name": "Name",
@@ -157,7 +161,7 @@
         "title": "Profile settings",
         "description": "Update your profile settings.",
         "errors": {
-            "update-error": "Unable to update user."
+            "UpdateError": "Unable to update user."
         }
     },
     "TagsSelect": {
@@ -184,7 +188,7 @@
         "images-placeholder": "Enter images",
         "text-placeholder": "Enter text",
         "errors": {
-            "create-error": "Unable to create review."
+            "CreateError": "Unable to create review."
         }
     },
     "ReviewsList": {

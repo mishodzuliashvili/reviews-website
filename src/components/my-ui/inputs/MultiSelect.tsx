@@ -81,13 +81,13 @@ export function MultiSelect({
                         aria-expanded={openCombobox}
                         className="w-full justify-between text-foreground"
                     >
-                        <span className="truncate">
+                        <p className="truncate overflow-hidden max-w-[200px] sm:max-w-xs">
                             {selectedValues.length === 0 && placeholder}
                             {selectedValues.length >= 1 &&
                                 selectedValues
                                     .map(({ label }) => label)
                                     .join(", ")}
-                        </span>
+                        </p>
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>

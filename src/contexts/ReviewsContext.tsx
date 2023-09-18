@@ -80,6 +80,7 @@ export default function ReviewsContextProvider({
         take,
         searchTerm,
     }: RefetchReviewsParams) => {
+        setReviews(null);
         setReviewsLoading(true);
         setReviewsError(null);
         const queryParams = buildQueryParams({

@@ -7,7 +7,7 @@ export default async function ProfileSettings() {
     if (!user) return null;
 
     return (
-        <div className="p-5 w-full max-w-xl">
+        <div className="p-5 flex justify-center">
             <ProfileSettingsForm user={user} />
         </div>
     );

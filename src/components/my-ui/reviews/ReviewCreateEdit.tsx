@@ -2,6 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from "react-responsive-carousel";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +34,8 @@ import { MultiSelect } from "@/components/my-ui/inputs/MultiSelect";
 import { Piece, ReviewGroup, Tag } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { ReviewReturnedType, useReviews } from "@/contexts/ReviewsContext";
+import { AiOutlineDelete } from "react-icons/ai";
+import MainLoader from "../main/MainLoader";
 const Wysiwyg = dynamic(() => import("../inputs/Wysiwyg"), {
     ssr: false,
 });
@@ -59,7 +63,7 @@ export default function ReviewCreateEdit({
     pieces,
     authorId,
 }: ReviewCreateEditProps) {
-    const { addOrUpdateReview } = useReviews();
+    const { addOrUpdateReview, reviewsLoading } = useReviews();
     const router = useRouter();
     const t = useTranslations("ReviewNewForm");
     const [selectedTags, setSelectedTags] = useState<string[]>(
@@ -80,7 +84,7 @@ export default function ReviewCreateEdit({
         },
     });
     const handleSubmit = async (data: any) => {
-        const reviewId = await addOrUpdateReview({
+        addOrUpdateReview({
             ...(review
                 ? {
                       reviewId: review.id,
@@ -95,7 +99,7 @@ export default function ReviewCreateEdit({
             text: text,
             authorId: authorId,
         });
-        router.push(`/profile`);
+        router.push(`/profile/${authorId}`);
     };
 
     const onUploadComplete = (im: UploadFileResponse[]) => {
@@ -104,6 +108,7 @@ export default function ReviewCreateEdit({
 
     return (
         <Form {...form}>
+            {reviewsLoading && <MainLoader />}
             <form
                 onSubmit={form.handleSubmit(handleSubmit)}
                 className="space-y-8"
@@ -221,21 +226,30 @@ export default function ReviewCreateEdit({
                 <div>
                     <h1>{t("images")}</h1>
                     <p>{t("images-placeholder")}</p>
-                    {uploadedImages.map((im) => (
-                        <Image
-                            onClick={() => {
-                                setUploadedImages((images) =>
-                                    images.filter((i) => i !== im)
-                                );
-                            }}
-                            className="hover:opacity-70"
-                            width={200}
-                            height={200}
-                            key={im}
-                            src={im}
-                            alt={im}
-                        />
-                    ))}
+
+                    <Carousel
+                        key={uploadedImages.length}
+                        className="cursor-pointer max-w-xl"
+                    >
+                        {uploadedImages.map((image) => (
+                            <div key={image} className="relative group">
+                                <img
+                                    className="group-hover:opacity-70"
+                                    src={image}
+                                />
+                                <div
+                                    className="absolute top-[50%] translate-x-[-50%] left-[50%] translate-y-[-50%] group-hover:opacity-100 opacity-0 transition-all duration-300 cursor-pointer text-5xl"
+                                    onClick={() => {
+                                        setUploadedImages((images) =>
+                                            images.filter((i) => i !== image)
+                                        );
+                                    }}
+                                >
+                                    <AiOutlineDelete />
+                                </div>
+                            </div>
+                        ))}
+                    </Carousel>
                 </div>
                 <UploadImages onUploadComplete={onUploadComplete} />
 

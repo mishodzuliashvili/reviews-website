@@ -39,8 +39,8 @@ export default function UserReviewsPage({
         []
     );
     return (
-        <div className="flex flex-col gap-4">
-            <div className="flex gap-4 flex-wrap">
+        <div className="flex flex-col gap-4 items-center">
+            <div className="flex gap-4 flex-wrap justify-center">
                 <Select
                     value={sortBy}
                     onValueChange={(e) => setSortBy(e as any)}

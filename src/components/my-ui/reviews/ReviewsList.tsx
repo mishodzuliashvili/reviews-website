@@ -28,24 +28,23 @@ export default function ReviewsList({
             searchTerm,
         });
     }, [userId, groupValues, pieceValues, sortBy, tagValues, take, searchTerm]);
-
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 w-full max-w-2xl mx-auto items-center">
             {reviewsLoading &&
                 Array(10)
                     .fill(0)
                     .map((_, i) => (
                         <div
                             key={i}
-                            className="flex flex-col gap-3 relative items-start"
+                            className="flex flex-col gap-3 relative items-start w-full"
                         >
                             <Skeleton className="h-52 w-full rounded-lg" />
                             <Skeleton className="h-20 w-full rounded-lg" />
                         </div>
                     ))}
             {!reviewsLoading && reviews?.length === 0 && (
-                <div>
-                    <h2 className="text-xl">{t("no-reviews")}</h2>
+                <div className="">
+                    <h2 className="text-xl text-center">{t("no-reviews")}</h2>
                 </div>
             )}
             {!reviewsLoading &&

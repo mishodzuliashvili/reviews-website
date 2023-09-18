@@ -50,17 +50,17 @@ async function authorizeCredentials(
     credentials: Record<"email" | "password", string> | undefined
 ) {
     if (!credentials) {
-        throw new Error("Invalid credentials");
+        throw new Error("InvalidCredentials");
     }
     const { email, password } = credentials;
     const user = await prisma.user.findUnique({
         where: { email },
     });
     if (!user || !user.password || !(await compare(password, user.password))) {
-        throw new Error("Email or password is incorrect");
+        throw new Error("EmailOrPasswordIsIncorrect");
     }
     if (user.isBlocked) {
-        throw new Error("Your account is blocked");
+        throw new Error("UserIsBlocked");
     }
     return {
         id: user.id,
