@@ -22,9 +22,14 @@ export default async function Profile({
     const tags = await prisma.tag.findMany({});
     const groups = await prisma.reviewGroup.findMany({});
     const pieces = await prisma.piece.findMany({});
-    const isCurrentUserProfile = !id || (id && user?.id === id[0]) || false;
+
+    const profileId = (id?.length > 0 && id?.[0]) || user?.id;
+
+    const isCurrentUserProfile = profileId === user?.id;
+
     const idOfEditReview = searchParams?.reviewForEdit;
     const ifCreate = searchParams?.create;
+
     let reviewForEdit = (await prisma.review.findUnique({
         where: {
             id: (searchParams?.reviewForEdit as string) || "",
@@ -41,7 +46,6 @@ export default async function Profile({
     if (reviewForEdit) {
         authorId = reviewForEdit.authorId;
     }
-    // what if we are some different user profile
 
     return (
         <div className="flex flex-col gap-3">
@@ -57,6 +61,7 @@ export default async function Profile({
                 reviewForEdit={reviewForEdit}
                 idOfEditReview={idOfEditReview}
                 ifCreate={ifCreate}
+                profileId={profileId}
             />
         </div>
     );
@@ -72,6 +77,7 @@ function ProfileTabs({
     idOfEditReview,
     ifCreate,
     authorId,
+    profileId,
 }: {
     id: string[] | undefined | string;
     user: any;
@@ -83,6 +89,7 @@ function ProfileTabs({
     idOfEditReview: any;
     ifCreate: any;
     authorId: any;
+    profileId: any;
 }) {
     const t = useTranslations("ProfileTabs");
     return (
@@ -111,7 +118,7 @@ function ProfileTabs({
             </div>
             <TabsContent value={"reviews"} className="flex flex-col gap-4">
                 <UserReviewsPage
-                    userId={authorId}
+                    userId={profileId}
                     tags={tags}
                     groups={groups}
                     pieces={pieces}

@@ -37,7 +37,7 @@ type ReviewsContextType = {
         tags: string[];
         images: string[];
         authorId?: string;
-    }) => void;
+    }) => Promise<void>;
 };
 
 const ReviewsContext = createContext<ReviewsContextType>({
@@ -47,7 +47,7 @@ const ReviewsContext = createContext<ReviewsContextType>({
     reviewsError: null,
     refetchReviews: () => {},
     deleteReview: () => {},
-    addOrUpdateReview: () => {},
+    addOrUpdateReview: async () => {},
 });
 
 type ReviewsContextProviderProps = {

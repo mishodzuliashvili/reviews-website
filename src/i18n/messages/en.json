@@ -189,7 +189,15 @@
         "text-placeholder": "Enter text",
         "errors": {
             "CreateError": "Unable to create review."
-        }
+        },
+        "group-invalid": "Choose group from the list.",
+        "group-required": "Group is required.",
+        "grade-invalid": "Grade must be between 1 and 10.",
+        "grade-required": "Grade is required.",
+        "title-required": "Title is required.",
+        "title-invalid": "Title is not valid.",
+        "item-required": "Item is required.",
+        "item-invalid": "Item is not valid."
     },
     "ReviewsList": {
         "no-reviews": "No reviews found"

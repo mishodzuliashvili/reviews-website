@@ -31,7 +31,7 @@ export default function ReviewHeaderDropDown({
                 {(user?.isAdmin || user?.id === review.author.id) && (
                     <>
                         <DropdownMenuItem asChild>
-                            <Link href={`/profile?=${review.id}`}>
+                            <Link href={`/profile?reviewForEdit=${review.id}`}>
                                 <FiEdit className="mr-2 h-4 w-4" />
                                 <span>Edit</span>
                             </Link>

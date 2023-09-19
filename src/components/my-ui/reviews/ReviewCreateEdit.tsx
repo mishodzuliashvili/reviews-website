@@ -29,7 +29,6 @@ import {
 import dynamic from "next/dynamic";
 import UploadImages from "@/components/my-ui/inputs/UploadImages";
 import { UploadFileResponse } from "uploadthing/client";
-import Image from "next/image";
 import { MultiSelect } from "@/components/my-ui/inputs/MultiSelect";
 import { Piece, ReviewGroup, Tag } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -42,10 +41,32 @@ const Wysiwyg = dynamic(() => import("../inputs/Wysiwyg"), {
 
 const getFromSchema = (t: any) =>
     z.object({
-        title: z.string(),
-        item: z.string(),
-        group: z.string(),
-        grade: z.coerce.number().min(0).max(10),
+        title: z.string({
+            required_error: t("title-required"),
+            invalid_type_error: t("title-invalid"),
+        }),
+        item: z.string({
+            required_error: t("item-required"),
+            invalid_type_error: t("item-invalid"),
+        }),
+        group: z.string({
+            required_error: t("group-required"),
+            invalid_type_error: t("group-invalid"),
+        }),
+        grade: z.coerce
+            .number({
+                invalid_type_error: t("grade-invalid"),
+                required_error: t("grade-required"),
+            })
+            .int({
+                message: t("grade-invalid"),
+            })
+            .min(0, {
+                message: t("grade-invalid"),
+            })
+            .max(10, {
+                message: t("grade-invalid"),
+            }),
     });
 
 type ReviewCreateEditProps = {
@@ -84,7 +105,7 @@ export default function ReviewCreateEdit({
         },
     });
     const handleSubmit = async (data: any) => {
-        addOrUpdateReview({
+        await addOrUpdateReview({
             ...(review
                 ? {
                       reviewId: review.id,
@@ -111,7 +132,7 @@ export default function ReviewCreateEdit({
             {reviewsLoading && <MainLoader />}
             <form
                 onSubmit={form.handleSubmit(handleSubmit)}
-                className="space-y-8"
+                className="space-y-8 mx-auto max-w-xl w-full"
             >
                 <h1 className="text-2xl">{t("title")}</h1>
                 <FormDescription>{t("description")}</FormDescription>

@@ -38,11 +38,8 @@ export default function ReviewHeader({
         </header>
     );
 }
-// TODO: edit and add correctly,
-// TODO: dont be redirect to profile if admin edits
 
 //TODO: admin page if have time
-// todo: validation also with zod i dunno
 // TODO: handle errors like returned from hooks
 
 // TODO: infinite scrool,

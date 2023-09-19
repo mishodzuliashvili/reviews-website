@@ -183,7 +183,15 @@
         "text-placeholder": "შეიყვანეთ ტექსტი",
         "errors": {
             "CreateError": "რევიუს დამატება ვერ ხერხდება."
-        }
+        },
+        "group-invalid": "აირჩიეთ ჯგუფი სიიდან.",
+        "group-required": "ჯგუფი აუცილებელია.",
+        "grade-invalid": "შეფასება უნდა იყოს 1-დან 10-მდე.",
+        "grade-required": "შეფასება აუცილებელია.",
+        "title-required": "სათაური აუცილებელია.",
+        "title-invalid": "სათაური არასწორია.",
+        "item-required": "ნამუშევრი აუცილებელია.",
+        "item-invalid": "ნამუშევრი არასწორია."
     },
     "ReviewsList": {
         "no-reviews": "რევიუები არ არის."
