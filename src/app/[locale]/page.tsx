@@ -45,10 +45,10 @@ function TabsComponent() {
                 </TabsList>
             </div>
             <TabsContent value="recentlyAdded">
-                <ReviewsList sortBy="createdAt" take={2} />
+                <ReviewsList sortBy="createdAt" take={10} />
             </TabsContent>
             <TabsContent value="highestGrades">
-                <ReviewsList sortBy="grade" take={2} />
+                <ReviewsList sortBy="grade" take={10} />
             </TabsContent>
         </Tabs>
     );

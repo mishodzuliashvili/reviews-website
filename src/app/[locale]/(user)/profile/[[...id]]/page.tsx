@@ -5,6 +5,7 @@ import { ReviewReturnedType } from "@/contexts/ReviewsContext";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { PiPencilLineLight } from "react-icons/pi";
 type ProfileProps = {
     params: {
@@ -23,6 +24,7 @@ export default async function Profile({
     const pieces = await prisma.piece.findMany({});
     const isCurrentUserProfile = !id || (id && user?.id === id[0]) || false;
     const idOfEditReview = searchParams?.reviewForEdit;
+    const ifCreate = searchParams?.create;
     let reviewForEdit = (await prisma.review.findUnique({
         where: {
             id: (searchParams?.reviewForEdit as string) || "",
@@ -35,10 +37,17 @@ export default async function Profile({
         },
     })) as ReviewReturnedType;
 
+    let authorId = user?.id;
+    if (reviewForEdit) {
+        authorId = reviewForEdit.authorId;
+    }
+    // what if we are some different user profile
+
     return (
         <div className="flex flex-col gap-3">
             <ProfileHeader isCurrentUserProfile={isCurrentUserProfile} />
             <ProfileTabs
+                authorId={authorId}
                 id={id}
                 user={user}
                 tags={tags}
@@ -47,13 +56,13 @@ export default async function Profile({
                 isCurrentUserProfile={isCurrentUserProfile}
                 reviewForEdit={reviewForEdit}
                 idOfEditReview={idOfEditReview}
+                ifCreate={ifCreate}
             />
         </div>
     );
 }
 
 function ProfileTabs({
-    id,
     user,
     tags,
     groups,
@@ -61,6 +70,8 @@ function ProfileTabs({
     isCurrentUserProfile,
     reviewForEdit,
     idOfEditReview,
+    ifCreate,
+    authorId,
 }: {
     id: string[] | undefined | string;
     user: any;
@@ -70,60 +81,51 @@ function ProfileTabs({
     isCurrentUserProfile: boolean;
     reviewForEdit: any;
     idOfEditReview: any;
+    ifCreate: any;
+    authorId: any;
 }) {
     const t = useTranslations("ProfileTabs");
     return (
-        <Tabs
-            defaultValue={idOfEditReview ? "createoredit" : "reviews"}
-            className=""
-        >
+        <Tabs value={idOfEditReview || ifCreate ? "createoredit" : "reviews"}>
             <div className="flex items-center justify-center mb-5">
                 <TabsList className="">
                     <TabsTrigger value="reviews" className="">
-                        {t("reviews")}
+                        <Link href={`/profile/${authorId}`} className="flex">
+                            {t("reviews")}
+                        </Link>
                     </TabsTrigger>
                     {(isCurrentUserProfile || user?.isAdmin) && (
-                        <TabsTrigger value="createoredit">
-                            <span className="flex items-center gap-1">
+                        <TabsTrigger asChild value="createoredit">
+                            <Link
+                                href={`/profile/${authorId}?create=true`}
+                                className="flex items-center gap-1"
+                            >
                                 <PiPencilLineLight className="sm:hidden text-lg" />
                                 <span className="w-16 overflow-hidden gap-1 text-ellipsis sm:w-fit">
                                     {t("create-or-edit")}
                                 </span>
-                            </span>
+                            </Link>
                         </TabsTrigger>
                     )}
                 </TabsList>
             </div>
-            <TabsContent value="reviews" className="flex flex-col gap-4">
+            <TabsContent value={"reviews"} className="flex flex-col gap-4">
                 <UserReviewsPage
-                    userId={
-                        id && id?.length > 0
-                            ? (id[0] as string)
-                            : (user?.id as string)
-                    }
+                    userId={authorId}
                     tags={tags}
                     groups={groups}
                     pieces={pieces}
                 />
             </TabsContent>
-            {(isCurrentUserProfile || user?.isAdmin) && (
-                <TabsContent
-                    value="createoredit"
-                    className="flex flex-col gap-4"
-                >
-                    <ReviewCreateEdit
-                        tags={tags}
-                        groups={groups}
-                        pieces={pieces}
-                        review={reviewForEdit}
-                        authorId={
-                            id && id?.length > 0
-                                ? (id[0] as string)
-                                : (user?.id as string)
-                        }
-                    />
-                </TabsContent>
-            )}
+            <TabsContent value="createoredit" className="flex flex-col gap-4">
+                <ReviewCreateEdit
+                    tags={tags}
+                    groups={groups}
+                    pieces={pieces}
+                    review={reviewForEdit}
+                    authorId={authorId}
+                />
+            </TabsContent>
         </Tabs>
     );
 }

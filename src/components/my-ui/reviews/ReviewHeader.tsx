@@ -41,8 +41,6 @@ export default function ReviewHeader({
 // TODO: edit and add correctly,
 // TODO: dont be redirect to profile if admin edits
 
-// TODO: edit page change photos remove more flexible
-
 //TODO: admin page if have time
 // todo: validation also with zod i dunno
 // TODO: handle errors like returned from hooks
