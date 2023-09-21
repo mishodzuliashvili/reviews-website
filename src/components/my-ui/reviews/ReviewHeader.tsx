@@ -38,8 +38,6 @@ export default function ReviewHeader({
         </header>
     );
 }
-
 //TODO: admin page if have time
-// TODO: handle errors like returned from hooks
-
-// TODO: infinite scrool,
+// TODO: what if admin creates post on somoenes page or comment on them
+// TODO: review refetch doesnt work

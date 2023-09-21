@@ -3,6 +3,8 @@ import { buildQueryParams } from "@/lib/utils";
 import { Prisma } from "@prisma/client";
 import { createContext, useContext, useState } from "react";
 
+export const dynamic = "force-dynamic";
+
 export type ReviewReturnedType = Prisma.ReviewGetPayload<{
     include: {
         author: true;
@@ -38,6 +40,8 @@ type ReviewsContextType = {
         images: string[];
         authorId?: string;
     }) => Promise<void>;
+    hasMore: boolean;
+    resetReviews: () => void;
 };
 
 const ReviewsContext = createContext<ReviewsContextType>({
@@ -48,6 +52,8 @@ const ReviewsContext = createContext<ReviewsContextType>({
     refetchReviews: () => {},
     deleteReview: () => {},
     addOrUpdateReview: async () => {},
+    hasMore: false,
+    resetReviews: () => {},
 });
 
 type ReviewsContextProviderProps = {
@@ -60,9 +66,14 @@ export type RefetchReviewsParams = {
     tagValues?: string[];
     groupValues?: string[];
     pieceValues?: string[];
-    take?: number;
+    // take?: number;
     searchTerm?: string;
+    // skip?: number;
 };
+
+const REVIEWS_PER_PAGE = 2;
+
+let page = 1;
 
 export default function ReviewsContextProvider({
     children,
@@ -70,6 +81,14 @@ export default function ReviewsContextProvider({
     const [reviews, setReviews] = useState<ReviewReturnedType[] | null>(null);
     const [reviewsLoading, setReviewsLoading] = useState(false);
     const [reviewsError, setReviewsError] = useState<Error | null>(null);
+    const [hasMore, setHasMore] = useState(true);
+    // const [page, setPage] = useState(1);
+
+    const resetReviews = () => {
+        setReviews([]);
+        setHasMore(true);
+        page = 1;
+    };
 
     const refetchReviews = ({
         userId,
@@ -77,10 +96,8 @@ export default function ReviewsContextProvider({
         tagValues,
         groupValues,
         pieceValues,
-        take,
         searchTerm,
     }: RefetchReviewsParams) => {
-        setReviews(null);
         setReviewsLoading(true);
         setReviewsError(null);
         const queryParams = buildQueryParams({
@@ -88,6 +105,7 @@ export default function ReviewsContextProvider({
             sortBy,
             searchTerm,
         });
+
         fetch(`/api/reviews/query?${queryParams}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -95,7 +113,8 @@ export default function ReviewsContextProvider({
                 tagValues,
                 groupValues,
                 pieceValues,
-                take,
+                take: REVIEWS_PER_PAGE,
+                skip: (page - 1) * REVIEWS_PER_PAGE,
             }),
         })
             .then((res) => res.json())
@@ -103,7 +122,11 @@ export default function ReviewsContextProvider({
                 if (data.error) {
                     throw new Error(data.error);
                 }
-                setReviews(data);
+                setReviews((prev) => (prev ? [...prev, ...data] : data));
+                if (data.length < REVIEWS_PER_PAGE) {
+                    setHasMore(false);
+                }
+                page++;
                 setReviewsLoading(false);
             })
             .catch((error) => {
@@ -164,6 +187,8 @@ export default function ReviewsContextProvider({
                 refetchReviews,
                 deleteReview,
                 addOrUpdateReview,
+                hasMore,
+                resetReviews,
             }}
         >
             {children}

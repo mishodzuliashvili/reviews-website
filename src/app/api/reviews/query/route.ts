@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
     try {
-        const { tagValues, groupValues, pieceValues, take } =
+        const { tagValues, groupValues, pieceValues, take, skip } =
             await request.json();
         const { sortBy, userId, searchTerm } = getQueries(request, [
             "sortBy",
@@ -47,6 +47,7 @@ export async function POST(request: Request) {
             .findMany({
                 ...sortByObj[sortBy || "createdAt"],
                 ...(take && { take: Number(take) }),
+                ...(skip && { skip: Number(skip) }),
                 where: {
                     ...(userId && { authorId: userId }),
                     ...(tagValues?.length > 0 && {

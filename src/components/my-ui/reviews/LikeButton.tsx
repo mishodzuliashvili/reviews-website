@@ -9,12 +9,19 @@ type LikeButtonProps = {
 };
 
 export default function LikeButton({ review }: LikeButtonProps) {
-    const { isLikedByUser, toggleLike, numberOfLikes, likesLoading } = useLikes(
-        {
-            review,
-        }
-    );
+    const {
+        likesError,
+        isLikedByUser,
+        toggleLike,
+        numberOfLikes,
+        likesLoading,
+    } = useLikes({
+        review,
+    });
     const { user } = useUser();
+    if (likesError) {
+        return <div>error</div>;
+    }
     return (
         <Button
             disabled={likesLoading || !user}

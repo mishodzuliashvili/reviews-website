@@ -114,3 +114,7 @@ body {
         display: block;
     }
 }
+
+.infinite-scroll-component__outerdiv {
+    width: 100%;
+}

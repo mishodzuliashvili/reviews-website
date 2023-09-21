@@ -43,6 +43,9 @@ export default async function Profile({
     })) as ReviewReturnedType;
 
     let authorId = user?.id;
+    if (!isCurrentUserProfile) {
+        authorId = profileId;
+    }
     if (reviewForEdit) {
         authorId = reviewForEdit.authorId;
     }

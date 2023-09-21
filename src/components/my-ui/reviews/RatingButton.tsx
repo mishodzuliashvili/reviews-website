@@ -8,10 +8,14 @@ type RatingButtonProps = {
     review: ReviewReturnedType;
 };
 export default function RatingButton({ review }: RatingButtonProps) {
-    const { ratesLoading, changeRateByPieceValue, userRating } = useRates({
-        review,
-    });
+    const { ratesLoading, ratesError, changeRateByPieceValue, userRating } =
+        useRates({
+            review,
+        });
     const { user } = useUser();
+    if (ratesError) {
+        return <div>error</div>;
+    }
 
     return (
         <div

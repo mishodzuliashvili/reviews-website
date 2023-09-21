@@ -14,10 +14,18 @@ type CommentsProps = {
 };
 
 export default function Comments({ review }: CommentsProps) {
-    const { comments, addComment, commentsLoading, deleteComment } =
-        useComments({ review });
+    const {
+        comments,
+        commentsError,
+        addComment,
+        commentsLoading,
+        deleteComment,
+    } = useComments({ review });
     const [sendText, setSendText] = useState("");
     const { user } = useUser();
+    if (commentsError) {
+        return <div>error</div>;
+    }
     return (
         <div>
             <div className="flex flex-col gap-3">
@@ -34,16 +42,16 @@ export default function Comments({ review }: CommentsProps) {
                         <div className="flex justify-between items-center">
                             <Link
                                 className="flex items-center gap-3 hover:underline"
-                                href={`/profile/${review.author.id}`}
+                                href={`/profile/${comment.author.id}`}
                             >
                                 <Image
-                                    src={review.author.image}
+                                    src={comment.author.image || ""}
                                     alt="Profile Image"
                                     width={30}
                                     height={30}
                                     className="rounded-full object-cover border"
                                 />
-                                <span>{review.author.name}</span>
+                                <span>{comment.author.name}</span>
                             </Link>
                             {(user?.id === comment.author.id ||
                                 user?.isAdmin) && (
