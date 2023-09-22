@@ -71,7 +71,7 @@ export type RefetchReviewsParams = {
     // skip?: number;
 };
 
-const REVIEWS_PER_PAGE = 2;
+const REVIEWS_PER_PAGE = 10;
 
 let page = 1;
 
