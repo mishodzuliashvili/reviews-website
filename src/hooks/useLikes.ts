@@ -20,6 +20,7 @@ export default function useLikes({ review }: UseLikesProps) {
             return;
         }
         setLikesLoading(true);
+        setLikesError(null);
         setNumberOfLikes((prev) => (isLikedByUser ? prev - 1 : prev + 1));
         const fetchMethod = isLikedByUser ? "DELETE" : "POST";
         setIsLikedByUser((prev) => !prev);
