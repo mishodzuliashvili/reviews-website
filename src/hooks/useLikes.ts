@@ -14,7 +14,6 @@ export default function useLikes({ review }: UseLikesProps) {
     );
     const [likesLoading, setLikesLoading] = useState(false);
     const [likesError, setLikesError] = useState<Error | null>(null);
-
     const toggleLike = async () => {
         if (likesLoading) {
             return;
@@ -30,7 +29,7 @@ export default function useLikes({ review }: UseLikesProps) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                reviewID: review.id,
+                reviewId: review.id,
             }),
         });
         const data = await res.json();
