@@ -1,6 +1,3 @@
-Here is a draft for a cool README for your project:
-
----
 
 # Reviews Website
 
@@ -93,7 +90,3 @@ Misho Dzuliashvili - [GitHub](https://github.com/mishodzuliashvili)
 
 - [Next.js](https://nextjs.org/)
 - [Vercel](https://vercel.com/)
-
----
-
-Would you like to make any adjustments to this draft?
